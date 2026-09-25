@@ -18,7 +18,8 @@ export const FALLBACK_MODELS: Record<ProviderId, ModelInfo[]> = {
     { id: 'claude-opus-5-5', displayName: 'Opus 5.5', role: 'best' },
   ],
   gemini: [
-    { id: 'gemini-3.5-flash', displayName: 'Gemini 3.5 Flash', role: 'default' },
+    { id: 'gemini-3.1-flash-lite', displayName: 'Gemini 3.1 Flash-Lite', role: 'default' },
+    { id: 'gemini-3.5-flash', displayName: 'Gemini 3.5 Flash' },
     { id: 'gemini-3.6-flash', displayName: 'Gemini 3.6 Flash' },
     { id: 'gemini-3.7-flash', displayName: 'Gemini 3.7 Flash' },
     { id: 'gemini-3.8-flash', displayName: 'Gemini 3.8 Flash' },
@@ -39,6 +40,7 @@ export const DEFAULT_PRICES: Record<string, ModelPrice> = {
   'gemini-3.5-flash': { input: 0.75, output: 3.75, cacheRead: 0.075, cacheWrite5m: 0 },
   'gemini-3.8-flash': { input: 0.75, output: 3.75, cacheRead: 0.075, cacheWrite5m: 0 },
   'gemini-3.5-flash-lite': { input: 0.3, output: 2.5, cacheRead: 0, cacheWrite5m: 0 },
+  'gemini-3.1-flash-lite': { input: 0.25, output: 1.5, cacheRead: 0.025, cacheWrite5m: 0 },
 };
 
 /**
@@ -100,13 +102,20 @@ export const PROVIDER_NAMES: Record<ProviderId, string> = {
 
 /**
  * Automatic fallback when a model hits its free-tier limit (Gemini quotas are per model).
- * Answers only fall back to full Flash models: in live tests Flash-Lite added details that
- * weren't in the resume. Fast tasks (summaries, transcription) use the Flash-Lite chain.
+ * Answers start on 3.1 Flash-Lite (Liben's pick), then move to the full Flash models. Fast tasks
+ * (summaries, transcription, fact check) use a separate Flash-Lite chain so they don't spend the
+ * answer model's quota; a model must not be in both chains.
  */
 export const FALLBACK_CHAINS: Record<ProviderId, { answer: string[]; fast: string[] }> = {
   gemini: {
-    answer: ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.8-flash'],
-    fast: ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-lite-latest'],
+    answer: [
+      'gemini-3.1-flash-lite',
+      'gemini-3.5-flash',
+      'gemini-3.6-flash',
+      'gemini-3.7-flash',
+      'gemini-3.8-flash',
+    ],
+    fast: ['gemini-3.5-flash-lite', 'gemini-flash-lite-latest'],
   },
   // Anthropic limits are per account, not per model; switching models wouldn't help.
   anthropic: { answer: [], fast: [] },
