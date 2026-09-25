@@ -4,6 +4,7 @@
 //   ANTHROPIC_API_KEY=... pnpm eval
 //   GEMINI_API_KEY=... pnpm eval --provider gemini
 //   pnpm eval --profile evals/profile.local.json --model claude-opus-5-5 --only 1,4,16
+//   pnpm eval --fact-check      (also runs the extension's fact check on prose answers)
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -23,6 +24,7 @@ import {
 import { parseLimits } from '../src/llm/limits';
 import { createProvider } from '../src/llm/provider';
 import { LlmError } from '../src/llm/errors';
+import { runFactCheck, shouldFactCheck } from '../src/llm/factCheck';
 import { parseTagged } from '../src/llm/tagParser';
 import { EMPTY_USAGE, type Usage } from '../src/llm/types';
 import type { FieldInfo, PendingCapture, Provider } from '../src/storage/schema';
@@ -50,6 +52,7 @@ const { values: args } = parseArgs({
     only: { type: 'string' },
     delay: { type: 'string' },
     out: { type: 'string', default: 'evals/report.md' },
+    'fact-check': { type: 'boolean', default: false },
   },
 });
 
@@ -184,6 +187,34 @@ for (const [i, q] of questions.entries()) {
       candidateText,
       question: capture.pageText,
     });
+    // Optional: the extension's own fact check, flagged for review (never an automatic fail).
+    if (args['fact-check'] && shouldFactCheck(parsed.type, parsed.answer)) {
+      try {
+        const fc = await runFactCheck({
+          provider: llm,
+          model: settings.fastModel,
+          candidateBlock: candidateText,
+          question: q.question,
+          answer: parsed.answer,
+          jobContext: q.jobContext,
+        });
+        checks.push({
+          name: 'fact check',
+          ok: fc.unsupported.length === 0,
+          flag: true,
+          detail:
+            fc.unsupported.map((c) => `"${c.sentence}": ${c.issue ?? 'not backed'}`).join(' ') ||
+            undefined,
+        });
+      } catch (err) {
+        checks.push({
+          name: 'fact check',
+          ok: false,
+          flag: true,
+          detail: `could not run: ${String(err).slice(0, 120)}`,
+        });
+      }
+    }
     const failed = checks.filter((c) => !c.ok && !c.flag);
     console.log(failed.length ? `FAIL (${failed.map((c) => c.name).join('; ')})` : 'ok');
     quotaStreak = 0;

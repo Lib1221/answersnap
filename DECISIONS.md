@@ -151,3 +151,12 @@ Ambiguities in `SPEC.md`, deviations from it, and the option picked. One line ea
 - The panel says which model answered and why ("Gemini 3.5 Flash reached its daily free limit, so this answer uses Gemini 3.6 Flash."); settings list the chain with each model's status. When every model is out, the message says when they come back.
 - Test key no longer picks the first listed model when the saved one is missing (that was Gemini 2.5 Flash, restricted for new users); it picks the recommended default, and the dropdown lists recommended models first.
 - E2E fixes: `seed()` also clears session storage; the latency test waits 1.1 s between its warm-up and measured snips, because `captureVisibleTab` allows about 2 calls a second and the throttle, not the extension, caused the occasional 850 ms reading.
+
+## After v1: fact-check pass
+
+- After each drafted answer and refinement, a second request checks the answer sentence by sentence against the candidate block (the same text the answer used, with its own cache breakpoint). The extension splits sentences (`Intl.Segmenter`) and the model returns verdicts by number, so flags map back exactly.
+- Claim by claim: for each sentence the model lists every claim (actions, numbers, tools, the situation before, the reason, the result) with an exact quote from the data or null. Any null quote makes the sentence unsupported, whatever the model's own verdict. The first design (one verdict per sentence) missed the real embellishment from the M4 eval on Gemini Flash-Lite; the claim version flagged it on both Flash-Lite and 3.6 Flash and flagged nothing on a clean answer (live test, September 25, 2026).
+- Checks run on the fast model by default (cheap, and on Gemini a separate free quota from the answer model); a setting switches to the answer model. Automatic fallback applies to checks too.
+- Skipped for value answers (number, yes/no, choice, URL, date, salary, assessment), answers under 40 characters of prose, and Reuse. Never blocks Insert. Editing the answer marks the check stale with a "Check again" button.
+- "Fix it" is a refinement (`fix-facts`) that lists the flagged sentences and their issues; the rewrite is checked again automatically.
+- `pnpm eval --fact-check` runs the same check on prose answers and marks unsupported sentences for review in the report.

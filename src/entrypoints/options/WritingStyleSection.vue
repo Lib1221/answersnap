@@ -92,6 +92,40 @@ const inputClass = 'rounded-[6px] border border-rule bg-paper px-2 py-1.5';
       </label>
     </fieldset>
 
+    <fieldset class="flex flex-col gap-2" data-testid="fact-check-settings">
+      <legend class="mb-1 font-medium">Fact check</legend>
+      <label class="flex items-start gap-2">
+        <input
+          type="checkbox"
+          class="mt-1"
+          :checked="settings.factCheck"
+          @change="update({ factCheck: ($event.target as HTMLInputElement).checked })"
+        />
+        <span>
+          Check every answer against my profile
+          <span class="block text-[13px] text-graphite-2">
+            A second, quick request flags any sentence your resume, sources, or standard answers
+            don't back up.
+          </span>
+        </span>
+      </label>
+      <label v-if="settings.factCheck" class="ml-6 flex items-center gap-2">
+        Check with
+        <select
+          class="rounded-[6px] border border-rule bg-paper px-2 py-1"
+          :value="settings.factCheckModel"
+          @change="
+            update({
+              factCheckModel: ($event.target as HTMLSelectElement).value as 'fast' | 'main',
+            })
+          "
+        >
+          <option value="fast">the fast model (cheaper, separate free quota)</option>
+          <option value="main">the answer model (stricter)</option>
+        </select>
+      </label>
+    </fieldset>
+
     <label class="flex max-w-md flex-col gap-1">
       <span class="font-medium">Answer language</span>
       <input

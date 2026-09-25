@@ -15,8 +15,43 @@ import { join } from 'node:path';
 const PROFILE = readFileSync(join(import.meta.dirname, '../fixtures/profile.json'), 'utf8');
 const TRANSCRIPT = 'Jamie Park\nBackend Engineer, Lisbon\nPayments APIs with Django at Ledgerly';
 
+/** Fact check: sentences mentioning "struggling" aren't in Jamie's resume; the rest are. */
+function factCheckJson(raw: string): string {
+  const body = JSON.parse(raw) as { messages?: unknown; contents?: unknown };
+  const turn = JSON.stringify(body.messages ?? body.contents ?? '');
+  const block = JSON.parse(
+    `"${turn.match(/<answer_sentences>(.*?)<\/answer_sentences>/)?.[1] ?? ''}"`,
+  ) as string;
+  const checks = block
+    .split('\n')
+    .map((line) => line.match(/^(\d+)\. (.*)$/))
+    .filter((m): m is RegExpMatchArray => m !== null)
+    .map((m) =>
+      /struggling/i.test(m[2]!)
+        ? {
+            index: Number(m[1]),
+            claims: [{ claim: 'the system was struggling under heavy load', quote: null }],
+            verdict: 'unsupported',
+            issue: 'Your resume never mentions load problems before your work.',
+          }
+        : {
+            index: Number(m[1]),
+            claims: [
+              {
+                claim: 'moved report generation to Celery',
+                quote: 'Cut p95 latency of the invoicing service from 900 ms to 240 ms',
+              },
+            ],
+            verdict: 'supported',
+            issue: null,
+          },
+    );
+  return JSON.stringify({ checks });
+}
+
 /** Non-streamed replies: structured profile JSON, tool use, or an image transcription. */
 function completeText(raw: string): string {
+  if (/You check a drafted job application answer/.test(raw)) return factCheckJson(raw);
   if (/Transcribe all readable text/.test(raw)) return TRANSCRIPT;
   if (/Extract the candidate's profile/.test(raw)) return PROFILE;
   return canned(raw);
@@ -27,6 +62,15 @@ const log: unknown[] = [];
 const counters = new Map<string, number>();
 
 const CANNED: [RegExp, string][] = [
+  // "Fix it" after a fact check: the rewrite drops the unsupported claim. Listed first so it wins.
+  [
+    /state things the candidate data doesn't support/i,
+    "<question>Describe a project you're proud of.</question>\n<type>long_text</type>\n<answer>I moved report generation for Ledgerly's invoicing service to Celery workers, which cut p95 latency from 900 ms to 240 ms.</answer>\n<missing></missing>\n<notes></notes>",
+  ],
+  [
+    /Describe a project you're proud of/i,
+    "<question>Describe a project you're proud of.</question>\n<type>long_text</type>\n<answer>I moved report generation for Ledgerly's invoicing service to Celery workers, which cut p95 latency from 900 ms to 240 ms. The system was struggling under heavy load before I stepped in.</answer>\n<missing></missing>\n<notes></notes>",
+  ],
   [
     /Rate your English proficiency/i,
     '<question>Rate your English proficiency.</question>\n<type>single_choice</type>\n<answer>Fluent</answer>\n<missing></missing>\n<notes></notes>',

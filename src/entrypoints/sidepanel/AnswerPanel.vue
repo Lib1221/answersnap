@@ -4,6 +4,7 @@ import { quirksFor } from '@/config/models';
 import { missingItemHash } from '@/kb/missing';
 import { cutAtLastSentence } from '@/llm/conversation';
 import { costLine, usageLine } from '@/llm/cost';
+import FactCheck from './FactCheck.vue';
 import type { FieldInfo } from '@/storage/schema';
 import type { useAnswer } from './useAnswer';
 import type { useInsert } from './useInsert';
@@ -137,6 +138,7 @@ const cacheOff = computed(() => {
           </button>
         </li>
       </ul>
+      <FactCheck :state="s" />
       <p v-if="s.parsed.value?.notes" class="text-[13px] text-graphite-2" data-testid="notes">
         {{ s.parsed.value.notes }}
       </p>

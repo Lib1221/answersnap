@@ -2,6 +2,7 @@ import { computed, ref, shallowRef } from 'vue';
 import { buildSystemBlocks, buildUserTurn, hasCandidateData, todayIso } from '@/kb/contextBuilder';
 import { getJobContext, jobPromptText } from '@/kb/jobContext';
 import { refineInstruction, refineMessages, type RefineAction } from '@/llm/conversation';
+import { runFactCheck, shouldFactCheck, type FactCheckResult } from '@/llm/factCheck';
 import { LlmError, type LlmErrorKind } from '@/llm/errors';
 import { countWords, parseLimits, type Limits } from '@/llm/limits';
 import { shortModelName } from '@/config/models';
@@ -134,6 +135,17 @@ export function useAnswer() {
   const generated = ref('');
   /** Set when automatic fallback switched models for this answer. */
   const fallbackNote = ref('');
+
+  // Fact check of the latest answer against the candidate data.
+  const factCheck = shallowRef<{
+    status: 'off' | 'checking' | 'done' | 'error';
+    result?: FactCheckResult;
+    /** The answer text that was checked; editing it makes the result stale. */
+    forText?: string;
+    dismissed?: boolean;
+  }>({ status: 'off' });
+  let factController: AbortController | null = null;
+  let jobText: string | null = null;
   let controller: AbortController | null = null;
   let lastCapture: PendingCapture | null = null;
   /** A saved answer that closely matches this question (spec 3.6). */
@@ -166,6 +178,8 @@ export function useAnswer() {
     error.value = null;
     retryNote.value = '';
     fallbackNote.value = '';
+    factController?.abort();
+    factCheck.value = { status: 'off' };
     convo = null;
     match.value = null;
     canRefine.value = false;
@@ -298,6 +312,7 @@ export function useAnswer() {
           .map((m) => m.entry);
 
     const job = await getJobContext(capture.page.hostname);
+    jobText = jobPromptText(job);
     const content: ContentPart[] = buildUserTurn({
       capture,
       settings: s,
@@ -317,7 +332,47 @@ export function useAnswer() {
     if (raw !== null && convo) {
       convo.lastRaw = raw;
       canRefine.value = true;
+      void checkFacts();
     }
+  }
+
+  /** Check the current answer's sentences against the candidate data (never blocks Insert). */
+  async function checkFacts() {
+    const s = settings.value;
+    const text = answer.value.trim();
+    if (
+      !convo ||
+      !s?.factCheck ||
+      phase.value !== 'done' ||
+      !shouldFactCheck(parsed.value?.type, text)
+    ) {
+      factCheck.value = { status: 'off' };
+      return;
+    }
+    factController?.abort();
+    const controller = new AbortController();
+    factController = controller;
+    factCheck.value = { status: 'checking', forText: text };
+    try {
+      const result = await runFactCheck({
+        provider: convo.provider,
+        model: s.factCheckModel === 'main' ? model.value || s.model : s.fastModel,
+        candidateBlock: convo.system[1]?.text ?? '',
+        question: parsed.value?.question || (lastCapture ? questionOf(lastCapture) : ''),
+        answer: text,
+        jobContext: jobText,
+        signal: controller.signal,
+      });
+      if (!controller.signal.aborted) factCheck.value = { status: 'done', result, forText: text };
+    } catch (err) {
+      if (controller.signal.aborted) return;
+      console.warn('[AnswerSnap] fact check failed', err);
+      factCheck.value = { status: 'error', forText: text };
+    }
+  }
+
+  function dismissFactCheck() {
+    factCheck.value = { ...factCheck.value, dismissed: true };
   }
 
   /** Reuse: the saved answer, no API call. */
@@ -379,6 +434,7 @@ export function useAnswer() {
     if (raw !== null && convo) {
       convo.history = messages;
       convo.lastRaw = raw;
+      void checkFacts();
     }
   }
 
@@ -405,6 +461,9 @@ export function useAnswer() {
     overLimit,
     edited,
     fallbackNote,
+    factCheck,
+    checkFacts,
+    dismissFactCheck,
     match,
     canRefine,
     run,

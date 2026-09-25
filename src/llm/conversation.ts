@@ -1,3 +1,4 @@
+import { fixFactsInstruction, type SentenceCheck } from './factCheck';
 import type { Limits } from './limits';
 import { REFINE } from './prompts';
 import type { ChatMessage } from './types';
@@ -10,7 +11,8 @@ export type RefineAction =
   | { kind: 'longer' }
   | { kind: 'tone'; tone: 'formal' | 'casual' }
   | { kind: 'fit' }
-  | { kind: 'custom'; text: string };
+  | { kind: 'custom'; text: string }
+  | { kind: 'fix-facts'; unsupported: SentenceCheck[] };
 
 export function refineInstruction(
   action: RefineAction,
@@ -26,6 +28,8 @@ export function refineInstruction(
       return REFINE.tone(action.tone);
     case 'fit':
       return REFINE.fitLimit(answerChars, limits.maxChars);
+    case 'fix-facts':
+      return fixFactsInstruction(action.unsupported);
     case 'custom':
       return REFINE.custom(action.text.trim().replace(/\.$/, ''));
   }
