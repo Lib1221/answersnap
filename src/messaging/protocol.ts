@@ -1,0 +1,57 @@
+import type { FieldInfo, PageInfo, Rect, Size, SnipMode } from '@/storage/schema';
+
+// One typed protocol for every context (spec 8). Payload fields sit directly on the message.
+
+export type StartSnipError = 'NEEDS_GESTURE' | 'RESTRICTED_PAGE' | 'INJECT_FAILED';
+
+export interface MessageMap {
+  START_SNIP: {
+    msg: { type: 'START_SNIP'; tabId: number; mode: SnipMode };
+    reply: { ok: true } | { ok: false; error: StartSnipError };
+  };
+  BEGIN_SELECTION: {
+    msg: { type: 'BEGIN_SELECTION'; captureId: string; mode: SnipMode };
+    reply: { ok: true };
+  };
+  /** Panel asks the page to drop the overlay (Esc pressed while the panel has focus). */
+  CANCEL_SELECTION: {
+    msg: { type: 'CANCEL_SELECTION' };
+    reply: { ok: true };
+  };
+  REGION_SELECTED: {
+    msg: {
+      type: 'REGION_SELECTED';
+      captureId: string;
+      rect: Rect;
+      viewport: Size;
+      pageText: string;
+      hiddenTextChars: number;
+      candidates: FieldInfo[];
+      page: PageInfo;
+    };
+    reply: { ok: true };
+  };
+  SELECTION_CANCELLED: {
+    msg: { type: 'SELECTION_CANCELLED'; captureId: string };
+    reply: void;
+  };
+  /** Test-only, compiled out of production (spec 16.2). */
+  E2E_START_SNIP: {
+    msg: { type: 'E2E_START_SNIP'; tabId: number; mode?: SnipMode };
+    reply: { ok: true } | { ok: false; error: StartSnipError };
+  };
+}
+
+export type MessageType = keyof MessageMap;
+export type Message<T extends MessageType = MessageType> = MessageMap[T]['msg'];
+export type Reply<T extends MessageType> = MessageMap[T]['reply'];
+
+export type AnyMessage = { [T in MessageType]: MessageMap[T]['msg'] }[MessageType];
+
+export function isMessage(value: unknown): value is AnyMessage {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as { type?: unknown }).type === 'string'
+  );
+}

@@ -20,3 +20,18 @@ Ambiguities in `SPEC.md`, deviations from it, and the option picked. One line ea
 - Job context expiry (3.4, 12 h) is enforced by `createdAt` on read, since `storage.session` has no TTL. It also clears on browser restart, which is fine.
 - `history.enabled = false` (7.2) means Insert and Copy stop auto-saving to the library; an explicit Save still saves.
 - To verify against live docs before use: `max_tokens: 0` pre-warm (M4), `output_config.format` structured outputs (M3), minimum cacheable lengths and prices (M2/M4).
+
+## M1 (capture)
+
+- Added session key `captureStatus` (selecting, capturing, done, cancelled, error). The panel can open in the same gesture that starts the snip, so a `CAPTURE_ERROR` runtime message could arrive before it listens. Errors and progress go through this key instead.
+- Added message `CANCEL_SELECTION` (panel to page): after a toolbar click the panel may hold focus, so Esc in the panel must also cancel the overlay.
+- `START_SNIP` can also reply `INJECT_FAILED` (script injected but the page didn't answer), shown as "Reload the page and try again".
+- `FieldInfo` gains optional `minLength` and `required`, since spec 9.7 lists them as constraints but the 7.2 type has no place for them.
+- Capture options come from `src/config/defaults.ts` constants until the settings store lands in M2.
+- Only the "Snip question" context menu exists so far. "Answer this field", "Use selection as job post", and "Import this page" arrive with M6 and M3.
+- Text nodes with no layout box (display: none) are judged "in the region" by their nearest ancestor that has a box, so hidden text inside the selection still counts toward `hiddenTextChars`.
+- A radio or checkbox counts as visible if the input or its label is visible (styled choice inputs usually hide the native input).
+- Verified: `scripting.executeScript` fails on the extension's own pages ("Cannot access contents of the page"), even with `<all_urls>`. The practice page (Appendix A) therefore can't be snipped via injection. Plan for M7: the practice page runs the capture runtime itself and the SW sends `BEGIN_SELECTION` directly when the tab is our own practice page.
+- A `captureStatus` older than 10 minutes is treated as abandoned and ignored by the panel.
+- Fields inside iframes aren't detected yet; the iframe copy fallback lands with insertion in M5.
+- Unit tests fake layout with `data-rect="x,y,w,h"` attributes (happy-dom has no layout engine). E2E covers real layout: DPR via `--force-device-scale-factor`, zoom via `tabs.setZoom`, no Playwright viewport emulation so `captureVisibleTab` matches the page's own pixels.

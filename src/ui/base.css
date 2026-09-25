@@ -37,3 +37,40 @@ body {
     transition: none !important;
   }
 }
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-control);
+    background: var(--paper);
+    color: var(--graphite);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .btn-primary {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-quiet {
+    border-color: transparent;
+    background: transparent;
+    color: var(--ink);
+    padding: 0 4px;
+  }
+  .notice {
+    padding: 8px 12px;
+    border-radius: var(--radius-control);
+    background: var(--carbon-pink);
+    color: var(--carbon-pink-text);
+  }
+}

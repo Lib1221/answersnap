@@ -20,6 +20,8 @@ export default tseslint.config(
   {
     files: ['**/*.vue'],
     languageOptions: { parserOptions: { parser: tseslint.parser } },
+    // TypeScript already checks undefined names, including WXT auto-imports.
+    rules: { 'no-undef': 'off' },
   },
   {
     languageOptions: {

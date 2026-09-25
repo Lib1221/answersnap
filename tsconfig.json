@@ -5,6 +5,7 @@
     "jsx": "preserve"
   },
   "vueCompilerOptions": {
-    "strictTemplates": true
+    "strictTemplates": true,
+    "dataAttributes": ["data-*"]
   }
 }
