@@ -54,6 +54,11 @@ export interface MessageMap {
     msg: { type: 'PICK_FIELD' };
     reply: FieldInfo | null;
   };
+  /** Is a capture runtime listening in this tab? */
+  PING: {
+    msg: { type: 'PING' };
+    reply: { ok: true };
+  };
   /** Panel asks the SW to (re)inject the capture script before messaging the page. */
   ENSURE_CAPTURE: {
     msg: { type: 'ENSURE_CAPTURE'; tabId: number };

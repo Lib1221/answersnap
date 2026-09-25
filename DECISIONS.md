@@ -120,3 +120,13 @@ Ambiguities in `SPEC.md`, deviations from it, and the option picked. One line ea
 - Export includes settings (minus the dev-only base URL), sources, profile, standard answers, and library; never API keys. Import replaces those and leaves keys alone.
 - "Delete all data" clears local and session storage and removes every host permission not in the manifest's required list.
 - The eval runner skips the remaining questions after three in a row fail on quota, and still writes the report.
+
+## M7 (polish)
+
+- The service worker first offers `BEGIN_SELECTION` to a capture runtime that may already be listening, and injects only if nothing answers (`ENSURE_CAPTURE` uses a `PING`). This is how the practice page works: it runs the capture runtime itself because Chrome won't inject into extension pages. Extension page URLs aren't visible to `tabs.query`, so URL checks alone couldn't recognize it. The extension's own origin is no longer "restricted". Verified in E2E that the screenshot works on the practice page (e2e build); still to confirm with a real gesture in the production build (docs/QA.md).
+- Install opens `options.html#welcome` (Getting started checklist). "Try it" marks onboarding done and opens the practice page.
+- Panel tabs: Answer, Library, Profile. The header shows "Profile ready: resume + 1 site" style status.
+- i18n scaffolding: `public/_locales/en/messages.json`, `default_locale: en`, manifest name, description, and command via `__MSG_*__`, context menus and the panel's main states through `t(key, fallback)`. The rest of the UI strings move over as translations are added; English only in v1. The action title stays literal because it embeds the shortcut.
+- Budgets are tests: the production build test checks capture.js < 40 KB and the side panel's up-front JS < 400 KB gzipped (it's about 60 KB) with no pdf.js or mammoth; an E2E test checks overlay < 150 ms after the trigger and region to thumbnail < 400 ms (measured 21 ms and 327 ms headless).
+- Accessibility: axe-core (dev dependency) scans the panel, every options section, and the practice page in light and dark mode for WCAG 2 A/AA. The practice page's white-on-white trap is excluded on purpose.
+- The manual QA checklist (spec 16.3) is in `docs/QA.md`; it needs real sites, real gestures, and HiDPI or Windows scaling, which the E2E suite can't do.

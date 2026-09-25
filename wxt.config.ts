@@ -18,8 +18,10 @@ export default defineConfig({
   manifest: ({ mode }) => {
     const e2e = mode === 'e2e';
     return {
-      name: BRAND.name,
-      description: BRAND.description,
+      // Strings come from public/_locales (spec 13.4); BRAND keeps the same values for code.
+      name: '__MSG_extName__',
+      description: '__MSG_extDescription__',
+      default_locale: 'en',
       minimum_chrome_version: '116',
       permissions: ['activeTab', 'scripting', 'storage', 'sidePanel', 'contextMenus'],
       // e2e builds may add <all_urls> (spec section 6). Production never does.
@@ -29,7 +31,7 @@ export default defineConfig({
       commands: {
         'snip-question': {
           suggested_key: { default: BRAND.shortcut, mac: BRAND.shortcut },
-          description: 'Snip a question and draft an answer',
+          description: '__MSG_commandSnip__',
         },
       },
     };

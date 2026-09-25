@@ -185,3 +185,21 @@ describe('crop outline for "Answer this field"', () => {
     expect(plan.outline).toEqual({ x: 40, y: 200, w: 320, h: 40 });
   });
 });
+
+describe('panel profile line', async () => {
+  const { profileStatus } = await import('@/entrypoints/sidepanel/profileSummary');
+  const src = (kind: string, enabled = true) =>
+    ({ id: kind, kind, label: kind, text: 'x', chars: 1, importedAt: '', enabled }) as never;
+  it('summarizes the profile and enabled sources', () => {
+    expect(
+      profileStatus({
+        profile: { fullName: 'J' },
+        sources: [src('resume'), src('website'), src('note', false)],
+      }),
+    ).toBe('Profile ready: resume + 1 site');
+    expect(profileStatus({ profile: null, sources: [src('note')] })).toBe(
+      'No profile yet, using 1 note',
+    );
+    expect(profileStatus({ profile: null, sources: [] })).toBeNull();
+  });
+});

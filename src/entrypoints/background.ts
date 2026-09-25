@@ -11,7 +11,9 @@ export default defineBackground(() => {
 
   browser.runtime.onInstalled.addListener(({ reason }) => {
     createMenus();
-    if (reason === 'install') void browser.runtime.openOptionsPage();
+    // First run opens the Welcome checklist (spec 3.1).
+    if (reason === 'install')
+      void browser.tabs.create({ url: browser.runtime.getURL('/options.html#welcome') });
   });
 
   // History retention runs at start-up; no alarms permission needed (spec 14.2).

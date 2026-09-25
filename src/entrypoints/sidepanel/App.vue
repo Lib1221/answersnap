@@ -9,10 +9,13 @@ import CropThumb from '@/ui/CropThumb.vue';
 import AnswerPanel from './AnswerPanel.vue';
 import JobBar from './JobBar.vue';
 import LibraryTab from './LibraryTab.vue';
+import ProfileTab from './ProfileTab.vue';
+import { profileStatus } from './profileSummary';
 import { pruneLibrary } from '@/kb/library';
 import { prewarmIfNeeded } from './prewarm';
 import { useAnswer } from './useAnswer';
 import { useCapture } from './useCapture';
+import { t } from '@/ui/i18n';
 import { useInsert } from './useInsert';
 import { useJob } from './useJob';
 
@@ -21,7 +24,8 @@ const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSele
 const answer = useAnswer();
 const job = useJob();
 const insert = useInsert(capture, answer);
-const tab = ref<'answer' | 'library'>('answer');
+const tab = ref<'answer' | 'library' | 'profile'>('answer');
+const profileLine = ref<string | null>(null);
 
 function useSaved(entry: import('@/kb/library').LibraryEntry) {
   tab.value = 'answer';
@@ -62,7 +66,10 @@ const readiness = ref<'ready' | 'needs-key' | 'needs-profile' | 'unknown'>('unkn
 async function checkReadiness() {
   const settings = await getSettings();
   if (!(await getApiKey(settings.provider))) readiness.value = 'needs-key';
-  else if (!hasCandidateData(await loadCandidateData())) readiness.value = 'needs-profile';
+  const data = await loadCandidateData();
+  profileLine.value = profileStatus(data);
+  if (readiness.value === 'needs-key') return;
+  if (!hasCandidateData(data)) readiness.value = 'needs-profile';
   else readiness.value = 'ready';
 }
 
@@ -113,35 +120,47 @@ function openSettings(section?: string) {
 
 <template>
   <div class="flex min-h-screen flex-col">
-    <header class="flex items-center justify-between border-b border-rule px-4 py-3">
-      <h1 class="text-base font-[650]">{{ BRAND.name }}</h1>
+    <header class="flex items-start justify-between gap-2 border-b border-rule px-4 py-3">
+      <div class="min-w-0">
+        <h1 class="text-base font-[650]">{{ BRAND.name }}</h1>
+        <p
+          v-if="profileLine"
+          class="truncate text-[13px] text-graphite-2"
+          data-testid="profile-line"
+        >
+          {{ profileLine }}
+        </p>
+      </div>
       <button class="btn btn-quiet" type="button" @click="openSettings()">Settings</button>
     </header>
 
     <JobBar :state="job" />
     <nav class="flex gap-1 border-b border-rule px-3" role="tablist" aria-label="Panel">
       <button
-        v-for="t in [
+        v-for="tb in [
           ['answer', 'Answer'],
           ['library', 'Library'],
         ] as const"
-        :key="t[0]"
+        :key="tb[0]"
         role="tab"
         type="button"
         class="border-b-2 px-2 py-1.5 text-[13px]"
         :class="
-          tab === t[0]
+          tab === tb[0]
             ? 'border-ink font-medium text-graphite'
             : 'border-transparent text-graphite-2'
         "
-        :aria-selected="tab === t[0]"
-        @click="tab = t[0]"
+        :aria-selected="tab === tb[0]"
+        @click="tab = tb[0]"
       >
-        {{ t[1] }}
+        {{ tb[1] }}
       </button>
     </nav>
     <main v-if="tab === 'library'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <LibraryTab :can-use="view.kind === 'captured'" @use="useSaved" />
+    </main>
+    <main v-else-if="tab === 'profile'" class="flex flex-1 flex-col gap-4 px-4 py-4">
+      <ProfileTab @open-settings="openSettings" />
     </main>
     <main v-else class="flex flex-1 flex-col gap-4 px-4 py-4">
       <section
@@ -150,19 +169,21 @@ function openSettings(section?: string) {
         data-state="idle"
       >
         <template v-if="readiness === 'needs-key'">
-          <p>Add your API key to start.</p>
+          <p>{{ t('panelNeedsKey', 'Add your API key to start.') }}</p>
           <button class="btn btn-primary" type="button" @click="openSettings('provider')">
             Open settings
           </button>
         </template>
         <template v-else-if="readiness === 'needs-profile'">
-          <p>Add your resume so answers have something to draw from.</p>
+          <p>
+            {{ t('panelNeedsProfile', 'Add your resume so answers have something to draw from.') }}
+          </p>
           <button class="btn btn-primary" type="button" @click="openSettings('sources')">
             Add resume
           </button>
         </template>
         <template v-else>
-          <p>Snip a question to draft an answer.</p>
+          <p>{{ t('panelIdle', 'Snip a question to draft an answer.') }}</p>
           <button class="btn btn-primary" type="button" :disabled="busy" @click="snip">
             Snip question
           </button>
@@ -175,7 +196,9 @@ function openSettings(section?: string) {
         class="flex flex-col items-start gap-3"
         data-state="selecting"
       >
-        <p role="status">Select the question on the page. Esc cancels.</p>
+        <p role="status">
+          {{ t('panelSelecting', 'Select the question on the page. Esc cancels.') }}
+        </p>
         <button class="btn" type="button" @click="cancelSelection">Cancel</button>
       </section>
 

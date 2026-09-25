@@ -46,13 +46,22 @@ export async function startSnip(target: SnipTarget, mode: SnipMode): Promise<Rep
   if (mode === 'import')
     await browser.tabs.update(target.tabId, { active: true }).catch(() => undefined);
   await setStatus({ ...base, state: 'selecting' });
+  const begin = () => sendToTab(target.tabId, { type: 'BEGIN_SELECTION', captureId, mode });
+  // A capture runtime may already be listening (an earlier snip, or the practice page, which
+  // runs it itself because Chrome won't inject into extension pages). Otherwise inject it.
+  try {
+    await begin();
+    return { ok: true };
+  } catch {
+    // No receiver yet.
+  }
   try {
     await ensureCaptureScript(target.tabId);
   } catch (err) {
     return fail(classifyInjectError(err));
   }
   try {
-    await sendToTab(target.tabId, { type: 'BEGIN_SELECTION', captureId, mode });
+    await begin();
   } catch {
     return fail('INJECT_FAILED');
   }

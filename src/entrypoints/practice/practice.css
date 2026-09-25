@@ -1,0 +1,86 @@
+html,
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--graphite);
+  font:
+    16px/1.5 'Public Sans Variable',
+    system-ui,
+    sans-serif;
+}
+.practice {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+h1 {
+  font-size: 24px;
+  font-weight: 650;
+  margin: 0 0 8px;
+}
+header p {
+  color: var(--graphite-2);
+  margin: 0 0 32px;
+}
+kbd {
+  font: inherit;
+  padding: 1px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 28px;
+  padding: 0;
+  border: 0;
+}
+label,
+.label,
+legend {
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+fieldset label {
+  font-weight: 400;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+input:not([type='radio']),
+textarea,
+select,
+.editor {
+  font: inherit;
+  color: inherit;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.editor {
+  min-height: 96px;
+}
+.counter {
+  font-size: 13px;
+  color: var(--graphite-2);
+  font-variant-numeric: tabular-nums;
+}
+pre {
+  margin: 0;
+  padding: 8px 10px;
+  background: var(--canary);
+  border-radius: 6px;
+}
+/* Appendix A item 9: a hidden-text trap, white on white. Text a person can't see never reaches the model. */
+.trap {
+  color: var(--paper);
+  margin: 0;
+  font-size: 14px;
+}
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}

@@ -1,4 +1,5 @@
 import { createRouter } from '@/messaging/send';
+import { sendToTab } from '@/messaging/send';
 import { classifyInjectError, ensureCaptureScript, isRestrictedUrl } from './inject';
 import {
   handleRegionSelected,
@@ -16,6 +17,9 @@ export function registerRouter(): void {
       return startSnip({ tabId: msg.tabId, windowId: tab.windowId, url: tab.url }, msg.mode);
     },
     ENSURE_CAPTURE: async (msg) => {
+      // Already listening (an earlier injection, or the practice page's own runtime)?
+      const alive = await sendToTab<'PING'>(msg.tabId, { type: 'PING' }).catch(() => null);
+      if (alive?.ok) return { ok: true as const };
       const tab = await browser.tabs.get(msg.tabId);
       if (isRestrictedUrl(tab.url))
         return { ok: false as const, error: 'RESTRICTED_PAGE' as const };

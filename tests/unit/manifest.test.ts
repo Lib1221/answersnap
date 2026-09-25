@@ -1,5 +1,6 @@
 // @vitest-environment node
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
+import { gzipSync } from 'node:zlib';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -14,11 +15,20 @@ interface BuiltManifest {
   minimum_chrome_version?: string;
 }
 
+let lastBuildDir = '';
+
 async function buildManifest(mode: string): Promise<BuiltManifest> {
   const outDir = await mkdtemp(join(tmpdir(), `answersnap-${mode}-`));
   dirs.push(outDir);
   await build({ mode, outDir, logger: silentLogger });
-  return JSON.parse(await readFile(join(outDir, 'chrome-mv3', 'manifest.json'), 'utf8'));
+  lastBuildDir = join(outDir, 'chrome-mv3');
+  return JSON.parse(await readFile(join(lastBuildDir, 'manifest.json'), 'utf8'));
+}
+
+/** Scripts an HTML entry loads up front: its module script plus modulepreload links. */
+async function entryScripts(dir: string, html: string): Promise<string[]> {
+  const page = await readFile(join(dir, html), 'utf8');
+  return [...page.matchAll(/(?:src|href)="\/?([^"]+\.js)"/g)].map((m) => m[1]!);
 }
 
 const dirs: string[] = [];
@@ -38,9 +48,6 @@ describe('production manifest', () => {
   let manifest: BuiltManifest;
   beforeAll(async () => {
     manifest = await buildManifest('production');
-  });
-  afterAll(async () => {
-    await Promise.all(dirs.map((d) => rm(d, { recursive: true, force: true })));
   });
 
   it('has exactly the permissions from spec section 6', () => {
@@ -77,4 +84,31 @@ describe('production manifest', () => {
     expect(manifest.content_scripts).toBeUndefined();
     expect(manifest.web_accessible_resources).toBeUndefined();
   });
+});
+
+describe('performance budgets (spec 17, M7)', () => {
+  beforeAll(async () => {
+    if (!lastBuildDir) await buildManifest('production');
+  });
+
+  it('keeps the capture script under 40 KB minified', async () => {
+    const { size } = await stat(join(lastBuildDir, 'capture.js'));
+    expect(size).toBeLessThan(40 * 1024);
+  });
+
+  it('keeps the side panel under 400 KB of JS gzipped, with pdf.js and mammoth out of it', async () => {
+    const scripts = await entryScripts(lastBuildDir, 'sidepanel.html');
+    expect(scripts.length).toBeGreaterThan(0);
+    let gz = 0;
+    for (const s of scripts) {
+      const code = await readFile(join(lastBuildDir, s));
+      gz += gzipSync(code).length;
+      expect(code.toString()).not.toMatch(/GlobalWorkerOptions|mammoth/);
+    }
+    expect(gz).toBeLessThan(400 * 1024);
+  });
+});
+
+afterAll(async () => {
+  await Promise.all(dirs.map((d) => rm(d, { recursive: true, force: true })));
 });

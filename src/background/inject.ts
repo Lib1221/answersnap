@@ -14,9 +14,14 @@ const RESTRICTED_PREFIXES = [
   'https://microsoftedge.microsoft.com/addons',
 ];
 
+/** Our own pages that run the capture runtime themselves (the practice form). */
+export function isOwnPage(url: string | undefined): boolean {
+  return !!url && typeof browser !== 'undefined' && url.startsWith(browser.runtime.getURL('/'));
+}
+
 /** Pages Chrome never lets extensions script (spec 4.1). */
 export function isRestrictedUrl(url: string | undefined): boolean {
-  if (!url) return false;
+  if (!url || isOwnPage(url)) return false;
   return RESTRICTED_PREFIXES.some((p) => url.startsWith(p));
 }
 

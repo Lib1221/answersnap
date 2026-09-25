@@ -62,8 +62,10 @@ test.describe('resume import', () => {
     await expect(options.getByTestId('review-text')).toHaveValue(
       /Payments APIs with Django at Ledgerly/,
     );
-    const [req] = await mockLog();
-    expect(JSON.stringify(req)).toContain('Transcribe all readable text');
+    const req = (await mockLog()).find((b) =>
+      JSON.stringify(b).includes('Transcribe all readable text'),
+    );
+    expect(req).toBeDefined();
     expect(req).toMatchObject({ model: 'claude-haiku-4-5-20251001' });
     await options.getByRole('button', { name: 'Save source' }).click();
     await expect(options.getByTestId('source-list')).toContainText('Read by AI');
@@ -149,7 +151,10 @@ test('profile: build, edit, survive a reload, rebuild with per-section choice, u
   const options = await openOptions(context, extensionId, 'profile');
   await options.getByTestId('build-profile').click();
   await expect(options.getByTestId('profile-fullName')).toHaveValue('Jamie Park');
-  const [req] = await mockLog();
+  // Find the profile build by its prompt; a late request from another test can't shift it.
+  const req = (await mockLog()).find((b) =>
+    JSON.stringify(b).includes("Extract the candidate's profile"),
+  );
   expect(JSON.stringify(req)).toContain('"format":{"type":"json_schema"');
 
   await options.getByTestId('profile-headline').fill('Senior Backend Engineer, payments');

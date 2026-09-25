@@ -1,3 +1,4 @@
+import { t } from '@/ui/i18n';
 import { importPageFromTab, jobFromSelection, startSnipFromGesture } from './capture';
 
 export const MENU_SNIP_QUESTION = 'snip-question';
@@ -10,22 +11,22 @@ export function createMenus(): void {
   browser.contextMenus.removeAll(() => {
     browser.contextMenus.create({
       id: MENU_SNIP_QUESTION,
-      title: 'Snip question',
+      title: t('menuSnipQuestion', 'Snip question'),
       contexts: ['page', 'selection', 'image', 'link', 'frame'],
     });
     browser.contextMenus.create({
       id: MENU_ANSWER_FIELD,
-      title: 'Answer this field',
+      title: t('menuAnswerField', 'Answer this field'),
       contexts: ['editable'],
     });
     browser.contextMenus.create({
       id: MENU_JOB_SELECTION,
-      title: 'Use selection as job post',
+      title: t('menuJobSelection', 'Use selection as job post'),
       contexts: ['selection'],
     });
     browser.contextMenus.create({
       id: MENU_IMPORT_PAGE,
-      title: 'Import this page into AnswerSnap',
+      title: t('menuImportPage', 'Import this page into AnswerSnap'),
       contexts: ['page'],
     });
   });

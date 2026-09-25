@@ -136,6 +136,7 @@ export function startCaptureRuntime(): void {
       else beginSelection(msg.captureId, msg.mode);
       return { ok: true };
     },
+    PING: () => ({ ok: true }),
     READ_PAGE_TEXT: (msg) => readPageText(msg.scope),
     // Only ever runs after the user clicks Insert in the panel (hard rule 5).
     INSERT_ANSWER: async (msg) => {

@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import { BRAND } from '@/config/brand';
 import { corruptNoticeItem } from '@/storage/items';
+import GettingStartedSection from './GettingStartedSection.vue';
 import PrivacySection from './PrivacySection.vue';
 import ProfileSection from './ProfileSection.vue';
 import ProviderSection from './ProviderSection.vue';
@@ -10,6 +11,7 @@ import StandardAnswersSection from './StandardAnswersSection.vue';
 import WritingStyleSection from './WritingStyleSection.vue';
 
 const SECTIONS = [
+  { id: 'welcome', title: 'Getting started' },
   { id: 'provider', title: 'AI provider' },
   { id: 'sources', title: 'Sources' },
   { id: 'profile', title: 'Profile' },
@@ -19,7 +21,7 @@ const SECTIONS = [
 ] as const;
 type SectionId = (typeof SECTIONS)[number]['id'];
 
-const current = ref<SectionId>('provider');
+const current = ref<SectionId>('welcome');
 const corrupt = ref<string[]>([]);
 
 function fromHash() {
@@ -66,7 +68,8 @@ async function dismissCorrupt() {
         <p>Some saved data couldn't be read and was reset. A copy was kept in case you need it.</p>
         <button class="btn" type="button" @click="dismissCorrupt">Dismiss</button>
       </div>
-      <ProviderSection v-if="current === 'provider'" />
+      <GettingStartedSection v-if="current === 'welcome'" />
+      <ProviderSection v-else-if="current === 'provider'" />
       <SourcesSection v-else-if="current === 'sources'" />
       <ProfileSection v-else-if="current === 'profile'" />
       <StandardAnswersSection v-else-if="current === 'standard-answers'" />
