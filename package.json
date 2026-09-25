@@ -2,7 +2,7 @@
   "name": "answersnap",
   "description": "Snip an application question. Get a draft answer written from your own resume and website.",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -55,5 +55,6 @@
     "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^3.3.11",
     "wxt": "^0.21.4"
-  }
+  },
+  "packageManager": "pnpm@11.22.0"
 }

@@ -140,6 +140,7 @@ function openSettings(section?: string) {
         v-for="tb in [
           ['answer', 'Answer'],
           ['library', 'Library'],
+          ['profile', 'Profile'],
         ] as const"
         :key="tb[0]"
         role="tab"

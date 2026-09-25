@@ -13,7 +13,9 @@ ambiguity calls: `DECISIONS.md` (log every new one there, one line with a reason
 - `pnpm typecheck && pnpm lint && pnpm test`: must be green before every commit
 - `pnpm test:e2e`: Playwright (starts the fixture server on 4610/4611 and the mock LLM on 4620). If the Playwright browser can't download, set
   `E2E_CHROMIUM_PATH` to a Chromium/Chrome for Testing binary (branded Chrome ignores `--load-extension`)
-- `pnpm eval`: answer quality evals against the real API (`--profile evals/profile.local.json`)
+- `pnpm eval`: answer quality evals against the real API (`ANTHROPIC_API_KEY` or `GEMINI_API_KEY`; `--profile evals/profile.local.json`)
+- `STORE_SHOTS=1 pnpm exec playwright test store`: regenerate Chrome Web Store screenshots in `docs/store/`
+- Releases: bump `version` in package.json, push a `v*` tag; CI attaches the zip to a GitHub release
 
 ## Folder map
 

@@ -105,3 +105,10 @@ test('latency budgets: overlay after the trigger, thumbnail after the drag', asy
     await panel.reload();
   }
 });
+
+test('the panel has Answer, Library, and Profile tabs', async ({ panel }) => {
+  await seed(panel);
+  await expect(panel.getByRole('tab')).toHaveText(['Answer', 'Library', 'Profile']);
+  await panel.getByRole('tab', { name: 'Profile' }).click();
+  await expect(panel.getByTestId('profile-tab')).toContainText('Sources');
+});
