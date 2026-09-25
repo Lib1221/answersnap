@@ -38,24 +38,28 @@ export interface CooldownStore {
   set(model: string, until: number): Promise<void>;
 }
 
-const cooldownItem = storage.defineItem<Record<string, number>>('local:modelCooldowns', {
-  fallback: {},
-});
+// Defined on first use: defineItem touches browser storage right away, which breaks Node callers
+// (the eval runner) that import this module but never fall back.
+let cooldownItem: ReturnType<typeof defineCooldownItem> | null = null;
+function defineCooldownItem() {
+  return storage.defineItem<Record<string, number>>('local:modelCooldowns', { fallback: {} });
+}
+const cooldowns = () => (cooldownItem ??= defineCooldownItem());
 
 export const storageCooldowns: CooldownStore = {
   async get() {
     const now = Date.now();
     return Object.fromEntries(
-      Object.entries(await cooldownItem.getValue()).filter(([, until]) => until > now),
+      Object.entries(await cooldowns().getValue()).filter(([, until]) => until > now),
     );
   },
   async set(model, until) {
-    await cooldownItem.setValue({ ...(await this.get()), [model]: until });
+    await cooldowns().setValue({ ...(await this.get()), [model]: until });
   },
 };
 
 export function watchCooldowns(cb: () => void): () => void {
-  return cooldownItem.watch(cb);
+  return cooldowns().watch(cb);
 }
 
 /** The chosen model first, then the rest of its chain in order. */

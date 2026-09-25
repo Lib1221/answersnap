@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { defaultSettings } from '@/config/defaults';
 import type { LibraryEntry } from '@/kb/library';
 import {
+  admitsGap,
   batchUserText,
   draftForm,
   FIELDS_PER_REQUEST,
@@ -47,6 +48,18 @@ describe('batch prompt', () => {
     expect(rules).not.toContain('Reply with exactly these tags');
     expect(rules).toContain('Reply with JSON');
     expect(renderSystemRules(['No em dashes.'])).toContain('Reply with exactly these tags');
+  });
+
+  it('spots saved answers that admit a gap', () => {
+    expect(
+      admitsGap(
+        'I have not worked directly with CUDA performance tuning. In my ML work I focus on',
+      ),
+    ).toBe(true);
+    expect(admitsGap("I haven't used Kubernetes in production.")).toBe(true);
+    expect(admitsGap('I have limited experience with Rust.')).toBe(true);
+    expect(admitsGap('I have about a year of hands-on experience with CUDA.')).toBe(false);
+    expect(admitsGap('I have not stopped learning since 2019.')).toBe(false);
   });
 
   it('switches the fact rules when answering confidently, keeping the shared rules', () => {

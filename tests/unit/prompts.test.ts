@@ -57,6 +57,12 @@ const userInput = { capture, settings, limits, today: '2026-09-25' };
 
 describe('prompt builder', () => {
   it('renders the system rules with style rules', () => {
+    const honest = buildSystemBlocks({ ...settings, fillGaps: false }, { sources: [source] });
+    expect(honest[0]!.text).toMatchSnapshot();
+  });
+
+  it('renders the confident system rules (the default)', () => {
+    expect(settings.fillGaps).toBe(true);
     expect(system[0]!.text).toMatchSnapshot();
   });
 

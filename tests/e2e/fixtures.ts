@@ -110,13 +110,15 @@ export async function seed(
     key?: string | null;
     profile?: boolean;
     prewarm?: boolean;
+    /** Answer confidently (the default); fact check only runs when this is off. */
+    fillGaps?: boolean;
   } = {},
 ) {
   const provider = opts.provider ?? 'anthropic';
   const key = opts.key === undefined ? 'test-key' : opts.key;
   await fetch(`${MOCK_LLM}/__reset`, { method: 'POST' });
   await panel.evaluate(
-    async ({ provider, key, profile, resume, prewarm }) => {
+    async ({ provider, key, profile, resume, prewarm, fillGaps }) => {
       const models: Record<string, [string, string]> = {
         anthropic: ['claude-sonnet-5', 'claude-haiku-4-5-20251001'],
         gemini: ['gemini-3.5-flash', 'gemini-3.5-flash-lite'],
@@ -129,6 +131,7 @@ export async function seed(
           fastModel: models[provider]![1],
           // Off unless a test is about it: a warm-up request would shift the mock log.
           prewarmCache: prewarm,
+          fillGaps,
         },
       };
       if (key) data[`apiKey:${provider}`] = key;
@@ -156,6 +159,7 @@ export async function seed(
       profile: opts.profile ?? true,
       resume: JAMIE_RESUME,
       prewarm: opts.prewarm ?? false,
+      fillGaps: opts.fillGaps ?? true,
     },
   );
   // Start the panel from the seeded state: its mount-time reads (readiness, pre-warm) would

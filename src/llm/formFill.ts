@@ -56,6 +56,22 @@ export function looksLikeAssessment(question: string): boolean {
   return ASSESSMENT_PATTERNS.some((re) => re.test(question));
 }
 
+const GAP_ADMISSION = new RegExp(
+  [
+    "\\bI (?:have not|haven't|havent)(?: yet)?(?: \\w+ly)? (?:worked|used|had|built|done|written|touched|been exposed)\\b",
+    "\\bI (?:do not|don't) have (?:any |much |direct |hands-on |professional )?(?:experience|exposure)\\b",
+    "\\bI(?: am|'m) not (?:familiar|experienced)\\b",
+    '\\bI (?:lack|have (?:limited|no) )',
+    '\\b(?:no|limited) (?:direct |hands-on |professional )?experience\\b',
+  ].join('|'),
+  'i',
+);
+
+/** Saved answers written in "stick to my profile" mode that admit a gap ("I haven't worked with X"). */
+export function admitsGap(answer: string): boolean {
+  return GAP_ADMISSION.test(answer);
+}
+
 /** Snap a single-choice answer to the exact option label, so review and insert agree. */
 export function snapToOption(field: FieldInfo, answer: string): string {
   if (!['select', 'radio-group'].includes(field.kind) || !field.options?.length || !answer.trim())
@@ -125,9 +141,12 @@ export function libraryMatch(
   question: string,
   library: LibraryEntry[],
   hostname: string,
+  fillGaps = false,
 ): LibraryEntry | null {
   const usable = library.filter(
-    (e) => e.hostname === hostname || !['long_text', 'unclear'].includes(e.questionType),
+    (e) =>
+      (e.hostname === hostname || !['long_text', 'unclear'].includes(e.questionType)) &&
+      !(fillGaps && admitsGap(e.answer)),
   );
   const [best] = rankMatches(question, usable, STRONG_MATCH);
   return best?.entry ?? null;
@@ -159,7 +178,12 @@ export async function draftForm(opts: {
   const toModel: typeof prepared = [];
 
   for (const p of prepared) {
-    const saved = libraryMatch(p.question, opts.library, opts.page.hostname);
+    const saved = libraryMatch(
+      p.question,
+      opts.library,
+      opts.page.hostname,
+      opts.settings.fillGaps,
+    );
     if (saved) {
       drafts.set(p.field.targetId, {
         ...p,

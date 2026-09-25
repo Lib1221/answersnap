@@ -143,9 +143,10 @@ export const SettingsSchema = z.object({
   factCheckModel: z.enum(['fast', 'main']).default('fast'),
   /**
    * Answer confidently: never admit a gap, claim modest experience for skills the data doesn't
-   * show (listed as "Assumed" in the notes). Off by default: answers stick to the data.
+   * show (listed as "Assumed" in the notes). On by default (Liben's call); "Stick to my profile"
+   * in settings turns it off.
    */
-  fillGaps: z.boolean().default(false),
+  fillGaps: z.boolean().default(true),
   /** When a model runs out of quota, switch to the next one in its chain. */
   autoFallback: z.boolean().default(true),
   /** Model ids the key can use (from Test key), so fallback skips models the key can't reach. */

@@ -10,7 +10,7 @@ test('the fact check flags an unsupported sentence, and Fix it rewrites without 
   context,
   panel,
 }) => {
-  await seed(panel);
+  await seed(panel, { fillGaps: false });
   const page = await context.newPage();
   await page.goto(`${FIXTURES}/project-form.html`);
   await snipLabel(panel, page, '#project-label');
@@ -40,7 +40,7 @@ test('editing makes the check stale; Keep anyway dismisses the warning', async (
   context,
   panel,
 }) => {
-  await seed(panel);
+  await seed(panel, { fillGaps: false });
   const page = await context.newPage();
   await page.goto(`${FIXTURES}/project-form.html`);
   await snipLabel(panel, page, '#project-label');
@@ -64,7 +64,7 @@ test('no fact check for value answers or when turned off', async ({
   extensionId,
   panel,
 }) => {
-  await seed(panel);
+  await seed(panel, { fillGaps: false });
   const page = await context.newPage();
   await page.goto(`${FIXTURES}/plain-form.html`);
   await snipLabel(panel, page, 'label[for="years"]');
@@ -85,7 +85,7 @@ test('no fact check for value answers or when turned off', async ({
 });
 
 test('Gemini checks with its fast model through a JSON schema', async ({ context, panel }) => {
-  await seed(panel, { provider: 'gemini' });
+  await seed(panel, { provider: 'gemini', fillGaps: false });
   const page = await context.newPage();
   await page.goto(`${FIXTURES}/project-form.html`);
   await snipLabel(panel, page, '#project-label');
@@ -93,4 +93,15 @@ test('Gemini checks with its fast model through a JSON schema', async ({ context
   const [check] = await checks();
   expect(check!._model).toBe('gemini-3.5-flash-lite');
   expect(JSON.stringify(check)).toContain('responseJsonSchema');
+});
+
+test('answering confidently (the default) skips the fact check', async ({ context, panel }) => {
+  await seed(panel);
+  const project = await context.newPage();
+  await project.goto(`${FIXTURES}/project-form.html`);
+  await snipLabel(panel, project, '#project-label');
+  await expect(panel.getByTestId('answer')).toHaveValue(/struggling/);
+  await panel.waitForTimeout(500);
+  expect(await checks()).toHaveLength(0);
+  await expect(panel.getByTestId('fact-check')).toHaveCount(0);
 });

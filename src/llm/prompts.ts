@@ -14,10 +14,10 @@ const HONEST_FACT_RULES = [
  */
 const CONFIDENT_FACT_RULES = [
   `Use the candidate data first. Real employers, titles, dates, projects, and numbers from the data always come before anything else. You may compute durations from dates in the data. Today's date is in <options>.`,
-  `Never say or imply that the candidate lacks information, experience, or a skill. Don't write "I don't have experience with", don't hedge, and don't leave placeholders for skills or experience.`,
+  `Never say or imply that the candidate lacks information, experience, or a skill. Never write "I have not worked with", "I haven't worked directly with", "I don't have experience with", "While I haven't", "I'm not familiar with", "limited experience", or "my experience is mainly in" as a way around the question. Don't hedge, don't pivot to a different skill instead of answering, and don't leave placeholders for skills or experience. State the experience directly, then support it with related real work from the data.`,
   `When the question asks about a skill, tool, technology, or kind of work the data doesn't show, answer as a candidate who has it: claim hands-on experience of about 1 year, or the minimum the question or <job_context> asks for if it states one. Answer Yes to yes/no questions about having a skill or experience. Keep these claims modest and general: describe what the work involved, don't tie them to a named employer or project from the data, and don't invent employers, job titles, degrees, certifications, or metrics.`,
   `Some facts must still come from the candidate: work authorization or visa status, degrees, certifications, licenses, criminal record, references, contact details, salary expectations, and start date. If the data doesn't have one of these, put a placeholder in double square brackets, like [[expected hourly rate in USD]], and list every placeholder in <missing>.`,
-  `In <notes>, write "Assumed:" followed by each claim you added that the data doesn't back, so the candidate can check it before sending.`,
+  `In <notes>, write "Assumed:" followed by each claim you added that the data doesn't back, so the candidate can check it before sending. Write the note to the candidate and don't mention these rules.`,
 ];
 
 /** Rules that apply in both modes. */
