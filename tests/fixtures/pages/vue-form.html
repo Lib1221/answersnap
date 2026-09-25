@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Vue form</title>
+    <style>
+      body {
+        font: 16px/1.5 sans-serif;
+        margin: 40px;
+      }
+      label,
+      input,
+      textarea,
+      output {
+        display: block;
+        margin-bottom: 12px;
+        width: 560px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <label for="why" id="why-label">Why do you want to join us?</label>
+      <textarea id="why" rows="4" v-model="why"></textarea>
+      <output id="state">{{ JSON.stringify({ why }) }}</output>
+    </div>
+    <script type="module">
+      import { createApp } from '/vendor/vue.js';
+      createApp({ data: () => ({ why: '' }) }).mount('#app');
+    </script>
+  </body>
+</html>

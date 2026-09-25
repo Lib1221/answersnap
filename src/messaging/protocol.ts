@@ -1,3 +1,4 @@
+import type { InsertMode, InsertResult } from '@/capture/insert';
 import type { FieldInfo, PageInfo, Rect, Size, SnipMode } from '@/storage/schema';
 
 // One typed protocol for every context (spec 8). Payload fields sit directly on the message.
@@ -34,6 +35,18 @@ export interface MessageMap {
   SELECTION_CANCELLED: {
     msg: { type: 'SELECTION_CANCELLED'; captureId: string };
     reply: void;
+  };
+  INSERT_ANSWER: {
+    msg: { type: 'INSERT_ANSWER'; targetId: string; text: string; mode: InsertMode };
+    reply: InsertResult;
+  };
+  HIGHLIGHT_FIELD: {
+    msg: { type: 'HIGHLIGHT_FIELD'; targetId: string; on: boolean };
+    reply: void;
+  };
+  PICK_FIELD: {
+    msg: { type: 'PICK_FIELD' };
+    reply: FieldInfo | null;
   };
   /** Panel asks the SW to (re)inject the capture script before messaging the page. */
   ENSURE_CAPTURE: {

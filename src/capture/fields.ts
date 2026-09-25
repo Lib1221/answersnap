@@ -38,7 +38,12 @@ export interface Fillable {
   kind: FieldKind;
   members: HTMLInputElement[];
   rect: Rect;
+  /** An iframe that may hold the field. v1 can't fill it; the panel falls back to copy. */
+  inIframe?: boolean;
 }
+
+const MIN_IFRAME_W = 40;
+const MIN_IFRAME_H = 20;
 
 function queryAllDeep(
   root: Document | ShadowRoot,
@@ -135,6 +140,12 @@ export function collectFillable(doc: Document, checker: VisibilityChecker): Fill
     found.push({ el, kind, members: [], rect: elementRect(el) });
   }
 
+  for (const frame of queryAllDeep(doc, 'iframe, frame')) {
+    const rect = elementRect(frame);
+    if (rect.w < MIN_IFRAME_W || rect.h < MIN_IFRAME_H || !checker.isVisible(frame)) continue;
+    found.push({ el: frame, kind: 'textarea', members: [], rect, inIframe: true });
+  }
+
   for (const members of groups.values()) {
     const first = members[0]!;
     found.push({
@@ -211,6 +222,12 @@ export function describeField(
   }
 
   const el = f.el;
+  if (f.inIframe) {
+    info.inIframe = true;
+    info.label = el.getAttribute('title') || labelFor(el, checker);
+    if (!info.label) delete info.label;
+    return info;
+  }
   info.label = labelFor(el, checker);
   info.hint = hintFor(el, checker);
   if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {

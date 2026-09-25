@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Iframe host</title>
+    <style>
+      body {
+        font: 16px/1.5 sans-serif;
+        margin: 40px;
+      }
+      iframe {
+        width: 600px;
+        height: 220px;
+        border: 1px solid #999;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="why-label">Why do you want to join us?</p>
+    <iframe
+      id="embed"
+      title="Application form"
+      src="http://127.0.0.1:4611/iframe-inner.html"
+    ></iframe>
+  </body>
+</html>

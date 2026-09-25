@@ -95,3 +95,14 @@ Ambiguities in `SPEC.md`, deviations from it, and the option picked. One line ea
 - Gemini default answer model is `gemini-3.5-flash` (Liben's call; it has its own free-tier quota and the same paid price as 3.8 Flash). 3.8 Flash stays in the list.
 - Requests now time out: 60 s for a streamed response to start, 180 s for non-streamed ones (they generate everything first), and a stream that sends nothing for 60 s counts as a dropped connection (retried once if no text has shown yet). Found when a live eval request hung with no data; without this the panel would sit on "Drafting" forever.
 - The eval runner retries a question twice after quota or "busy" errors, waiting 65 s each time (free-tier per-minute windows).
+
+## M5 (insertion)
+
+- Rich editors are blurred after an insert (spec says so for inputs). Found in E2E: a still-focused editor won the next snip's "focused field" rule (score 1000), so the next answer targeted the previous field.
+- Iframes that are visible and at least 40 x 20 px count as field candidates with `inIframe: true`; a focused iframe (the user clicked into a field inside it) wins as "focused". Insert on them goes straight to the copy fallback (v1 fills the top frame only).
+- Contenteditable insert order: select (all for Replace, caret at end for Append), `execCommand('insertText')`, re-do paragraph by paragraph if the editor dropped the line breaks, else a synthetic paste. An Append that half-applied fails verification instead of pasting a second copy.
+- Highlight, flash, and the field picker draw in their own closed shadow root and never change page elements' styles.
+- If the capture script is gone (page reloaded), the panel asks the SW to inject it again. Field ids from the old page no longer resolve, so Insert says "The page changed since the snip. Pick the field again, or copy the answer."
+- The clipboard can refuse writes when the panel isn't focused; the copy fallback then tells the user to copy the text by hand instead of claiming it was copied.
+- The Insert split button: "Replace" (default) plus a ▾ that shows "Append", only when the field already has content. With no text field (dropdown, radios), Copy becomes the primary button until choice fields arrive in M6.
+- Test-only dev dependencies for fixtures: react, react-dom, quill, and esbuild (bundles the React fixture when the fixture server starts). Vue's browser ESM build comes from the existing runtime dependency. Nothing is loaded from a CDN.

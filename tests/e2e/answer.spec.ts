@@ -16,7 +16,8 @@ test('a snip streams an answer into the panel', async ({ context, panel }) => {
   );
   await expect(panel.getByTestId('usage')).toContainText('About $');
 
-  const [body] = await mockLog();
+  // The streamed answer request (a stray request from another test can't shift this).
+  const body = (await mockLog()).find((b) => b.stream === true);
   const system = body!.system as { text: string; cache_control?: unknown }[];
   expect(system.map((b) => 'cache_control' in b)).toEqual([false, true]);
   expect(system[1]!.text).toContain('Jamie Park');

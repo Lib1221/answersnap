@@ -4,14 +4,35 @@ import { quirksFor } from '@/config/models';
 import { missingItemHash } from '@/kb/missing';
 import { cutAtLastSentence } from '@/llm/conversation';
 import { costLine, usageLine } from '@/llm/cost';
+import type { FieldInfo } from '@/storage/schema';
 import type { useAnswer } from './useAnswer';
+import type { useInsert } from './useInsert';
 
-const props = defineProps<{ state: ReturnType<typeof useAnswer> }>();
+const props = defineProps<{
+  state: ReturnType<typeof useAnswer>;
+  insert: ReturnType<typeof useInsert>;
+}>();
 const emit = defineEmits<{ openSettings: [section?: string] }>();
 
 const s = props.state;
-const toast = ref('');
-let toastTimer = 0;
+const ins = props.insert;
+const appendOpen = ref(false);
+
+const KIND_NAMES: Record<FieldInfo['kind'], string> = {
+  input: 'input',
+  textarea: 'text box',
+  contenteditable: 'editor',
+  select: 'dropdown',
+  'radio-group': 'choice',
+  'checkbox-group': 'checkboxes',
+};
+
+const targetText = computed(() => {
+  const f = ins.target.value;
+  if (!f) return null;
+  if (f.inIframe) return 'a field inside an embedded frame';
+  return f.label ? `"${f.label}" ${KIND_NAMES[f.kind]}` : KIND_NAMES[f.kind];
+});
 
 const streaming = computed(() => s.phase.value === 'streaming' || s.phase.value === 'drafting');
 // Keep the previous answer on screen while a refinement drafts.
@@ -65,17 +86,6 @@ const cacheOff = computed(() => {
     u.cacheWriteTokens === 0
   );
 });
-
-function flash(message: string) {
-  toast.value = message;
-  clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => (toast.value = ''), 2000);
-}
-
-async function copy() {
-  await navigator.clipboard.writeText(s.answer.value);
-  flash('Copied');
-}
 </script>
 
 <template>
@@ -126,13 +136,56 @@ async function copy() {
       <div class="flex flex-wrap items-center gap-2">
         <button v-if="streaming" class="btn" type="button" @click="s.stop">Stop</button>
         <template v-else>
-          <button class="btn btn-primary" type="button" :disabled="!s.answer.value" @click="copy">
+          <span v-if="ins.fillable.value" class="inline-flex">
+            <button
+              class="btn btn-primary"
+              :class="ins.hasExisting.value ? 'rounded-r-none' : ''"
+              type="button"
+              :disabled="!ins.canInsert.value || ins.busy.value"
+              title="Ctrl+Enter"
+              @click="ins.insert('replace')"
+            >
+              {{ ins.hasExisting.value ? 'Replace' : 'Insert' }}
+            </button>
+            <button
+              v-if="ins.hasExisting.value"
+              class="btn btn-primary rounded-l-none border-l-paper px-2"
+              type="button"
+              aria-label="More insert options"
+              :aria-expanded="appendOpen"
+              :disabled="!ins.canInsert.value || ins.busy.value"
+              @click="appendOpen = !appendOpen"
+            >
+              ▾
+            </button>
+          </span>
+          <button
+            v-if="appendOpen && ins.hasExisting.value"
+            class="btn"
+            type="button"
+            :disabled="!ins.canInsert.value"
+            @click="((appendOpen = false), ins.insert('append'))"
+          >
+            Append
+          </button>
+          <button
+            class="btn"
+            :class="ins.fillable.value ? '' : 'btn-primary'"
+            type="button"
+            :disabled="!s.answer.value"
+            @click="ins.copy"
+          >
             Copy
           </button>
           <button class="btn btn-quiet" type="button" @click="s.retry">Regenerate</button>
         </template>
-        <span v-if="toast" role="status" class="text-[13px] text-graphite-2">{{ toast }}</span>
+        <span v-if="ins.toast.value" role="status" class="text-[13px] text-graphite-2">{{
+          ins.toast.value
+        }}</span>
       </div>
+      <p v-if="ins.message.value" class="notice" role="alert" data-testid="insert-message">
+        {{ ins.message.value }}
+      </p>
 
       <div v-if="!streaming && s.answer.value" class="flex flex-col gap-2" data-testid="refine">
         <div class="flex flex-wrap gap-1">
@@ -218,6 +271,25 @@ async function copy() {
         Add resume
       </button>
     </div>
+
+    <p
+      class="flex flex-wrap items-center gap-x-2 text-[13px] text-graphite-2"
+      data-testid="target"
+      @mouseenter="ins.highlight(true)"
+      @mouseleave="ins.highlight(false)"
+    >
+      <span v-if="ins.picking.value">Click the field on the page. Esc cancels.</span>
+      <span v-else-if="targetText">Target: {{ targetText }}</span>
+      <span v-else>No text field found near the question. Copy the answer or pick a field.</span>
+      <button
+        class="btn btn-quiet min-h-0"
+        type="button"
+        :disabled="ins.picking.value"
+        @click="ins.pick"
+      >
+        {{ ins.target.value ? 'Change' : 'Pick field' }}
+      </button>
+    </p>
 
     <footer
       v-if="footer"

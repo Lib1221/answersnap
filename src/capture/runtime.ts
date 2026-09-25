@@ -1,7 +1,9 @@
 import { createRouter } from '@/messaging/send';
 import type { Message } from '@/messaging/protocol';
 import type { PageInfo, SnipMode } from '@/storage/schema';
-import { findCandidates } from './fields';
+import { findCandidates, resolveTarget } from './fields';
+import { insertText } from './insert';
+import { flash, pickField, setHighlight } from './picker';
 import { createVisibilityChecker } from './hiddenText';
 import { mountOverlay, type OverlayHandle } from './overlay';
 import { readPageText } from './pageImport';
@@ -91,6 +93,16 @@ export function startCaptureRuntime(): void {
       return { ok: true };
     },
     READ_PAGE_TEXT: (msg) => readPageText(msg.scope),
+    // Only ever runs after the user clicks Insert in the panel (hard rule 5).
+    INSERT_ANSWER: async (msg) => {
+      setHighlight(msg.targetId, false);
+      const el = resolveTarget(msg.targetId);
+      const result = await insertText(el, msg.text, msg.mode);
+      if (result.ok && el) flash(el);
+      return result;
+    },
+    HIGHLIGHT_FIELD: (msg) => setHighlight(msg.targetId, msg.on),
+    PICK_FIELD: () => pickField(),
     CANCEL_SELECTION: () => {
       const id = currentCaptureId;
       teardown();

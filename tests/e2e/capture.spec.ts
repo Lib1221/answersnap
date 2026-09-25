@@ -51,7 +51,7 @@ test.describe('capture at DPR 1', () => {
     expect(text).toContain('Why do you want to join us?');
     expect(text).not.toContain('pineapple');
     await expect(panel.getByTestId('hidden-text')).toBeVisible();
-    await expect(panel.getByTestId('target')).toHaveText(
+    await expect(panel.getByTestId('target')).toContainText(
       'Target: "Why do you want to join us?" text box',
     );
   });

@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { BRAND } from '@/config/brand';
 import { hasCandidateData } from '@/kb/contextBuilder';
 import { loadCandidateData } from '@/kb/candidate';
 import { getApiKey, getSettings } from '@/storage/items';
-import type { CaptureErrorCode, FieldInfo } from '@/storage/schema';
+import type { CaptureErrorCode } from '@/storage/schema';
 import CropThumb from '@/ui/CropThumb.vue';
 import AnswerPanel from './AnswerPanel.vue';
 import JobBar from './JobBar.vue';
 import { prewarmIfNeeded } from './prewarm';
 import { useAnswer } from './useAnswer';
 import { useCapture } from './useCapture';
+import { useInsert } from './useInsert';
 import { useJob } from './useJob';
 
 const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSelection } =
   useCapture();
 const answer = useAnswer();
 const job = useJob();
+const insert = useInsert(capture, answer);
 
 // A new capture starts a draft right away; a job snip becomes the site's job context.
 watch(
@@ -66,23 +68,13 @@ const ERRORS: Record<CaptureErrorCode, string> = {
   INJECT_FAILED: "Couldn't start snipping on this page. Reload the page and try again.",
 };
 
-const KIND_NAMES: Record<FieldInfo['kind'], string> = {
-  input: 'input',
-  textarea: 'text box',
-  contenteditable: 'editor',
-  select: 'dropdown',
-  'radio-group': 'choice',
-  'checkbox-group': 'checkboxes',
-};
-
-const target = computed(() => {
-  if (view.value.kind !== 'captured') return null;
-  const f = view.value.capture.field;
-  if (!f) return null;
-  return f.label ? `"${f.label}" ${KIND_NAMES[f.kind]}` : KIND_NAMES[f.kind];
-});
-
 function onKey(e: KeyboardEvent) {
+  // Ctrl+Enter inserts (spec 13.2).
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && insert.canInsert.value) {
+    e.preventDefault();
+    void insert.insert('replace');
+    return;
+  }
   if (e.key !== 'Escape') return;
   if (status.value?.state === 'selecting') void cancelSelection();
   else if (['drafting', 'streaming'].includes(answer.phase.value)) answer.stop();
@@ -206,13 +198,7 @@ function openSettings(section?: string) {
         >
           This page has hidden text in the area you selected. It was left out.
         </p>
-        <p class="text-[13px] text-graphite-2" data-testid="target">
-          <template v-if="target">Target: {{ target }}</template>
-          <template v-else
-            >No text field found near the question. Copy the answer or pick a field.</template
-          >
-        </p>
-        <AnswerPanel :state="answer" @open-settings="openSettings" />
+        <AnswerPanel :state="answer" :insert="insert" @open-settings="openSettings" />
         <div class="border-t border-rule pt-3">
           <button class="btn" type="button" :disabled="busy" @click="snip">Snip question</button>
         </div>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Editors</title>
+    <link rel="stylesheet" href="/vendor/quill.snow.css" />
+    <style>
+      body {
+        font: 16px/1.5 sans-serif;
+        margin: 40px;
+        width: 600px;
+      }
+      .ce {
+        border: 1px solid #999;
+        min-height: 80px;
+        padding: 8px;
+        margin-bottom: 32px;
+      }
+      #quill {
+        height: 140px;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="plain-label">Why do you want to join us?</p>
+    <div id="plain" class="ce" contenteditable="true"></div>
+    <p id="quill-label">Why do you want to join us? (rich editor)</p>
+    <div id="quill"></div>
+    <script src="/vendor/quill.js"></script>
+    <script>
+      window.quill = new Quill('#quill', { theme: 'snow' });
+    </script>
+  </body>
+</html>
