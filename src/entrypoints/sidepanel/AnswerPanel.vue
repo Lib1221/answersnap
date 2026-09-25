@@ -154,7 +154,7 @@ async function copy() {
       data-testid="needs-profile"
     >
       <p>Add your resume so answers have something to draw from.</p>
-      <button class="btn btn-primary" type="button" @click="emit('openSettings', 'profile')">
+      <button class="btn btn-primary" type="button" @click="emit('openSettings', 'sources')">
         Add resume
       </button>
     </div>

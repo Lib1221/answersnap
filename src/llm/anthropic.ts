@@ -75,6 +75,13 @@ export function buildBody(req: AnswerRequest, opts: { stream: boolean }): Record
   return body;
 }
 
+function textOf(content: { type: string; text?: string }[] | undefined): string {
+  return (content ?? [])
+    .filter((b) => b.type === 'text')
+    .map((b) => b.text ?? '')
+    .join('');
+}
+
 async function errorFromResponse(res: Response): Promise<LlmError> {
   let message = `The AI service returned ${res.status}.`;
   let type = '';
@@ -190,41 +197,100 @@ export class AnthropicProvider implements LlmProvider {
     );
   }
 
+  private async post(body: Record<string, unknown>, signal?: AbortSignal) {
+    const res = await fetchOrThrow(`${this.baseUrl}/v1/messages`, {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(body),
+      signal,
+    });
+    if (!res.ok) throw await errorFromResponse(res);
+    return (await res.json()) as {
+      content?: { type: string; text?: string; input?: unknown }[];
+      stop_reason?: string;
+      usage?: WireUsage;
+    };
+  }
+
+  /**
+   * Not streamed. With a JSON schema, uses structured outputs (`output_config.format`); if the
+   * model rejects that with a 400, retries once with tool use (spec 10.3). Forced tool_choice
+   * is itself a 400 on some models, which get `auto` plus an instruction instead.
+   */
   async complete(req: CompleteRequest, signal?: AbortSignal): Promise<CompleteResult> {
     return withRetries(
       async () => {
         const body = buildBody(req, { stream: false });
-        if (req.jsonSchema) {
-          body.output_config = {
-            ...(body.output_config as object | undefined),
-            format: { type: 'json_schema', schema: req.jsonSchema },
+        if (!req.jsonSchema) {
+          const json = await this.post(body, signal);
+          return {
+            text: textOf(json.content),
+            stopReason: json.stop_reason ?? 'unknown',
+            usage: toUsage(json.usage),
           };
         }
-        const res = await fetchOrThrow(`${this.baseUrl}/v1/messages`, {
-          method: 'POST',
-          headers: this.headers(),
-          body: JSON.stringify(body),
-          signal,
-        });
-        if (!res.ok) throw await errorFromResponse(res);
-        const json = (await res.json()) as {
-          content?: { type: string; text?: string }[];
-          stop_reason?: string;
-          usage?: WireUsage;
-        };
-        const text = (json.content ?? [])
-          .filter((b) => b.type === 'text')
-          .map((b) => b.text ?? '')
-          .join('');
-        return {
-          text,
-          json: req.jsonSchema ? JSON.parse(text) : undefined,
-          stopReason: json.stop_reason ?? 'unknown',
-          usage: toUsage(json.usage),
-        };
+        try {
+          const json = await this.post(
+            {
+              ...body,
+              output_config: {
+                ...(body.output_config as object | undefined),
+                format: { type: 'json_schema', schema: req.jsonSchema },
+              },
+            },
+            signal,
+          );
+          const text = textOf(json.content);
+          return {
+            text,
+            json: JSON.parse(text),
+            stopReason: json.stop_reason ?? 'unknown',
+            usage: toUsage(json.usage),
+          };
+        } catch (err) {
+          if (!(err instanceof LlmError) || err.kind !== 'bad_request') throw err;
+          return this.completeWithTool(req, body, signal);
+        }
       },
       { signal },
     );
+  }
+
+  private async completeWithTool(
+    req: CompleteRequest,
+    body: Record<string, unknown>,
+    signal?: AbortSignal,
+  ): Promise<CompleteResult> {
+    const name = req.schemaName ?? 'save_result';
+    const forced = !quirksFor(req.model).noForcedToolChoice;
+    const system = body.system as { type: 'text'; text: string }[];
+    const json = await this.post(
+      {
+        ...body,
+        system: forced
+          ? system
+          : [...system, { type: 'text', text: `Call the ${name} tool with the result.` }],
+        tools: [
+          {
+            name,
+            description: 'Save the extracted result.',
+            input_schema: req.jsonSchema,
+            strict: true,
+          },
+        ],
+        tool_choice: forced ? { type: 'tool', name } : { type: 'auto' },
+      },
+      signal,
+    );
+    const call = json.content?.find((b) => b.type === 'tool_use');
+    if (!call)
+      throw new LlmError('bad_request', 'The model did not return structured data. Try again.');
+    return {
+      text: JSON.stringify(call.input),
+      json: call.input,
+      stopReason: json.stop_reason ?? 'unknown',
+      usage: toUsage(json.usage),
+    };
   }
 
   /** max_tokens 0 writes the cache and returns immediately (can't be streamed). */

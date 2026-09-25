@@ -2,7 +2,8 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { BRAND } from '@/config/brand';
 import { hasCandidateData } from '@/kb/contextBuilder';
-import { getApiKey, getSettings, getSources } from '@/storage/items';
+import { loadCandidateData } from '@/kb/candidate';
+import { getApiKey, getSettings } from '@/storage/items';
 import type { CaptureErrorCode, FieldInfo } from '@/storage/schema';
 import CropThumb from '@/ui/CropThumb.vue';
 import AnswerPanel from './AnswerPanel.vue';
@@ -26,7 +27,7 @@ const readiness = ref<'ready' | 'needs-key' | 'needs-profile' | 'unknown'>('unkn
 async function checkReadiness() {
   const settings = await getSettings();
   if (!(await getApiKey(settings.provider))) readiness.value = 'needs-key';
-  else if (!hasCandidateData({ sources: await getSources() })) readiness.value = 'needs-profile';
+  else if (!hasCandidateData(await loadCandidateData())) readiness.value = 'needs-profile';
   else readiness.value = 'ready';
 }
 
@@ -103,7 +104,7 @@ function openSettings(section?: string) {
         </template>
         <template v-else-if="readiness === 'needs-profile'">
           <p>Add your resume so answers have something to draw from.</p>
-          <button class="btn btn-primary" type="button" @click="openSettings('profile')">
+          <button class="btn btn-primary" type="button" @click="openSettings('sources')">
             Add resume
           </button>
         </template>

@@ -5,7 +5,8 @@ import { countWords, parseLimits, type Limits } from '@/llm/limits';
 import { createProvider } from '@/llm/provider';
 import { TagParser, type ParsedAnswer } from '@/llm/tagParser';
 import { EMPTY_USAGE, type AnswerRequest, type ContentPart, type Usage } from '@/llm/types';
-import { getApiKey, getSettings, getSources } from '@/storage/items';
+import { loadCandidateData } from '@/kb/candidate';
+import { getApiKey, getSettings } from '@/storage/items';
 import type { PendingCapture, Settings } from '@/storage/schema';
 
 export type AnswerPhase =
@@ -47,9 +48,10 @@ export function errorMessage(err: LlmError, settings: Settings | null): string {
     case 'auth':
       return 'The API key was rejected. Check it in Settings.';
     case 'rate_limit':
-      return settings?.provider === 'gemini'
-        ? "You've hit Gemini's rate limit. Wait a minute and try again."
-        : 'Rate limited by the API. Wait a minute and try again.';
+      if (settings?.provider === 'gemini' && /free_tier/i.test(err.message)) {
+        return "Gemini's free tier allows only a few answers a minute. Wait a minute and try again.";
+      }
+      return 'Rate limited by the API. Wait a minute and try again.';
     case 'overloaded':
     case 'server':
       return 'The AI service is busy. Try again in a moment.';
@@ -103,7 +105,7 @@ export function useAnswer() {
       phase.value = 'needs-key';
       return;
     }
-    const data = { sources: await getSources() };
+    const data = await loadCandidateData();
     if (!hasCandidateData(data)) {
       phase.value = 'needs-profile';
       return;

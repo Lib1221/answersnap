@@ -163,7 +163,9 @@ export class GeminiProvider implements LlmProvider {
       .filter(
         (m) =>
           m.id.startsWith('gemini-') &&
-          !/(tts|image|live|embedding|transcribe|robotics|computer-use)/.test(m.id),
+          !/(tts|image|live|embedding|transcribe|robotics|computer-use|omni|customtools)/.test(
+            m.id,
+          ),
       );
   }
 
@@ -216,28 +218,61 @@ export class GeminiProvider implements LlmProvider {
     );
   }
 
+  private async generate(body: Record<string, unknown>, model: string, signal?: AbortSignal) {
+    const res = await fetchOrThrow(this.url(model, 'generateContent'), {
+      method: 'POST',
+      headers: this.headers(),
+      body: JSON.stringify(body),
+      signal,
+    });
+    if (!res.ok) throw await errorFromResponse(res);
+    const json = (await res.json()) as Chunk;
+    const candidate = json.candidates?.[0];
+    return {
+      text: (candidate?.content?.parts ?? [])
+        .filter((p) => !p.thought)
+        .map((p) => p.text ?? '')
+        .join(''),
+      stopReason: STOP_REASONS[candidate?.finishReason ?? ''] ?? 'unknown',
+      usage: toUsage(json.usageMetadata),
+    };
+  }
+
+  /**
+   * Not streamed. With a JSON schema, uses `responseJsonSchema`; if that's rejected with a 400,
+   * retries once in plain JSON mode with the schema in the system instruction.
+   */
   async complete(req: CompleteRequest, signal?: AbortSignal): Promise<CompleteResult> {
     return withRetries(
       async () => {
-        const res = await fetchOrThrow(this.url(req.model, 'generateContent'), {
-          method: 'POST',
-          headers: this.headers(),
-          body: JSON.stringify(buildGeminiBody(req)),
-          signal,
-        });
-        if (!res.ok) throw await errorFromResponse(res);
-        const json = (await res.json()) as Chunk;
-        const candidate = json.candidates?.[0];
-        const text = (candidate?.content?.parts ?? [])
-          .filter((p) => !p.thought)
-          .map((p) => p.text ?? '')
-          .join('');
-        return {
-          text,
-          json: req.jsonSchema ? JSON.parse(text) : undefined,
-          stopReason: STOP_REASONS[candidate?.finishReason ?? ''] ?? 'unknown',
-          usage: toUsage(json.usageMetadata),
-        };
+        const body = buildGeminiBody(req);
+        if (!req.jsonSchema) return this.generate(body, req.model, signal);
+        let result;
+        try {
+          result = await this.generate(body, req.model, signal);
+        } catch (err) {
+          if (!(err instanceof LlmError) || err.kind !== 'bad_request') throw err;
+          const config = { ...(body.generationConfig as Record<string, unknown>) };
+          delete config.responseJsonSchema;
+          const system = body.systemInstruction as { parts: { text: string }[] };
+          result = await this.generate(
+            {
+              ...body,
+              systemInstruction: {
+                parts: [
+                  ...system.parts,
+                  {
+                    text: `Reply with JSON matching this schema:\n${JSON.stringify(req.jsonSchema)}`,
+                  },
+                ],
+              },
+              generationConfig: config,
+            },
+            req.model,
+            signal,
+          );
+        }
+        return { ...result, json: JSON.parse(result.text) };
       },
       { signal },
     );

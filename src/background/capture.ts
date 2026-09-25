@@ -4,9 +4,16 @@ import {
   captureStatusItem,
   getSettings,
   pendingCaptureItem,
+  pendingImportItem,
   readCaptureStatus,
 } from '@/storage/items';
-import type { CaptureErrorCode, CaptureStatus, PendingCapture, SnipMode } from '@/storage/schema';
+import type {
+  CaptureErrorCode,
+  CaptureStatus,
+  PendingCapture,
+  PendingImport,
+  SnipMode,
+} from '@/storage/schema';
 import { cropCapture } from './crop';
 import { classifyInjectError, ensureCaptureScript, isRestrictedUrl } from './inject';
 
@@ -34,6 +41,9 @@ export async function startSnip(target: SnipTarget, mode: SnipMode): Promise<Rep
   };
 
   if (isRestrictedUrl(target.url)) return fail('RESTRICTED_PAGE');
+  // Import snips start from the options page, so bring the site's tab to the front.
+  if (mode === 'import')
+    await browser.tabs.update(target.tabId, { active: true }).catch(() => undefined);
   await setStatus({ ...base, state: 'selecting' });
   try {
     await ensureCaptureScript(target.tabId);
@@ -90,11 +100,15 @@ export async function handleRegionSelected(
 
   await setStatus({ ...base, state: 'capturing' });
   const opts = await getSettings();
+  // Imports are always read from the image; the screenshot setting covers answer requests.
+  const wantImage = opts.sendScreenshot || mode === 'import';
   let image: PendingCapture['image'];
-  if (opts.sendScreenshot) {
+  if (wantImage) {
     try {
       const shot = await captureVisibleTab(windowId);
-      image = await cropCapture(shot, msg.rect, msg.viewport, { pad: opts.contextPadding });
+      // Context padding helps the model find a question; imports and job posts need only the region.
+      const pad = opts.contextPadding && (mode === 'question' || mode === 'field');
+      image = await cropCapture(shot, msg.rect, msg.viewport, { pad });
     } catch (err) {
       console.warn('[AnswerSnap] capture failed', err);
       await setStatus({ ...base, state: 'error', code: 'CAPTURE_FAILED' });
@@ -123,4 +137,25 @@ export async function handleRegionSelected(
 export async function handleSelectionCancelled(msg: Message<'SELECTION_CANCELLED'>): Promise<void> {
   const status = await readCaptureStatus();
   if (status?.captureId === msg.captureId) await setStatus({ ...status, state: 'cancelled' });
+}
+
+/** "Import this page into AnswerSnap": read the tab's text and open options to review it. */
+export async function importPageFromTab(tab: Browser.tabs.Tab | undefined): Promise<void> {
+  if (!tab?.id) return;
+  const base = { url: tab.url ?? '', title: tab.title ?? '', tabId: tab.id, createdAt: Date.now() };
+  let pending: PendingImport = { ...base, text: '', failed: true };
+  if (!isRestrictedUrl(tab.url)) {
+    try {
+      await ensureCaptureScript(tab.id);
+      const read = await sendToTab<'READ_PAGE_TEXT'>(tab.id, {
+        type: 'READ_PAGE_TEXT',
+        scope: 'page',
+      });
+      pending = { ...base, url: read.url, title: read.title, text: read.text, failed: false };
+    } catch (err) {
+      console.warn('[AnswerSnap] page import failed', err);
+    }
+  }
+  await pendingImportItem.setValue(pending);
+  await browser.tabs.create({ url: browser.runtime.getURL('/options.html#sources') });
 }

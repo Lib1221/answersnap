@@ -155,3 +155,14 @@ export const KnowledgeSourceSchema = z.object({
 });
 export type KnowledgeSource = z.infer<typeof KnowledgeSourceSchema>;
 export const SourcesSchema = z.array(KnowledgeSourceSchema);
+
+export const PendingImportSchema = z.object({
+  url: z.string(),
+  title: z.string(),
+  text: z.string(),
+  tabId: z.number(),
+  createdAt: z.number(),
+  /** Chrome refused or the page didn't answer; empty text alone can mean a canvas-only page. */
+  failed: z.boolean().default(false),
+});
+export type PendingImport = z.infer<typeof PendingImportSchema>;

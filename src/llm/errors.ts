@@ -29,6 +29,7 @@ export function redactKeys(text: string): string {
   return text
     .replace(/sk-ant-[A-Za-z0-9_-]+/g, 'sk-ant-[redacted]')
     .replace(/AIza[0-9A-Za-z_-]{20,}/g, 'AIza[redacted]')
+    .replace(/\bAQ\.[0-9A-Za-z_-]{20,}/g, 'AQ.[redacted]')
     .replace(/([?&]key=)[^&\s]+/g, '$1[redacted]');
 }
 

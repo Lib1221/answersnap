@@ -51,7 +51,7 @@ evals/            questions.json, run.ts    docs/  PRIVACY.md, STORE_LISTING.md
 - Build in milestone order (spec 17). Commit after each milestone with conventional commits.
 - Ask Liben before: new permission/host permission, new runtime dependency not in spec 5, sending
   data anywhere new, changing the default model.
-- Never commit real personal data. Fixtures use Jamie Park.
+- Never commit real personal data (or API keys, even partial). Fixtures use Jamie Park.
 - Use WXT's `browser` global, not `chrome`. Service worker listeners register synchronously at top level.
 - `chrome.sidePanel.open()` must be called before any `await` in a gesture handler.
 - Capture script: no Vue, no network, no storage, under 40 KB minified.

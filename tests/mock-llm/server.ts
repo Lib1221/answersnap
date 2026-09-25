@@ -8,7 +8,19 @@
 //   slow-key        streams one word every 300 ms (for Stop)
 // GET /__log returns logged bodies; POST /__reset clears the log and counters.
 
+import { readFileSync } from 'node:fs';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { join } from 'node:path';
+
+const PROFILE = readFileSync(join(import.meta.dirname, '../fixtures/profile.json'), 'utf8');
+const TRANSCRIPT = 'Jamie Park\nBackend Engineer, Lisbon\nPayments APIs with Django at Ledgerly';
+
+/** Non-streamed replies: structured profile JSON, tool use, or an image transcription. */
+function completeText(raw: string): string {
+  if (/Transcribe all readable text/.test(raw)) return TRANSCRIPT;
+  if (/Extract the candidate's profile/.test(raw)) return PROFILE;
+  return canned(raw);
+}
 
 const PORT = Number(process.env.MOCK_LLM_PORT ?? 4620);
 const log: unknown[] = [];
@@ -115,6 +127,16 @@ function scenario(res: ServerResponse, key: string, gemini: boolean): boolean {
   return false;
 }
 
+function nonStreamContent(body: { max_tokens?: number; tools?: { name: string }[] }, raw: string) {
+  if (body.max_tokens === 0) return [];
+  if (body.tools?.length) {
+    return [
+      { type: 'tool_use', id: 'toolu_mock', name: body.tools[0]!.name, input: JSON.parse(PROFILE) },
+    ];
+  }
+  return [{ type: 'text', text: completeText(raw) }];
+}
+
 async function anthropicMessages(req: IncomingMessage, res: ServerResponse) {
   const raw = await readBody(req);
   const body = JSON.parse(raw) as { stream?: boolean; max_tokens?: number };
@@ -133,7 +155,7 @@ async function anthropicMessages(req: IncomingMessage, res: ServerResponse) {
       id: 'msg_mock',
       type: 'message',
       role: 'assistant',
-      content: body.max_tokens === 0 ? [] : [{ type: 'text', text: canned(raw) }],
+      content: nonStreamContent(body, raw),
       stop_reason: body.max_tokens === 0 ? 'max_tokens' : 'end_turn',
       usage: { ...usage, cache_creation_input_tokens: 1800, cache_read_input_tokens: 0 },
     });
@@ -239,6 +261,20 @@ createServer(async (req, res) => {
     }
     if (/^\/v1beta\/models\/[^/]+:streamGenerateContent$/.test(url.pathname))
       return await geminiStream(req, res);
+    if (/^\/v1beta\/models\/[^/]+:generateContent$/.test(url.pathname)) {
+      const raw = await readBody(req);
+      log.push(JSON.parse(raw));
+      if (scenario(res, String(req.headers['x-goog-api-key'] ?? ''), true)) return;
+      return json(res, 200, {
+        candidates: [
+          {
+            content: { role: 'model', parts: [{ text: completeText(raw) }] },
+            finishReason: 'STOP',
+          },
+        ],
+        usageMetadata: { promptTokenCount: 1000, candidatesTokenCount: 200 },
+      });
+    }
     json(res, 404, { error: 'not found' });
   } catch (err) {
     json(res, 500, { error: String(err) });

@@ -54,13 +54,21 @@ export interface ModelQuirks {
   minMaxTokens?: number;
   /** Minimum cacheable prefix in tokens; below it caching silently does nothing. */
   minCacheTokens?: number;
+  /** Forced tool_choice ("tool"/"any") returns a 400 on these models; use "auto" + an instruction. */
+  noForcedToolChoice?: boolean;
 }
 
 export function quirksFor(model: string): ModelQuirks {
-  if (model.startsWith('claude-sonnet-5'))
+  if (model.startsWith('claude-sonnet-5')) {
     return { thinking: { type: 'disabled' }, minCacheTokens: 1024 };
+  }
+  if (model.startsWith('claude-opus-5-5')) {
+    return { effort: 'low', minMaxTokens: 4096, minCacheTokens: 512, noForcedToolChoice: true };
+  }
   if (model.startsWith('claude-opus-5'))
     return { effort: 'low', minMaxTokens: 4096, minCacheTokens: 512 };
+  if (model.startsWith('claude-fable-5-1'))
+    return { noForcedToolChoice: true, minCacheTokens: 512 };
   if (model.startsWith('claude-haiku-4-5')) return { minCacheTokens: 4096 };
   if (model.startsWith('gemini-')) return { geminiThinkingLevel: 'low', minMaxTokens: 4096 };
   return {};

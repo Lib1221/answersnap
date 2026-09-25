@@ -44,7 +44,7 @@ export function useCapture() {
   });
 
   async function consume() {
-    const next = await takePendingCapture();
+    const next = await takePendingCapture(['question', 'field', 'job']);
     if (next) capture.value = next;
   }
 

@@ -4,6 +4,7 @@ import type { PageInfo, SnipMode } from '@/storage/schema';
 import { findCandidates } from './fields';
 import { createVisibilityChecker } from './hiddenText';
 import { mountOverlay, type OverlayHandle } from './overlay';
+import { readPageText } from './pageImport';
 import { extractVisibleText } from './visibleText';
 
 let overlay: OverlayHandle | null = null;
@@ -87,6 +88,7 @@ export function startCaptureRuntime(): void {
       beginSelection(msg.captureId, msg.mode);
       return { ok: true };
     },
+    READ_PAGE_TEXT: (msg) => readPageText(msg.scope),
     CANCEL_SELECTION: () => {
       const id = currentCaptureId;
       teardown();

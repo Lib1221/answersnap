@@ -1,0 +1,88 @@
+{
+  "fullName": "Jamie Park",
+  "headline": "Backend Engineer",
+  "location": "Lisbon, Portugal (UTC+0)",
+  "email": "jamie.park@example.com",
+  "phone": null,
+  "links": [
+    { "label": "GitHub", "url": "https://github.com/jamiepark-example" },
+    { "label": "Shift Planner", "url": "https://github.com/jamiepark-example/shift-planner" }
+  ],
+  "summary": "Backend engineer with 5 years of professional Python and Django experience building payment and data APIs.",
+  "skills": [
+    { "name": "Python", "years": 5, "evidence": "Summary: 5 years of professional Python" },
+    { "name": "Django", "years": 5, "evidence": "Summary; Ledgerly and Shift Planner" },
+    {
+      "name": "Django REST Framework",
+      "years": null,
+      "evidence": "Ledgerly: payment reconciliation API"
+    },
+    { "name": "PostgreSQL", "years": null, "evidence": "Ledgerly and Brightpath tech lists" },
+    { "name": "Celery", "years": null, "evidence": "Ledgerly: report generation workers" },
+    { "name": "Vue 3", "years": null, "evidence": "Shift Planner project" },
+    { "name": "pandas", "years": null, "evidence": "Brightpath ETL pipelines" },
+    { "name": "Flask", "years": null, "evidence": "Brightpath microservices" }
+  ],
+  "experience": [
+    {
+      "company": "Ledgerly",
+      "title": "Senior Backend Engineer",
+      "start": "2022-03",
+      "end": "present",
+      "location": "Remote",
+      "bullets": [
+        "Built a Django REST Framework API that handles 2 million payment reconciliation requests per day.",
+        "Cut p95 latency of the invoicing service from 900 ms to 240 ms by moving report generation to Celery workers."
+      ],
+      "tech": ["Python", "Django", "Django REST Framework", "PostgreSQL", "Celery", "Redis", "AWS"]
+    },
+    {
+      "company": "Brightpath Analytics",
+      "title": "Backend Engineer",
+      "start": "2021-09",
+      "end": "2022-02",
+      "location": "Lisbon",
+      "bullets": [
+        "Wrote ETL pipelines in Python and pandas that feed the customer dashboards.",
+        "Maintained Flask microservices for data export."
+      ],
+      "tech": ["Python", "Flask", "pandas", "PostgreSQL", "Docker"]
+    },
+    {
+      "company": "Data Science for Everyone",
+      "title": "Volunteer Mentor",
+      "start": "2021",
+      "end": "present",
+      "location": null,
+      "bullets": [
+        "Mentor 4 learners per cohort through a 12-week intro to Python and data analysis."
+      ],
+      "tech": []
+    }
+  ],
+  "projects": [
+    {
+      "name": "Shift Planner",
+      "url": "https://github.com/jamiepark-example/shift-planner",
+      "description": "Vue 3 and Django app that schedules volunteer shifts for a food bank.",
+      "tech": ["Vue 3", "Django"],
+      "highlights": ["300 weekly users."]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Porto",
+      "degree": "BSc",
+      "field": "Computer Science",
+      "start": "2015",
+      "end": "2019"
+    }
+  ],
+  "certifications": [],
+  "languages": [
+    { "language": "English", "level": "fluent" },
+    { "language": "Portuguese", "level": "native" }
+  ],
+  "achievements": [],
+  "conflicts": []
+}

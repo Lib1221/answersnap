@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Jamie Park 3D</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #0b0d12;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="scene" width="900" height="500"></canvas>
+    <script>
+      // Stands in for a WebGL site: the text exists only as pixels.
+      const ctx = document.getElementById('scene').getContext('2d');
+      ctx.fillStyle = '#0b0d12';
+      ctx.fillRect(0, 0, 900, 500);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 44px sans-serif';
+      ctx.fillText('Jamie Park', 60, 120);
+      ctx.font = '28px sans-serif';
+      ctx.fillText('Backend Engineer, Lisbon', 60, 180);
+      ctx.fillText('Payments APIs with Django at Ledgerly', 60, 230);
+    </script>
+  </body>
+</html>

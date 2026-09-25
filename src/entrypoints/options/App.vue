@@ -2,12 +2,16 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import { BRAND } from '@/config/brand';
 import { corruptNoticeItem } from '@/storage/items';
-import ProfileTextSection from './ProfileTextSection.vue';
+import ProfileSection from './ProfileSection.vue';
 import ProviderSection from './ProviderSection.vue';
+import SourcesSection from './SourcesSection.vue';
+import StandardAnswersSection from './StandardAnswersSection.vue';
 
 const SECTIONS = [
   { id: 'provider', title: 'AI provider' },
+  { id: 'sources', title: 'Sources' },
   { id: 'profile', title: 'Profile' },
+  { id: 'standard-answers', title: 'Standard answers' },
 ] as const;
 type SectionId = (typeof SECTIONS)[number]['id'];
 
@@ -59,7 +63,9 @@ async function dismissCorrupt() {
         <button class="btn" type="button" @click="dismissCorrupt">Dismiss</button>
       </div>
       <ProviderSection v-if="current === 'provider'" />
-      <ProfileTextSection v-else-if="current === 'profile'" />
+      <SourcesSection v-else-if="current === 'sources'" />
+      <ProfileSection v-else-if="current === 'profile'" />
+      <StandardAnswersSection v-else-if="current === 'standard-answers'" />
     </main>
   </div>
 </template>

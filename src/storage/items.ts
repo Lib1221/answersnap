@@ -1,17 +1,26 @@
 import { storage } from 'wxt/utils/storage';
 import type { z } from 'zod';
 import { defaultSettings } from '@/config/defaults';
+import {
+  ProfileRecordSchema,
+  StandardAnswersSchema,
+  type ProfileRecord,
+  type StandardAnswers,
+} from '@/kb/profileSchema';
 import { migrateSettingsV0, type SettingsV0 } from './migrations';
 import {
   CaptureStatusSchema,
   PendingCaptureSchema,
+  PendingImportSchema,
   SettingsSchema,
   SourcesSchema,
   type CaptureStatus,
   type KnowledgeSource,
   type PendingCapture,
+  type PendingImport,
   type Provider,
   type Settings,
+  type SnipMode,
 } from './schema';
 
 // storage.session is only readable by extension pages and the SW (default access level).
@@ -34,12 +43,24 @@ export async function readCaptureStatus(): Promise<CaptureStatus | null> {
   return parseOrNull(CaptureStatusSchema, await captureStatusItem.getValue());
 }
 
-/** Reads and deletes the pending capture (it must not outlive one read, hard rule 3). */
-export async function takePendingCapture(): Promise<PendingCapture | null> {
+/**
+ * Reads and deletes the pending capture (it must not outlive one read, hard rule 3). Each
+ * consumer takes only its own modes: the side panel takes questions, options takes imports.
+ */
+export async function takePendingCapture(modes: SnipMode[]): Promise<PendingCapture | null> {
   const raw = await pendingCaptureItem.getValue();
   if (raw == null) return null;
+  const mode = (raw as { mode?: unknown }).mode;
+  if (!modes.includes(mode as SnipMode)) return null;
   await pendingCaptureItem.removeValue();
   return parseOrNull(PendingCaptureSchema, raw);
+}
+
+/** Text read from an open tab by "Import this page into AnswerSnap", waiting for review. */
+export const pendingImportItem = storage.defineItem<PendingImport>('session:pendingImport');
+
+export async function readPendingImport(): Promise<PendingImport | null> {
+  return parseOrNull(PendingImportSchema, await pendingImportItem.getValue());
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -136,4 +157,39 @@ export async function getSources(): Promise<KnowledgeSource[]> {
 
 export async function saveSources(sources: KnowledgeSource[]): Promise<void> {
   await sourcesItem.setValue(SourcesSchema.parse(sources));
+}
+
+// ---------------------------------------------------------------------------------------------
+// Profile (spec 10.3) and standard answers (spec 10.4).
+
+export const profileItem = storage.defineItem<unknown>('local:profile');
+
+export async function getProfile(): Promise<ProfileRecord | null> {
+  const raw = await profileItem.getValue();
+  if (raw == null) return null;
+  const result = ProfileRecordSchema.safeParse(raw);
+  if (result.success) return result.data;
+  await backupCorrupt('profile', raw);
+  await profileItem.removeValue();
+  return null;
+}
+
+export async function saveProfile(record: ProfileRecord): Promise<void> {
+  await profileItem.setValue(ProfileRecordSchema.parse(record));
+}
+
+export const standardAnswersItem = storage.defineItem<unknown>('local:standardAnswers');
+
+export async function getStandardAnswers(): Promise<StandardAnswers> {
+  const raw = await standardAnswersItem.getValue();
+  const result = StandardAnswersSchema.safeParse(raw ?? {});
+  if (result.success) return result.data;
+  await backupCorrupt('standardAnswers', raw);
+  const fresh = StandardAnswersSchema.parse({});
+  await standardAnswersItem.setValue(fresh);
+  return fresh;
+}
+
+export async function saveStandardAnswers(sa: StandardAnswers): Promise<void> {
+  await standardAnswersItem.setValue(StandardAnswersSchema.parse(sa));
 }

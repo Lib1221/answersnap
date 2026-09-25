@@ -1,5 +1,10 @@
 import { createRouter } from '@/messaging/send';
-import { handleRegionSelected, handleSelectionCancelled, startSnip } from './capture';
+import {
+  handleRegionSelected,
+  handleSelectionCancelled,
+  importPageFromTab,
+  startSnip,
+} from './capture';
 
 export function registerRouter(): void {
   createRouter({
@@ -20,6 +25,10 @@ export function registerRouter(): void {
               { tabId: msg.tabId, windowId: tab.windowId, url: tab.url },
               msg.mode ?? 'question',
             );
+          },
+          E2E_IMPORT_PAGE: async (msg) => {
+            await importPageFromTab(await browser.tabs.get(msg.tabId));
+            return { ok: true as const };
           },
         }
       : {}),

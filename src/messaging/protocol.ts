@@ -35,10 +35,19 @@ export interface MessageMap {
     msg: { type: 'SELECTION_CANCELLED'; captureId: string };
     reply: void;
   };
+  READ_PAGE_TEXT: {
+    msg: { type: 'READ_PAGE_TEXT'; scope: 'selection' | 'page' };
+    reply: { title: string; text: string; url: string };
+  };
   /** Test-only, compiled out of production (spec 16.2). */
   E2E_START_SNIP: {
     msg: { type: 'E2E_START_SNIP'; tabId: number; mode?: SnipMode };
     reply: { ok: true } | { ok: false; error: StartSnipError };
+  };
+  /** Test-only: run the "Import this page" menu action on a tab. */
+  E2E_IMPORT_PAGE: {
+    msg: { type: 'E2E_IMPORT_PAGE'; tabId: number };
+    reply: { ok: true };
   };
 }
 

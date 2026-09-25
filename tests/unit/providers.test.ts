@@ -83,14 +83,12 @@ describe('AnthropicProvider', () => {
   });
 
   it('stops on 401 without retrying', async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValue(
-        json(401, {
-          type: 'error',
-          error: { type: 'authentication_error', message: 'invalid x-api-key' },
-        }),
-      );
+    const fetchMock = vi.fn().mockResolvedValue(
+      json(401, {
+        type: 'error',
+        error: { type: 'authentication_error', message: 'invalid x-api-key' },
+      }),
+    );
     vi.stubGlobal('fetch', fetchMock);
     await expect(run(new AnthropicProvider('bad'))).rejects.toMatchObject({ kind: 'auth' });
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -177,15 +175,13 @@ describe('AnthropicProvider', () => {
   });
 
   it('pre-warms with max_tokens 0 and no stream', async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValue(
-        json(200, {
-          content: [],
-          stop_reason: 'max_tokens',
-          usage: { input_tokens: 5, cache_creation_input_tokens: 2000, output_tokens: 0 },
-        }),
-      );
+    const fetchMock = vi.fn().mockResolvedValue(
+      json(200, {
+        content: [],
+        stop_reason: 'max_tokens',
+        usage: { input_tokens: 5, cache_creation_input_tokens: 2000, output_tokens: 0 },
+      }),
+    );
     vi.stubGlobal('fetch', fetchMock);
     const usage = await new AnthropicProvider('k').prewarm(req.system, 'claude-sonnet-5');
     const body = JSON.parse(fetchMock.mock.calls[0]![1].body);
@@ -195,6 +191,9 @@ describe('AnthropicProvider', () => {
   });
 
   it('never puts the key in error messages', () => {
+    expect(new LlmError('bad_request', 'key AQ.FAKEfakeFAKEfakeFAKEfake12 is bad').message).toBe(
+      'key AQ.[redacted] is bad',
+    );
     expect(new LlmError('bad_request', 'bad key sk-ant-abc123XYZ').message).toBe(
       'bad key sk-ant-[redacted]',
     );
