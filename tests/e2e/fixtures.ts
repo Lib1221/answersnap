@@ -121,7 +121,7 @@ export async function seed(
     async ({ provider, key, profile, resume, prewarm, fillGaps }) => {
       const models: Record<string, [string, string]> = {
         anthropic: ['claude-sonnet-5', 'claude-haiku-4-5-20251001'],
-        gemini: ['gemini-3.5-flash', 'gemini-3.5-flash-lite'],
+        gemini: ['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite'],
       };
       const data: Record<string, unknown> = {
         settings: {

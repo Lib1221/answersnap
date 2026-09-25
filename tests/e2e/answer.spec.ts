@@ -112,7 +112,7 @@ test('Gemini streams an answer too', async ({ context, panel }) => {
   await snipLabel(panel, page, PYTHON);
 
   await expect(panel.getByTestId('answer')).toHaveValue('5');
-  await expect(panel.getByTestId('usage')).toContainText('Gemini 3.5 Flash.');
+  await expect(panel.getByTestId('usage')).toContainText('Gemini 3.1 Flash-Lite.');
   await expect(panel.getByTestId('usage')).toContainText('Free tier');
   const [body] = await mockLog();
   expect(body).toMatchObject({ generationConfig: { thinkingConfig: { thinkingLevel: 'low' } } });

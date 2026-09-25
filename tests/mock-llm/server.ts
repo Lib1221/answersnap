@@ -292,9 +292,9 @@ async function anthropicMessages(req: IncomingMessage, res: ServerResponse) {
   res.end();
 }
 
-/** quota-key: gemini-3.5-flash is out of its daily free quota, like Google's real error. */
+/** quota-key: gemini-3.1-flash-lite (the default) is out of its daily free quota, like Google's real error. */
 function quotaScenario(res: ServerResponse, key: string, model: string): boolean {
-  if (key !== 'quota-key' || model !== 'gemini-3.5-flash') return false;
+  if (key !== 'quota-key' || model !== 'gemini-3.1-flash-lite') return false;
   json(res, 429, {
     error: {
       code: 429,

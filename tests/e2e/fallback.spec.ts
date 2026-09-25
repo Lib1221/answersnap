@@ -19,24 +19,24 @@ test('Gemini falls back to the next model when one hits its daily free limit', a
 
   await expect(panel.getByTestId('answer')).toHaveValue('5');
   await expect(panel.getByTestId('fallback-note')).toHaveText(
-    'Gemini 3.5 Flash reached its daily free limit, so this answer uses Gemini 3.6 Flash.',
+    'Gemini 3.1 Flash-Lite reached its daily free limit, so this answer uses Gemini 3.5 Flash.',
   );
-  await expect(panel.getByTestId('usage')).toContainText('Gemini 3.6 Flash.');
+  await expect(panel.getByTestId('usage')).toContainText('Gemini 3.5 Flash.');
   let models = await answerModels();
-  // One try on 3.5 Flash (no pointless retry on a daily quota), then 3.6 Flash.
-  expect(models).toEqual(['gemini-3.5-flash', 'gemini-3.6-flash']);
+  // One try on 3.1 Flash-Lite (no pointless retry on a daily quota), then 3.5 Flash.
+  expect(models).toEqual(['gemini-3.1-flash-lite', 'gemini-3.5-flash']);
 
   // The next question goes straight to the model that works.
   await snipLabel(panel, page, 'label[for="why-text"]');
   await expect(panel.getByTestId('answer')).toHaveValue(/Ledgerly/);
   models = await answerModels();
-  expect(models.slice(2)).toEqual(['gemini-3.6-flash']);
+  expect(models.slice(2)).toEqual(['gemini-3.5-flash']);
 
   // Settings show which model is resting.
   const options = await context.newPage();
   await options.goto(`chrome-extension://${extensionId}/options.html#provider`);
   const chain = options.getByTestId('fallback-chain');
-  await expect(chain.locator('li').first()).toContainText('Gemini 3.5 Flash');
+  await expect(chain.locator('li').first()).toContainText('Gemini 3.1 Flash-Lite');
   await expect(chain.locator('li').first()).toContainText(/Limit reached, back in/);
   await expect(chain.locator('li').nth(1)).toContainText('Ready');
 });
@@ -58,5 +58,5 @@ test('with fallback off, the limit message suggests switching', async ({
   await expect(panel.getByTestId('answer-error')).toContainText(
     "You've reached Gemini's free-tier limit for this model.",
   );
-  expect(await answerModels()).toEqual(['gemini-3.5-flash']);
+  expect(await answerModels()).toEqual(['gemini-3.1-flash-lite']);
 });
