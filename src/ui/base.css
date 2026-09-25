@@ -4,20 +4,28 @@
 
 @theme {
   --font-sans: 'Public Sans Variable', system-ui, sans-serif;
+  --color-surface: var(--surface);
   --color-paper: var(--paper);
   --color-canary: var(--canary);
+  --color-canary-edge: var(--canary-edge);
   --color-ink: var(--ink);
+  --color-ink-strong: var(--ink-strong);
+  --color-ink-soft: var(--ink-soft);
+  --color-on-ink: var(--on-ink);
   --color-carbon-pink: var(--carbon-pink);
   --color-carbon-pink-text: var(--carbon-pink-text);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-graphite: var(--graphite);
   --color-graphite-2: var(--graphite-2);
   --color-rule: var(--rule);
-  --radius-control: 6px;
+  --radius-control: 8px;
+  --radius-card: 12px;
 }
 
 html,
 body {
-  background: var(--paper);
+  background: var(--surface);
   color: var(--graphite);
   font-family: var(--font-sans);
   font-size: 14px;
@@ -42,15 +50,25 @@ body {
   .btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    min-height: 32px;
+    min-height: 34px;
     padding: 0 12px;
     border: 1px solid var(--rule);
     border-radius: var(--radius-control);
     background: var(--paper);
     color: var(--graphite);
+    font-size: 13.5px;
     font-weight: 500;
+    line-height: 1;
     cursor: pointer;
+    transition:
+      background-color 120ms,
+      border-color 120ms,
+      color 120ms;
+  }
+  .btn:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--ink) 35%, var(--rule));
   }
   .btn:disabled {
     opacity: 0.5;
@@ -59,18 +77,110 @@ body {
   .btn-primary {
     border-color: var(--ink);
     background: var(--ink);
-    color: var(--paper);
+    color: var(--on-ink);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--ink-strong);
+    border-color: var(--ink-strong);
   }
   .btn-quiet {
     border-color: transparent;
     background: transparent;
     color: var(--ink);
-    padding: 0 4px;
+    padding: 0 8px;
+  }
+  .btn-quiet:hover:not(:disabled) {
+    background: var(--ink-soft);
+    border-color: transparent;
+  }
+  .btn-icon {
+    min-height: 32px;
+    width: 32px;
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+    color: var(--graphite-2);
+  }
+  .btn-icon:hover:not(:disabled) {
+    background: var(--ink-soft);
+    color: var(--ink);
+    border-color: transparent;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 28px;
+    padding: 0 10px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--graphite);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 120ms,
+      border-color 120ms,
+      color 120ms;
+  }
+  .chip:hover:not(:disabled) {
+    border-color: var(--ink);
+    background: var(--ink-soft);
+    color: var(--ink);
+  }
+  .chip:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .card {
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+    background: var(--paper);
+    box-shadow: var(--shadow-sm);
+  }
+  .field-input {
+    width: 100%;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-control);
+    background: var(--paper);
+    color: var(--graphite);
+    padding: 7px 10px;
+  }
+  .field-input:focus {
+    border-color: var(--ink);
+    outline: 3px solid color-mix(in srgb, var(--ink) 22%, transparent);
+    outline-offset: 0;
+  }
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 6px;
+    border: 1px solid var(--rule);
+    border-bottom-width: 2px;
+    border-radius: 6px;
+    background: var(--paper);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--graphite);
+  }
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--graphite-2);
   }
   .notice {
-    padding: 8px 12px;
-    border-radius: var(--radius-control);
+    padding: 10px 12px;
+    border-radius: 10px;
     background: var(--carbon-pink);
     color: var(--carbon-pink-text);
+  }
+  .success {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--success-soft);
+    color: var(--success);
   }
 }

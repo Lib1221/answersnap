@@ -1,25 +1,46 @@
-/* Design tokens (spec 13.1). Carbonless form sets and ballpoint ink. */
+/*
+ * Design tokens (spec 13.1, refreshed): carbonless form sets and ballpoint ink, as a modern app.
+ * Surfaces sit on a soft background; cards are white with a hairline border.
+ */
 :root {
+  --surface: #f5f6fa;
   --paper: #ffffff;
   --canary: #fff6c9;
+  --canary-edge: #f1e3a0;
   --ink: #2447b8;
+  --ink-strong: #1b3793;
+  --ink-soft: #eef2ff;
+  --on-ink: #ffffff;
   --carbon-pink: #fbe3e6;
   --carbon-pink-text: #9e1f35;
+  --success: #1f7a4d;
+  --success-soft: #e5f4ec;
   --graphite: #23262b;
   --graphite-2: #5b616b;
-  --rule: #d7deea;
+  --rule: #dfe3ec;
+  --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.05), 0 1px 3px rgb(16 24 40 / 0.07);
+  --shadow-md: 0 4px 12px rgb(16 24 40 / 0.08), 0 1px 3px rgb(16 24 40 / 0.06);
   color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #15171b;
-    --canary: #3a3421;
+    --surface: #0f1115;
+    --paper: #181b21;
+    --canary: #332e1c;
+    --canary-edge: #4a4226;
     --ink: #8fa8ff;
+    --ink-strong: #aebfff;
+    --ink-soft: #1c2340;
+    --on-ink: #0f1115;
     --carbon-pink: #3b1e24;
     --carbon-pink-text: #ff9aa8;
+    --success: #6fd3a0;
+    --success-soft: #16301f;
     --graphite: #eceef2;
     --graphite-2: #a3a9b3;
-    --rule: #2c313a;
+    --rule: #2a2f38;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+    --shadow-md: 0 6px 16px rgb(0 0 0 / 0.4);
   }
 }

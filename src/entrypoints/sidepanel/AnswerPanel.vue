@@ -5,6 +5,7 @@ import { missingItemHash } from '@/kb/missing';
 import { cutAtLastSentence } from '@/llm/conversation';
 import { costLine, usageLine } from '@/llm/cost';
 import FactCheck from './FactCheck.vue';
+import Icon from '@/ui/AppIcon.vue';
 import type { FieldInfo } from '@/storage/schema';
 import type { useAnswer } from './useAnswer';
 import type { useInsert } from './useInsert';
@@ -90,7 +91,10 @@ const cacheOff = computed(() => {
 </script>
 
 <template>
-  <section class="flex flex-col gap-3 border-t border-rule pt-3" data-testid="answer-section">
+  <section class="card flex flex-col gap-3 p-3.5" data-testid="answer-section">
+    <p class="eyebrow flex items-center gap-1.5">
+      <Icon name="sparkle" :size="14" class="text-ink" /> Your answer
+    </p>
     <p
       v-if="s.fallbackNote.value"
       class="text-[13px] text-graphite-2"
@@ -99,7 +103,14 @@ const cacheOff = computed(() => {
     >
       {{ s.fallbackNote.value }}
     </p>
-    <p v-if="s.phase.value === 'drafting'" role="status">{{ s.retryNote.value || 'Drafting' }}</p>
+    <p
+      v-if="s.phase.value === 'drafting'"
+      role="status"
+      class="flex items-center gap-2 text-graphite-2"
+    >
+      <span class="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden="true" />
+      {{ s.retryNote.value || 'Drafting' }}
+    </p>
     <p v-else-if="s.retryNote.value" role="status" class="text-graphite-2">
       {{ s.retryNote.value }}
     </p>
@@ -110,7 +121,7 @@ const cacheOff = computed(() => {
         id="answer"
         v-model="s.answer.value"
         data-testid="answer"
-        class="min-h-32 w-full resize-y rounded-[6px] border border-rule bg-paper p-3 text-[15px] leading-[1.6]"
+        class="field-input min-h-36 resize-y p-3 text-[15px] leading-[1.6]"
         :readonly="streaming"
         rows="6"
       />
@@ -130,11 +141,11 @@ const cacheOff = computed(() => {
       >
         <li v-for="item in s.parsed.value.missing" :key="item">
           <button
-            class="rounded-[6px] bg-carbon-pink px-2 py-1 text-[13px] text-carbon-pink-text"
+            class="inline-flex items-center gap-1 rounded-full bg-carbon-pink px-2.5 py-1 text-[12.5px] font-medium text-carbon-pink-text"
             type="button"
             @click="emit('openSettings', missingItemHash(item))"
           >
-            {{ item }}
+            <Icon name="alert" :size="13" /> {{ item }}
           </button>
         </li>
       </ul>
@@ -144,7 +155,9 @@ const cacheOff = computed(() => {
       </p>
 
       <div class="flex flex-wrap items-center gap-2">
-        <button v-if="streaming" class="btn" type="button" @click="s.stop">Stop</button>
+        <button v-if="streaming" class="btn" type="button" @click="s.stop">
+          <Icon name="stop" /> Stop
+        </button>
         <template v-else>
           <span v-if="ins.fillable.value" class="inline-flex">
             <button
@@ -155,6 +168,7 @@ const cacheOff = computed(() => {
               title="Ctrl+Enter"
               @click="ins.insert('replace')"
             >
+              <Icon :name="ins.isChoice.value ? 'check' : 'insert'" />
               {{ ins.isChoice.value ? 'Select' : ins.hasExisting.value ? 'Replace' : 'Insert' }}
             </button>
             <button
@@ -185,14 +199,21 @@ const cacheOff = computed(() => {
             :disabled="!s.answer.value"
             @click="ins.copy"
           >
-            Copy
+            <Icon name="copy" /> Copy
           </button>
-          <button class="btn btn-quiet" type="button" @click="ins.saveToLibrary">Save</button>
-          <button class="btn btn-quiet" type="button" @click="s.retry">Regenerate</button>
+          <button class="btn btn-quiet" type="button" @click="ins.saveToLibrary">
+            <Icon name="bookmark" :size="15" /> Save
+          </button>
+          <button class="btn btn-quiet" type="button" @click="s.retry">
+            <Icon name="refresh" :size="15" /> Regenerate
+          </button>
         </template>
-        <span v-if="ins.toast.value" role="status" class="text-[13px] text-graphite-2">{{
-          ins.toast.value
-        }}</span>
+        <span
+          v-if="ins.toast.value"
+          role="status"
+          class="inline-flex items-center gap-1 text-[13px] font-medium text-success"
+          ><Icon name="check" :size="14" />{{ ins.toast.value }}</span
+        >
       </div>
       <p v-if="ins.message.value" class="notice" role="alert" data-testid="insert-message">
         {{ ins.message.value }}
@@ -203,29 +224,30 @@ const cacheOff = computed(() => {
         class="flex flex-col gap-2"
         data-testid="refine"
       >
-        <div class="flex flex-wrap gap-1">
+        <p class="eyebrow">Refine</p>
+        <div class="flex flex-wrap gap-1.5">
           <template v-if="s.overLimit.value">
-            <button class="btn" type="button" @click="s.refine({ kind: 'fit' })">Fit limit</button>
-            <button class="btn" type="button" @click="cut">Cut at last sentence</button>
+            <button
+              class="chip border-carbon-pink-text text-carbon-pink-text"
+              type="button"
+              @click="s.refine({ kind: 'fit' })"
+            >
+              Fit limit
+            </button>
+            <button
+              class="chip border-carbon-pink-text text-carbon-pink-text"
+              type="button"
+              @click="cut"
+            >
+              Cut at last sentence
+            </button>
           </template>
-          <button class="btn btn-quiet" type="button" @click="s.refine({ kind: 'shorter' })">
-            Shorter
-          </button>
-          <button class="btn btn-quiet" type="button" @click="s.refine({ kind: 'longer' })">
-            Longer
-          </button>
-          <button
-            class="btn btn-quiet"
-            type="button"
-            @click="s.refine({ kind: 'tone', tone: 'formal' })"
-          >
+          <button class="chip" type="button" @click="s.refine({ kind: 'shorter' })">Shorter</button>
+          <button class="chip" type="button" @click="s.refine({ kind: 'longer' })">Longer</button>
+          <button class="chip" type="button" @click="s.refine({ kind: 'tone', tone: 'formal' })">
             More formal
           </button>
-          <button
-            class="btn btn-quiet"
-            type="button"
-            @click="s.refine({ kind: 'tone', tone: 'casual' })"
-          >
+          <button class="chip" type="button" @click="s.refine({ kind: 'tone', tone: 'casual' })">
             More casual
           </button>
         </div>
@@ -234,7 +256,7 @@ const cacheOff = computed(() => {
           <input
             id="change-request"
             v-model="changeRequest"
-            class="min-w-0 flex-1 rounded-[6px] border border-rule bg-paper px-3 py-1.5"
+            class="field-input min-w-0 flex-1"
             placeholder="Change it..."
             data-testid="change-request"
           />
@@ -246,10 +268,12 @@ const cacheOff = computed(() => {
 
     <div
       v-else-if="s.phase.value === 'match' && s.match.value"
-      class="flex flex-col gap-2 bg-canary p-3"
+      class="flex flex-col gap-2 rounded-[10px] border border-canary-edge bg-canary p-3.5"
       data-testid="reuse-card"
     >
-      <p class="font-medium">You answered this before</p>
+      <p class="flex items-center gap-1.5 font-[650]">
+        <Icon name="bookmark" :size="15" class="text-ink" /> You answered this before
+      </p>
       <p class="text-[13px] text-graphite-2">
         {{ s.match.value.entry.question }} ({{ s.match.value.entry.hostname }})
       </p>

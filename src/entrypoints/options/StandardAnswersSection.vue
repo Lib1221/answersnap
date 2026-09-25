@@ -41,7 +41,7 @@ function addCustom() {
   answers.value?.custom.push({ id: crypto.randomUUID(), question: '', answer: '' });
 }
 
-const inputClass = 'w-full rounded-[6px] border border-rule bg-paper px-3 py-1.5';
+const inputClass = 'w-full field-input px-3 py-1.5';
 </script>
 
 <template>

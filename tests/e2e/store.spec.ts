@@ -116,6 +116,7 @@ test('store screenshots', async ({ context, extensionId, panel }) => {
   await options.goto(`chrome-extension://${extensionId}/options.html#welcome`);
   await options.setViewportSize({ width: 1280, height: H });
   await expect(options.getByTestId('checklist')).toBeVisible();
+  await options.waitForTimeout(400); // let button color transitions finish
   writeFileSync(resolve(OUT, 'screenshot-4-setup.png'), await options.screenshot());
 
   // Promo tile.

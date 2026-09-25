@@ -49,7 +49,7 @@ async function resetRules() {
   await saveRules();
 }
 
-const inputClass = 'rounded-[6px] border border-rule bg-paper px-2 py-1.5';
+const inputClass = 'field-input px-2 py-1.5';
 </script>
 
 <template>
@@ -112,7 +112,7 @@ const inputClass = 'rounded-[6px] border border-rule bg-paper px-2 py-1.5';
       <label v-if="settings.factCheck" class="ml-6 flex items-center gap-2">
         Check with
         <select
-          class="rounded-[6px] border border-rule bg-paper px-2 py-1"
+          class="field-input px-2 py-1"
           :value="settings.factCheckModel"
           @change="
             update({

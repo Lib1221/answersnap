@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Icon from '@/ui/AppIcon.vue';
 import { ref } from 'vue';
 import type { useJob } from './useJob';
 
@@ -13,8 +14,12 @@ function pick(action: () => Promise<void>) {
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 border-b border-rule px-4 py-2 text-[13px]" data-testid="job-bar">
+  <div
+    class="mx-3 mt-3 flex flex-col gap-2 rounded-[10px] border border-rule bg-paper px-3 py-2 text-[13px]"
+    data-testid="job-bar"
+  >
     <div class="flex items-center gap-2">
+      <Icon name="briefcase" :size="15" class="text-graphite-2" />
       <template v-if="j.job.value">
         <span class="min-w-0 flex-1 truncate" data-testid="job-chip"
           >Job: {{ j.label(j.job.value) }}</span

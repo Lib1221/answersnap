@@ -15,7 +15,7 @@ const profile = () => data.value?.profile as CandidateProfile | null | undefined
 </script>
 
 <template>
-  <section v-if="data" class="flex flex-col gap-4" data-testid="profile-tab">
+  <section v-if="data" class="card flex flex-col gap-4 p-4" data-testid="profile-tab">
     <template v-if="profile()">
       <div>
         <p class="text-base font-[650]">{{ profile()!.fullName ?? 'Unnamed candidate' }}</p>

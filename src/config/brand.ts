@@ -5,4 +5,6 @@ export const BRAND = {
     'Snip an application question. Get a draft answer written from your own resume and website.',
   shortcut: 'Alt+Shift+Q',
   overlayTag: 'answersnap-overlay',
+  author: 'Liben',
+  repoUrl: 'https://github.com/Lib1221/answersnap',
 } as const;

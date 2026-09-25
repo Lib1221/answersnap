@@ -167,7 +167,7 @@ onUnmounted(() => stopWatch?.());
           type="password"
           autocomplete="off"
           spellcheck="false"
-          class="w-full max-w-md rounded-[6px] border border-rule bg-paper px-3 py-1.5"
+          class="w-full max-w-md field-input px-3 py-1.5"
           @change="saveKey"
         />
         <button
@@ -229,7 +229,7 @@ onUnmounted(() => stopWatch?.());
       <label for="model" class="font-medium">Model</label>
       <select
         id="model"
-        class="rounded-[6px] border border-rule bg-paper px-2 py-1.5"
+        class="field-input px-2 py-1.5"
         :value="settings.model"
         @change="update({ model: ($event.target as HTMLSelectElement).value })"
       >
@@ -238,7 +238,7 @@ onUnmounted(() => stopWatch?.());
       <label for="fast-model" class="font-medium">Fast model</label>
       <select
         id="fast-model"
-        class="rounded-[6px] border border-rule bg-paper px-2 py-1.5"
+        class="field-input px-2 py-1.5"
         :value="settings.fastModel"
         @change="update({ fastModel: ($event.target as HTMLSelectElement).value })"
       >
@@ -309,7 +309,7 @@ onUnmounted(() => stopWatch?.());
       <label for="base-url" class="font-medium">API base URL (development only)</label>
       <input
         id="base-url"
-        class="w-full max-w-md rounded-[6px] border border-rule bg-paper px-3 py-1.5"
+        class="w-full max-w-md field-input px-3 py-1.5"
         :value="settings.baseUrl ?? ''"
         placeholder="Provider default"
         @change="update({ baseUrl: ($event.target as HTMLInputElement).value.trim() || undefined })"

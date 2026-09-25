@@ -173,3 +173,10 @@ Ambiguities in `SPEC.md`, deviations from it, and the option picked. One line ea
 - Bug found by this feature: `hintFor` took the next field's label as a field's helper text (a label below a field belongs to the next field). Fixed for single snips too.
 - `neutralize` now also covers `fields`, `field`, `placeholder`, `current_value`, and `answer_sentences`, so page text can't close the batch or fact-check tags.
 - Live check (September 25, 2026): 9 fields drafted in one Gemini request in 8 s; name, email, years, placeholder rate, choices, and checkboxes correct.
+
+## After v1: UI refresh
+
+- Liben asked for a modern look plus a credit and a GitHub star link. Kept the spec's identity (ink blue, crop-mark logo, canary question card, Public Sans) and moved to an app-style layout: soft background surface, white cards with hairline borders and a light shadow (spec 13.1 said no shadowed cards; changed at Liben's request), 8 px controls and 12 px cards, segmented tabs with icons, chip-style refine actions, key-cap shortcut, empty-state cards, sidebar navigation with icons in settings, and green success states.
+- Icons are hand-drawn SVG paths in `src/ui/AppIcon.vue` (no icon library, since runtime dependencies need approval). The GitHub mark is used only to link to the project's repository.
+- Credit: "Made by Liben" and "Star on GitHub" (links to `BRAND.repoUrl`) in the side panel footer and the settings sidebar; author and repo URL live in `src/config/brand.ts`. The repository is still private, so the star link works only for people with access until it's made public.
+- Color transitions (120 ms) respect reduced motion. The axe test runs with reduced motion so it measures settled colors instead of mid-fade ones.

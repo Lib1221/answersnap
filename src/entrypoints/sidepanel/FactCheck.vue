@@ -27,7 +27,12 @@ function fix() {
     class="text-[13px]"
     data-testid="fact-check"
   >
-    <p v-if="fc.status === 'checking'" role="status" class="text-graphite-2">
+    <p
+      v-if="fc.status === 'checking'"
+      role="status"
+      class="flex items-center gap-2 text-graphite-2"
+    >
+      <span class="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden="true" />
       Checking facts against your profile…
     </p>
 
@@ -43,7 +48,7 @@ function fix() {
 
     <p
       v-else-if="fc.status === 'done' && !flagged.length"
-      class="text-graphite-2"
+      class="success"
       data-testid="fact-check-ok"
     >
       ✓ Fact check:

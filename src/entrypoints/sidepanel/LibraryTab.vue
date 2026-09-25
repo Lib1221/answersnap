@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import Icon from '@/ui/AppIcon.vue';
 import { deleteEntry, getLibrary, libraryItem, updateEntry, type LibraryEntry } from '@/kb/library';
 
 const props = defineProps<{ canUse: boolean }>();
@@ -61,18 +62,24 @@ function date(iso: string) {
       v-model="query"
       type="search"
       placeholder="Search saved answers"
-      class="rounded-[6px] border border-rule bg-paper px-3 py-1.5"
+      class="field-input"
     />
     <p v-if="toast" role="status" class="text-[13px] text-graphite-2">{{ toast }}</p>
-    <p v-if="!entries.length" class="text-graphite-2">
-      Answers you insert, copy, or save show up here, so you can reuse them.
-    </p>
+    <div
+      v-if="!entries.length"
+      class="card flex flex-col items-center gap-2 px-5 py-8 text-center text-graphite-2"
+    >
+      <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-soft text-ink">
+        <Icon name="bookmark" :size="22" />
+      </div>
+      <p>Answers you insert, copy, or save show up here, so you can reuse them.</p>
+    </div>
     <p v-else-if="!shown.length" class="text-graphite-2">No saved answers match.</p>
-    <ul class="flex flex-col divide-y divide-rule border-y border-rule">
+    <ul class="flex flex-col gap-2.5">
       <li
         v-for="e in shown"
         :key="e.id"
-        class="flex flex-col gap-2 py-3"
+        class="card flex flex-col gap-2 p-3"
         data-testid="library-entry"
       >
         <p class="font-medium">{{ e.question }}</p>
@@ -85,7 +92,7 @@ function date(iso: string) {
           v-if="editing === e.id"
           v-model="draft"
           rows="5"
-          class="rounded-[6px] border border-rule bg-paper p-2"
+          class="field-input p-2"
           aria-label="Edit saved answer"
         />
         <p v-else class="line-clamp-4 whitespace-pre-wrap text-[13px]">{{ e.answer }}</p>

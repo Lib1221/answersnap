@@ -18,6 +18,9 @@ import { prewarmIfNeeded } from './prewarm';
 import { useAnswer } from './useAnswer';
 import { useCapture } from './useCapture';
 import { t } from '@/ui/i18n';
+import Credit from '@/ui/AppCredit.vue';
+import Icon, { type IconName } from '@/ui/AppIcon.vue';
+import LogoMark from '@/ui/LogoMark.vue';
 import { useInsert } from './useInsert';
 import { useJob } from './useJob';
 
@@ -35,6 +38,12 @@ watch(
   },
 );
 const tab = ref<'answer' | 'form' | 'library' | 'profile'>('answer');
+const TABS: { id: 'answer' | 'form' | 'library' | 'profile'; label: string; icon: IconName }[] = [
+  { id: 'answer', label: 'Answer', icon: 'sparkle' },
+  { id: 'form', label: 'Form', icon: 'form' },
+  { id: 'library', label: 'Library', icon: 'bookmark' },
+  { id: 'profile', label: 'Profile', icon: 'user' },
+];
 const profileLine = ref<string | null>(null);
 
 function useSaved(entry: import('@/kb/library').LibraryEntry) {
@@ -129,45 +138,57 @@ function openSettings(section?: string) {
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col">
-    <header class="flex items-start justify-between gap-2 border-b border-rule px-4 py-3">
-      <div class="min-w-0">
-        <h1 class="text-base font-[650]">{{ BRAND.name }}</h1>
+  <div class="flex min-h-screen flex-col bg-surface">
+    <header
+      class="sticky top-0 z-10 flex items-center gap-2.5 border-b border-rule bg-paper px-4 py-3"
+    >
+      <LogoMark :size="30" />
+      <div class="min-w-0 flex-1">
+        <h1 class="text-[15px] leading-tight font-[650]">{{ BRAND.name }}</h1>
         <p
           v-if="profileLine"
-          class="truncate text-[13px] text-graphite-2"
+          class="flex items-center gap-1.5 truncate text-[12px] text-graphite-2"
           data-testid="profile-line"
         >
+          <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true" />
           {{ profileLine }}
         </p>
       </div>
-      <button class="btn btn-quiet" type="button" @click="openSettings()">Settings</button>
+      <button
+        class="btn btn-icon"
+        type="button"
+        aria-label="Settings"
+        title="Settings"
+        @click="openSettings()"
+      >
+        <Icon name="settings" :size="18" />
+      </button>
     </header>
 
     <JobBar :state="job" />
-    <nav class="flex gap-1 border-b border-rule px-3" role="tablist" aria-label="Panel">
-      <button
-        v-for="tb in [
-          ['answer', 'Answer'],
-          ['form', 'Form'],
-          ['library', 'Library'],
-          ['profile', 'Profile'],
-        ] as const"
-        :key="tb[0]"
-        role="tab"
-        type="button"
-        class="border-b-2 px-2 py-1.5 text-[13px]"
-        :class="
-          tab === tb[0]
-            ? 'border-ink font-medium text-graphite'
-            : 'border-transparent text-graphite-2'
-        "
-        :aria-selected="tab === tb[0]"
-        @click="tab = tb[0]"
-      >
-        {{ tb[1] }}
-      </button>
+
+    <nav class="px-3 pt-3" aria-label="Panel">
+      <div class="grid grid-cols-4 gap-1 rounded-[10px] bg-rule/60 p-1" role="tablist">
+        <button
+          v-for="tb in TABS"
+          :key="tb.id"
+          role="tab"
+          type="button"
+          class="flex items-center justify-center gap-1.5 rounded-[8px] py-1.5 text-[12.5px] font-medium transition-colors"
+          :class="
+            tab === tb.id
+              ? 'bg-paper text-graphite shadow-[var(--shadow-sm)]'
+              : 'text-graphite-2 hover:text-graphite'
+          "
+          :aria-selected="tab === tb.id"
+          @click="tab = tb.id"
+        >
+          <Icon :name="tb.icon" :size="14" />
+          {{ tb.label }}
+        </button>
+      </div>
     </nav>
+
     <main v-if="tab === 'library'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <LibraryTab :can-use="view.kind === 'captured'" @use="useSaved" />
     </main>
@@ -177,56 +198,84 @@ function openSettings(section?: string) {
     <main v-else-if="tab === 'profile'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <ProfileTab @open-settings="openSettings" />
     </main>
-    <main v-else class="flex flex-1 flex-col gap-4 px-4 py-4">
+    <main v-else class="flex flex-1 flex-col gap-3 px-4 py-4">
       <section
         v-if="view.kind === 'idle'"
-        class="flex flex-col items-start gap-3"
+        class="card flex flex-col items-center gap-3 px-5 py-8 text-center"
         data-state="idle"
       >
+        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-soft text-ink">
+          <Icon
+            :name="
+              readiness === 'needs-key' ? 'key' : readiness === 'needs-profile' ? 'file' : 'snip'
+            "
+            :size="26"
+          />
+        </div>
         <template v-if="readiness === 'needs-key'">
-          <p>{{ t('panelNeedsKey', 'Add your API key to start.') }}</p>
+          <h2 class="text-[15px] font-[650]">Connect your AI</h2>
+          <p class="text-graphite-2">{{ t('panelNeedsKey', 'Add your API key to start.') }}</p>
           <button class="btn btn-primary" type="button" @click="openSettings('provider')">
-            Open settings
+            <Icon name="key" /> Open settings
           </button>
         </template>
         <template v-else-if="readiness === 'needs-profile'">
-          <p>
+          <h2 class="text-[15px] font-[650]">Add your resume</h2>
+          <p class="text-graphite-2">
             {{ t('panelNeedsProfile', 'Add your resume so answers have something to draw from.') }}
           </p>
           <button class="btn btn-primary" type="button" @click="openSettings('sources')">
-            Add resume
+            <Icon name="file" /> Add resume
           </button>
         </template>
         <template v-else>
-          <p>{{ t('panelIdle', 'Snip a question to draft an answer.') }}</p>
-          <button class="btn btn-primary" type="button" :disabled="busy" @click="snip">
-            Snip question
+          <h2 class="text-[15px] font-[650]">Ready when you are</h2>
+          <p class="text-graphite-2">{{ t('panelIdle', 'Snip a question to draft an answer.') }}</p>
+          <button class="btn btn-primary px-4" type="button" :disabled="busy" @click="snip">
+            <Icon name="snip" /> Snip question
           </button>
-          <p class="text-[13px] text-graphite-2">Shortcut: {{ shortcut }}</p>
+          <p class="text-[12.5px] text-graphite-2">
+            or press <kbd class="kbd">{{ shortcut }}</kbd> on the page
+          </p>
+          <button class="btn btn-quiet text-[12.5px]" type="button" @click="tab = 'form'">
+            <Icon name="form" :size="14" /> Or fill the whole form at once
+          </button>
         </template>
       </section>
 
       <section
         v-else-if="view.kind === 'selecting'"
-        class="flex flex-col items-start gap-3"
+        class="card flex flex-col items-center gap-3 px-5 py-8 text-center"
         data-state="selecting"
       >
-        <p role="status">
+        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-soft text-ink">
+          <Icon name="target" :size="26" />
+        </div>
+        <p role="status" class="font-medium">
           {{ t('panelSelecting', 'Select the question on the page. Esc cancels.') }}
         </p>
         <button class="btn" type="button" @click="cancelSelection">Cancel</button>
       </section>
 
-      <section v-else-if="view.kind === 'reading'" data-state="reading">
-        <p role="status">Reading</p>
+      <section
+        v-else-if="view.kind === 'reading'"
+        class="card flex flex-col gap-2.5 p-4"
+        data-state="reading"
+      >
+        <p role="status" class="eyebrow">Reading</p>
+        <div class="h-3 w-4/5 animate-pulse rounded bg-rule" />
+        <div class="h-3 w-3/5 animate-pulse rounded bg-rule" />
       </section>
 
       <section
         v-else-if="view.kind === 'error'"
-        class="flex flex-col items-start gap-3"
+        class="card flex flex-col items-start gap-3 p-4"
         :data-state="`error-${view.code}`"
       >
-        <p role="alert">{{ ERRORS[view.code] }}</p>
+        <p role="alert" class="flex items-start gap-2">
+          <Icon name="alert" :size="18" class="mt-0.5 text-carbon-pink-text" />
+          {{ ERRORS[view.code] }}
+        </p>
         <button
           v-if="view.code === 'NEEDS_GESTURE'"
           class="btn"
@@ -242,7 +291,7 @@ function openSettings(section?: string) {
           :disabled="busy"
           @click="snip"
         >
-          Retry
+          <Icon name="refresh" /> Retry
         </button>
       </section>
 
@@ -251,30 +300,39 @@ function openSettings(section?: string) {
         class="flex flex-col gap-3"
         data-state="captured"
       >
-        <CropThumb
-          v-if="view.capture.image"
-          :src="view.capture.image.dataUrl"
-          alt="Snipped region"
-          :width="view.capture.image.width"
-          :height="view.capture.image.height"
-        />
-        <div class="rounded-none bg-canary px-3 py-2">
-          <p class="whitespace-pre-wrap" data-testid="page-text">
-            {{ view.capture.pageText || 'No text found in the selection.' }}
-          </p>
+        <div class="card overflow-hidden">
+          <div v-if="view.capture.image" class="bg-surface px-3 pt-3 pb-2">
+            <CropThumb
+              :src="view.capture.image.dataUrl"
+              alt="Snipped region"
+              :width="view.capture.image.width"
+              :height="view.capture.image.height"
+            />
+          </div>
+          <div class="border-t border-canary-edge bg-canary px-3.5 py-2.5">
+            <p class="eyebrow mb-0.5">Question</p>
+            <p class="whitespace-pre-wrap" data-testid="page-text">
+              {{ view.capture.pageText || 'No text found in the selection.' }}
+            </p>
+          </div>
         </div>
         <p
           v-if="view.capture.hiddenTextChars >= HIDDEN_TEXT_MIN"
-          class="notice"
+          class="notice flex items-start gap-2 text-[13px]"
           data-testid="hidden-text"
         >
+          <Icon name="shield" :size="16" class="mt-0.5" />
           This page has hidden text in the area you selected. It was left out.
         </p>
         <AnswerPanel :state="answer" :insert="insert" @open-settings="openSettings" />
-        <div class="border-t border-rule pt-3">
-          <button class="btn" type="button" :disabled="busy" @click="snip">Snip question</button>
-        </div>
+        <button class="btn self-start" type="button" :disabled="busy" @click="snip">
+          <Icon name="snip" /> Snip question
+        </button>
       </section>
     </main>
+
+    <footer class="border-t border-rule bg-paper px-4 py-2.5">
+      <Credit compact />
+    </footer>
   </div>
 </template>

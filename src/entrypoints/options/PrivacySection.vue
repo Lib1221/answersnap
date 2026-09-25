@@ -129,7 +129,7 @@ async function deleteEverything() {
         <input
           type="number"
           min="1"
-          class="w-20 rounded-[6px] border border-rule bg-paper px-2 py-1"
+          class="w-20 field-input px-2 py-1"
           :value="settings.history.retentionDays"
           data-testid="retention-days"
           @change="

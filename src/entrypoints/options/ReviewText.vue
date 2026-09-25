@@ -20,20 +20,11 @@ const chars = computed(() => text.value.length);
     <h3 class="font-[650]">{{ title }}</h3>
     <label class="flex flex-col gap-1">
       <span class="text-[13px] text-graphite-2">Name</span>
-      <input
-        v-model="label"
-        class="max-w-md rounded-[6px] border border-rule bg-paper px-3 py-1.5"
-        data-testid="review-label"
-      />
+      <input v-model="label" class="max-w-md field-input px-3 py-1.5" data-testid="review-label" />
     </label>
     <label class="flex flex-col gap-1">
       <span class="text-[13px] text-graphite-2">Text (fix anything the import got wrong)</span>
-      <textarea
-        v-model="text"
-        rows="14"
-        class="w-full rounded-[6px] border border-rule bg-paper p-3"
-        data-testid="review-text"
-      />
+      <textarea v-model="text" rows="14" class="w-full field-input p-3" data-testid="review-text" />
     </label>
     <p class="text-[13px] text-graphite-2 tabular-nums" data-testid="review-count">
       {{ chars.toLocaleString() }} characters, about

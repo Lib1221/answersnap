@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FieldInfo } from '@/storage/schema';
+import Icon from '@/ui/AppIcon.vue';
 import type { ReviewItem, useFormFill } from './useFormFill';
 
 const props = defineProps<{ state: ReturnType<typeof useFormFill> }>();
@@ -33,23 +34,31 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
 
 <template>
   <section class="flex flex-col gap-4" data-testid="form-fill">
-    <template v-if="f.phase.value === 'idle' || f.phase.value === 'scanning'">
-      <p>
+    <div
+      v-if="f.phase.value === 'idle' || f.phase.value === 'scanning'"
+      class="card flex flex-col items-center gap-3 px-5 py-8 text-center"
+    >
+      <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-soft text-ink">
+        <Icon name="form" :size="26" />
+      </div>
+      <h2 class="text-[15px] font-[650]">Fill the whole form</h2>
+      <p class="text-graphite-2">
         Draft answers for every field on this form at once. You review everything before anything is
         filled.
       </p>
       <button
-        class="btn btn-primary self-start"
+        class="btn btn-primary"
         type="button"
         :disabled="f.phase.value === 'scanning'"
         @click="f.scan"
       >
+        <Icon name="target" />
         {{ f.phase.value === 'scanning' ? 'Reading the form' : 'Scan this form' }}
       </button>
-      <p class="text-[13px] text-graphite-2">
+      <p class="text-[12.5px] text-graphite-2">
         Or right-click the page and choose "Fill this form with AnswerSnap".
       </p>
-    </template>
+    </div>
 
     <template v-else-if="f.phase.value === 'scanned' || f.phase.value === 'drafting'">
       <p>
@@ -57,7 +66,7 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
         <template v-if="f.page.value?.title">on {{ f.page.value.title }}</template
         >. Untick any you'll answer yourself.
       </p>
-      <ul class="flex flex-col divide-y divide-rule border-y border-rule" data-testid="form-fields">
+      <ul class="card flex flex-col divide-y divide-rule px-3" data-testid="form-fields">
         <li
           v-for="field in f.fields.value"
           :key="field.targetId"
@@ -110,7 +119,7 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
         <li
           v-for="item in f.items.value"
           :key="item.field.targetId"
-          class="flex flex-col gap-1.5 border-l-2 pl-3"
+          class="card flex flex-col gap-1.5 border-l-4 p-3"
           :class="
             item.result === 'inserted'
               ? 'border-ink'
@@ -134,7 +143,7 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
           <select
             v-if="isChoice(item)"
             v-model="item.answer"
-            class="rounded-[6px] border border-rule bg-paper px-2 py-1.5"
+            class="field-input px-2 py-1.5"
             :aria-label="`Answer for ${label(item.field)}`"
           >
             <option value="">No answer</option>
@@ -144,7 +153,7 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
             v-else
             v-model="item.answer"
             :rows="item.field.kind === 'input' ? 1 : 4"
-            class="rounded-[6px] border border-rule bg-paper p-2 text-[14px]"
+            class="field-input p-2 text-[14px]"
             :aria-label="`Answer for ${label(item.field)}`"
           />
           <p class="flex flex-wrap gap-x-3 text-[12px] text-graphite-2">

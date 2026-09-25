@@ -39,7 +39,8 @@ for (const scheme of ['light', 'dark'] as const) {
     pages.push(practice);
     const problems: string[] = [];
     for (const p of pages) {
-      await p.emulateMedia({ colorScheme: scheme });
+      // Reduced motion turns off the color fades, so axe measures settled colors.
+      await p.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
       await p.waitForLoadState('networkidle');
       problems.push(...(await axe(p)).map((v) => `${p.url().split('/').pop()}: ${v}`));
     }

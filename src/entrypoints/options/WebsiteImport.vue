@@ -135,7 +135,7 @@ function hostOf(url: string): string {
         <input
           id="site-url"
           v-model="urlInput"
-          class="w-full max-w-md rounded-[6px] border border-rule bg-paper px-3 py-1.5"
+          class="w-full max-w-md field-input px-3 py-1.5"
           placeholder="yourname.dev"
           data-testid="site-url"
         />

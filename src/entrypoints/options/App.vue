@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
 import { BRAND } from '@/config/brand';
+import AppCredit from '@/ui/AppCredit.vue';
+import Icon, { type IconName } from '@/ui/AppIcon.vue';
+import LogoMark from '@/ui/LogoMark.vue';
 import { corruptNoticeItem } from '@/storage/items';
 import GettingStartedSection from './GettingStartedSection.vue';
 import PrivacySection from './PrivacySection.vue';
@@ -11,14 +14,15 @@ import StandardAnswersSection from './StandardAnswersSection.vue';
 import WritingStyleSection from './WritingStyleSection.vue';
 
 const SECTIONS = [
-  { id: 'welcome', title: 'Getting started' },
-  { id: 'provider', title: 'AI provider' },
-  { id: 'sources', title: 'Sources' },
-  { id: 'profile', title: 'Profile' },
-  { id: 'standard-answers', title: 'Standard answers' },
-  { id: 'writing-style', title: 'Writing style' },
-  { id: 'privacy', title: 'Privacy' },
-] as const;
+  { id: 'welcome', title: 'Getting started', icon: 'flag' },
+  { id: 'provider', title: 'AI provider', icon: 'key' },
+  { id: 'sources', title: 'Sources', icon: 'file' },
+  { id: 'profile', title: 'Profile', icon: 'user' },
+  { id: 'standard-answers', title: 'Standard answers', icon: 'book' },
+  { id: 'writing-style', title: 'Writing style', icon: 'pen' },
+  { id: 'privacy', title: 'Privacy', icon: 'shield' },
+] as const satisfies readonly { id: string; title: string; icon: IconName }[];
+const version = browser.runtime.getManifest().version;
 type SectionId = (typeof SECTIONS)[number]['id'];
 
 const current = ref<SectionId>('welcome');
@@ -43,38 +47,63 @@ async function dismissCorrupt() {
 </script>
 
 <template>
-  <div class="mx-auto flex max-w-5xl gap-10 px-8 py-8">
-    <nav class="w-48 shrink-0" aria-label="Settings sections">
-      <p class="mb-4 text-base font-[650]">{{ BRAND.name }}</p>
-      <ul class="flex flex-col gap-1">
-        <li v-for="s in SECTIONS" :key="s.id">
-          <a
-            :href="`#${s.id}`"
-            class="block rounded-[6px] px-2 py-1"
-            :class="current === s.id ? 'bg-canary font-medium' : 'text-graphite-2'"
-            :aria-current="current === s.id ? 'page' : undefined"
-          >
-            {{ s.title }}
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <main class="min-w-0 flex-1">
-      <div
-        v-if="corrupt.length"
-        class="notice mb-6 flex items-start justify-between gap-4"
-        role="alert"
-      >
-        <p>Some saved data couldn't be read and was reset. A copy was kept in case you need it.</p>
-        <button class="btn" type="button" @click="dismissCorrupt">Dismiss</button>
+  <div class="flex min-h-screen bg-surface">
+    <aside
+      class="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-rule bg-paper px-4 py-6"
+    >
+      <div class="mb-6 flex items-center gap-2.5 px-2">
+        <LogoMark :size="34" />
+        <div>
+          <p class="text-[16px] leading-tight font-[650]">{{ BRAND.name }}</p>
+          <p class="text-[12px] text-graphite-2">Answers from your own resume</p>
+        </div>
       </div>
-      <GettingStartedSection v-if="current === 'welcome'" />
-      <ProviderSection v-else-if="current === 'provider'" />
-      <SourcesSection v-else-if="current === 'sources'" />
-      <ProfileSection v-else-if="current === 'profile'" />
-      <StandardAnswersSection v-else-if="current === 'standard-answers'" />
-      <WritingStyleSection v-else-if="current === 'writing-style'" />
-      <PrivacySection v-else-if="current === 'privacy'" />
+      <nav aria-label="Settings sections">
+        <ul class="flex flex-col gap-0.5">
+          <li v-for="s in SECTIONS" :key="s.id">
+            <a
+              :href="`#${s.id}`"
+              class="flex items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-[13.5px] transition-colors"
+              :class="
+                current === s.id
+                  ? 'bg-ink-soft font-medium text-ink'
+                  : 'text-graphite-2 hover:bg-surface hover:text-graphite'
+              "
+              :aria-current="current === s.id ? 'page' : undefined"
+            >
+              <Icon :name="s.icon" :size="16" />
+              {{ s.title }}
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="mt-auto flex flex-col gap-2 border-t border-rule px-2 pt-4">
+        <AppCredit />
+        <p class="text-[11.5px] text-graphite-2">Version {{ version }}</p>
+      </div>
+    </aside>
+    <main class="min-w-0 flex-1 px-10 py-8">
+      <div class="mx-auto max-w-3xl">
+        <div
+          v-if="corrupt.length"
+          class="notice mb-6 flex items-start justify-between gap-4"
+          role="alert"
+        >
+          <p>
+            Some saved data couldn't be read and was reset. A copy was kept in case you need it.
+          </p>
+          <button class="btn" type="button" @click="dismissCorrupt">Dismiss</button>
+        </div>
+        <div class="card p-8">
+          <GettingStartedSection v-if="current === 'welcome'" />
+          <ProviderSection v-else-if="current === 'provider'" />
+          <SourcesSection v-else-if="current === 'sources'" />
+          <ProfileSection v-else-if="current === 'profile'" />
+          <StandardAnswersSection v-else-if="current === 'standard-answers'" />
+          <WritingStyleSection v-else-if="current === 'writing-style'" />
+          <PrivacySection v-else-if="current === 'privacy'" />
+        </div>
+      </div>
     </main>
   </div>
 </template>
