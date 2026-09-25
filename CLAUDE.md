@@ -1,7 +1,8 @@
 # AnswerSnap
 
 Chrome MV3 extension (WXT + Vue 3 + TS strict). Snip an application question, get a draft answer
-written only from the user's own resume and website. Full spec: `SPEC.md`. Deviations and
+written only from the user's own resume and website. AI providers: Anthropic (default) and Google
+Gemini (free tier works), both bring-your-own-key, behind `src/llm/provider.ts`. Full spec: `SPEC.md`. Deviations and
 ambiguity calls: `DECISIONS.md` (log every new one there, one line with a reason).
 
 ## Commands
@@ -10,7 +11,7 @@ ambiguity calls: `DECISIONS.md` (log every new one there, one line with a reason
 - `pnpm build` / `pnpm build:e2e`: production build / e2e build (`.output/chrome-mv3[-e2e]`)
 - `pnpm zip`: store package
 - `pnpm typecheck && pnpm lint && pnpm test`: must be green before every commit
-- `pnpm test:e2e`: Playwright. If the Playwright browser can't download, set
+- `pnpm test:e2e`: Playwright (starts the fixture server on 4610/4611 and the mock LLM on 4620). If the Playwright browser can't download, set
   `E2E_CHROMIUM_PATH` to a Chromium/Chrome for Testing binary (branded Chrome ignores `--load-extension`)
 - `pnpm eval`: answer quality evals against the real API (`--profile evals/profile.local.json`)
 

@@ -35,3 +35,23 @@ Ambiguities in `SPEC.md`, deviations from it, and the option picked. One line ea
 - A `captureStatus` older than 10 minutes is treated as abandoned and ignored by the panel.
 - Fields inside iframes aren't detected yet; the iframe copy fallback lands with insertion in M5.
 - Unit tests fake layout with `data-rect="x,y,w,h"` attributes (happy-dom has no layout engine). E2E covers real layout: DPR via `--force-device-scale-factor`, zoom via `tabs.setZoom`, no Playwright viewport emulation so `captureVisibleTab` matches the page's own pixels.
+
+## M2 (AI connection)
+
+- Added Google Gemini as a second provider at Liben's request (free-tier API access). No new permission: the Gemini API returns `access-control-allow-origin` for `chrome-extension://` origins (verified with a CORS preflight), so extension pages can call it directly. Production `host_permissions` still lists only `https://api.anthropic.com/*`.
+- Gemini defaults: `gemini-3.8-flash` (answers) and `gemini-3.5-flash-lite` (fast), from Google's model docs in September 2026. The dropdown fills from the live `GET /v1beta/models` after Test key, so a renamed model shows up there.
+- The Gemini free tier lets Google use requests to improve its products. The options page says so when Gemini is picked, and a "free tier" checkbox (default on) shows "Free tier" instead of a cost estimate.
+- Gemini specifics: key in the `x-goog-api-key` header (never `?key=`), `streamGenerateContent?alt=sse`, one `systemInstruction` with the blocks in order (Gemini caches repeated prefixes implicitly, so `prewarm` is a no-op), `thinkingConfig.thinkingLevel: 'low'`, thought parts skipped. An invalid key comes back as 400 `API_KEY_INVALID` and maps to the same "key rejected" message as a 401. The free-tier 429 retry delay is read from `RetryInfo.retryDelay`.
+- API keys live under `apiKey:anthropic` and `apiKey:gemini` (local or session) instead of one `apiKey` key, so switching providers keeps both keys.
+- Settings add `provider: 'gemini'` and `geminiFreeTier`. Every settings field has a zod default; stored objects are merged over the provider's defaults before validation.
+- v0 settings (for the migration test) are defined as the unversioned shape with the key inside the settings object; migrating moves the key to its own entry.
+- Per-model request quirks, from Anthropic's current model docs: Sonnet 5 runs adaptive thinking when `thinking` is omitted, which would eat the 1,024-token answer budget, so it gets `thinking: {type: 'disabled'}`. Opus 5.5 can't disable thinking (400), so it gets `output_config.effort: 'low'` and a 4,096-token floor. Haiku 4.5 gets neither (it rejects `effort`). Gemini 3.x always thinks and thinking counts toward `maxOutputTokens`, so it also gets a 4,096 floor.
+- Retries: "back off 1 s, 2 s, 4 s, max 3 tries" is read as three retries (four attempts in total). A dropped connection mid-stream (TypeError from the body reader) counts as a network error, retried only if no text streamed.
+- Full SYSTEM_RULES, user-turn builder, limits parser, and refine/profile/transcribe prompt templates landed in M2 rather than M4, since the basic prompt needed them anyway. M4 still owns pre-warm scheduling, job context, refinements, and the eval run.
+- Page-supplied text that looks like one of our tags (`</page_text>`, `<options>`) is neutralized with a lookalike `‹` before it goes into the user turn.
+- `field_info` shows the input type with the kind, e.g. `kind: input (number)`, so the format rule has something to work with.
+- Counters like "0/1000" are read from field hints only: in question text the same pattern matches dates such as "09/2026".
+- Until resume import (M3), the options page has a "Profile" box whose text is saved as a `note` source labeled "Pasted profile".
+- The 400 image-size retry resizes the image in the side panel (it holds the image) to a 1,092 px long edge as JPEG and retries once.
+- The mock LLM server picks error scenarios by API key (`bad-key`, `rate-limit-key`, `overloaded-key`, `slow-key`) and canned answers by keywords in the conversation only (the system blocks contain the resume).
+- Anthropic "Get a key" link points at console.anthropic.com/settings/keys; Gemini at aistudio.google.com/apikey.

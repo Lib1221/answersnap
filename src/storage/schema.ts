@@ -94,3 +94,64 @@ export const CaptureStatusSchema = z.object({
   updatedAt: z.number(),
 });
 export type CaptureStatus = z.infer<typeof CaptureStatusSchema>;
+
+// ---------------------------------------------------------------------------------------------
+// Settings (spec 7.2, plus the Gemini provider). Every field has a default so older or partial
+// stored objects still parse.
+
+export const ProviderSchema = z.enum(['anthropic', 'gemini']);
+export type Provider = z.infer<typeof ProviderSchema>;
+export const ToneSchema = z.enum(['professional', 'friendly', 'concise']);
+export type Tone = z.infer<typeof ToneSchema>;
+export const LengthPrefSchema = z.enum(['auto', 'short', 'medium', 'long']);
+export type LengthPref = z.infer<typeof LengthPrefSchema>;
+
+export const ModelPriceSchema = z.object({
+  input: z.number(),
+  output: z.number(),
+  cacheRead: z.number(),
+  cacheWrite5m: z.number(),
+});
+export type ModelPrice = z.infer<typeof ModelPriceSchema>;
+
+export const SettingsSchema = z.object({
+  schemaVersion: z.literal(1).default(1),
+  provider: ProviderSchema.default('anthropic'),
+  apiKeyStorage: z.enum(['local', 'session']).default('local'),
+  model: z.string().default(''),
+  fastModel: z.string().default(''),
+  maxOutputTokens: z.number().int().positive().default(1024),
+  tone: ToneSchema.default('professional'),
+  length: LengthPrefSchema.default('auto'),
+  answerLanguage: z.string().default('auto'),
+  styleRules: z.array(z.string()).default([]),
+  sendScreenshot: z.boolean().default(true),
+  contextPadding: z.boolean().default(true),
+  prewarmCache: z.boolean().default(true),
+  history: z
+    .object({
+      enabled: z.boolean().default(true),
+      retentionDays: z.number().int().positive().default(180),
+    })
+    .default({ enabled: true, retentionDays: 180 }),
+  prices: z.record(z.string(), ModelPriceSchema).default({}),
+  /** Gemini free tier: no charge, but Google may use requests to improve its products. */
+  geminiFreeTier: z.boolean().default(true),
+  baseUrl: z.string().optional(),
+  onboardingDone: z.boolean().default(false),
+});
+export type Settings = z.infer<typeof SettingsSchema>;
+
+export const KnowledgeSourceSchema = z.object({
+  id: z.string(),
+  kind: z.enum(['resume', 'website', 'tab', 'note', 'ai-transcript']),
+  label: z.string(),
+  url: z.string().optional(),
+  fileName: z.string().optional(),
+  text: z.string(),
+  chars: z.number(),
+  importedAt: z.string(),
+  enabled: z.boolean(),
+});
+export type KnowledgeSource = z.infer<typeof KnowledgeSourceSchema>;
+export const SourcesSchema = z.array(KnowledgeSourceSchema);

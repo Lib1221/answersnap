@@ -1,4 +1,5 @@
 import { test as base, chromium, type BrowserContext, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const extensionPath = resolve(import.meta.dirname, '../../.output/chrome-mv3-e2e');
@@ -92,4 +93,67 @@ export async function thumbnailPixels(panel: Page, points: [number, number][]) {
       pixels: pts.map(([x, y]) => Array.from(ctx.getImageData(x, y, 1, 1).data.slice(0, 3))),
     };
   }, points);
+}
+
+export const MOCK_LLM = 'http://127.0.0.1:4620';
+
+export const JAMIE_RESUME = readFileSync(
+  resolve(import.meta.dirname, '../fixtures/jamie-park.txt'),
+  'utf8',
+);
+
+/** Seed extension storage from an extension page: provider, key, and a pasted profile. */
+export async function seed(
+  panel: Page,
+  opts: { provider?: 'anthropic' | 'gemini'; key?: string | null; profile?: boolean } = {},
+) {
+  const provider = opts.provider ?? 'anthropic';
+  const key = opts.key === undefined ? 'test-key' : opts.key;
+  await fetch(`${MOCK_LLM}/__reset`, { method: 'POST' });
+  await panel.evaluate(
+    async ({ provider, key, profile, resume }) => {
+      const models: Record<string, [string, string]> = {
+        anthropic: ['claude-sonnet-5', 'claude-haiku-4-5-20251001'],
+        gemini: ['gemini-3.8-flash', 'gemini-3.5-flash-lite'],
+      };
+      const data: Record<string, unknown> = {
+        settings: {
+          schemaVersion: 1,
+          provider,
+          model: models[provider]![0],
+          fastModel: models[provider]![1],
+        },
+      };
+      if (key) data[`apiKey:${provider}`] = key;
+      if (profile) {
+        data.sources = [
+          {
+            id: 'pasted-profile',
+            kind: 'note',
+            label: 'Pasted profile',
+            text: resume,
+            chars: resume.length,
+            importedAt: new Date().toISOString(),
+            enabled: true,
+          },
+        ];
+      }
+      await chrome.storage.local.clear();
+      await chrome.storage.local.set(data);
+    },
+    { provider, key, profile: opts.profile ?? true, resume: JAMIE_RESUME },
+  );
+}
+
+export async function mockLog(): Promise<Record<string, unknown>[]> {
+  return (await fetch(`${MOCK_LLM}/__log`)).json();
+}
+
+/** Snip the question whose label is `selector` on the plain form by clicking it. */
+export async function snipLabel(panel: Page, page: Page, selector: string) {
+  const box = (await page.locator(selector).boundingBox())!;
+  await startSnip(panel, page);
+  await page.mouse.move(box.x + 20, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.up();
 }

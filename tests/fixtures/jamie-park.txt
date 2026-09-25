@@ -1,0 +1,29 @@
+Jamie Park
+Backend Engineer. Lisbon, Portugal (UTC+0). jamie.park@example.com. github.com/jamiepark-example
+
+Summary
+Backend engineer with 5 years of professional Python and Django experience building payment and data APIs.
+
+Experience
+Senior Backend Engineer, Ledgerly (fintech), 2022-03 to present, remote
+- Built a Django REST Framework API that handles 2 million payment reconciliation requests per day.
+- Cut p95 latency of the invoicing service from 900 ms to 240 ms by moving report generation to Celery workers.
+- Tech: Python, Django, Django REST Framework, PostgreSQL, Celery, Redis, AWS
+
+Backend Engineer, Brightpath Analytics, 2020-01 to 2022-02, Lisbon
+- Wrote ETL pipelines in Python and pandas that feed the customer dashboards.
+- Maintained Flask microservices for data export.
+- Tech: Python, Flask, pandas, PostgreSQL, Docker
+
+Volunteer Mentor, Data Science for Everyone (nonprofit), 2021 to present
+- Mentor 4 learners per cohort through a 12-week intro to Python and data analysis.
+
+Projects
+Shift Planner (github.com/jamiepark-example/shift-planner)
+- Vue 3 and Django app that schedules volunteer shifts for a food bank. 300 weekly users.
+
+Education
+BSc Computer Science, University of Porto, 2015 to 2019
+
+Languages
+English (fluent), Portuguese (native)

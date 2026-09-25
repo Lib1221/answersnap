@@ -1,8 +1,12 @@
 import type { Message, Reply, StartSnipError } from '@/messaging/protocol';
 import { sendToTab } from '@/messaging/send';
-import { captureStatusItem, pendingCaptureItem, readCaptureStatus } from '@/storage/items';
+import {
+  captureStatusItem,
+  getSettings,
+  pendingCaptureItem,
+  readCaptureStatus,
+} from '@/storage/items';
 import type { CaptureErrorCode, CaptureStatus, PendingCapture, SnipMode } from '@/storage/schema';
-import { DEFAULT_CAPTURE_OPTIONS } from '@/config/defaults';
 import { cropCapture } from './crop';
 import { classifyInjectError, ensureCaptureScript, isRestrictedUrl } from './inject';
 
@@ -85,7 +89,7 @@ export async function handleRegionSelected(
   const base = { captureId: msg.captureId, mode, tabId, windowId };
 
   await setStatus({ ...base, state: 'capturing' });
-  const opts = DEFAULT_CAPTURE_OPTIONS;
+  const opts = await getSettings();
   let image: PendingCapture['image'];
   if (opts.sendScreenshot) {
     try {

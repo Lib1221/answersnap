@@ -1,11 +1,34 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { BRAND } from '@/config/brand';
+import { hasCandidateData } from '@/kb/contextBuilder';
+import { getApiKey, getSettings, getSources } from '@/storage/items';
 import type { CaptureErrorCode, FieldInfo } from '@/storage/schema';
 import CropThumb from '@/ui/CropThumb.vue';
+import AnswerPanel from './AnswerPanel.vue';
+import { useAnswer } from './useAnswer';
 import { useCapture } from './useCapture';
 
-const { view, busy, snip, allowAllSites, cancelSelection } = useCapture();
+const { view, capture, busy, snip, allowAllSites, cancelSelection } = useCapture();
+const answer = useAnswer();
+
+// A new capture starts a draft right away.
+watch(
+  () => capture.value?.id,
+  () => {
+    const c = capture.value;
+    if (c && c.mode === 'question') void answer.run(c);
+  },
+);
+
+/** What the idle state asks for first (spec 13.2): an API key, then candidate data. */
+const readiness = ref<'ready' | 'needs-key' | 'needs-profile' | 'unknown'>('unknown');
+async function checkReadiness() {
+  const settings = await getSettings();
+  if (!(await getApiKey(settings.provider))) readiness.value = 'needs-key';
+  else if (!hasCandidateData({ sources: await getSources() })) readiness.value = 'needs-profile';
+  else readiness.value = 'ready';
+}
 
 const HIDDEN_TEXT_MIN = 20;
 const shortcut = ref<string>(BRAND.shortcut);
@@ -35,19 +58,27 @@ const target = computed(() => {
 });
 
 function onKey(e: KeyboardEvent) {
-  if (e.key === 'Escape' && view.value.kind === 'selecting') void cancelSelection();
+  if (e.key !== 'Escape') return;
+  if (view.value.kind === 'selecting') void cancelSelection();
+  else if (['drafting', 'streaming'].includes(answer.phase.value)) answer.stop();
 }
 
 onMounted(async () => {
   window.addEventListener('keydown', onKey);
+  window.addEventListener('focus', checkReadiness);
+  void checkReadiness();
   const commands = await browser.commands.getAll();
   const snipCommand = commands.find((c) => c.name === 'snip-question');
   if (snipCommand?.shortcut) shortcut.value = snipCommand.shortcut;
 });
-onUnmounted(() => window.removeEventListener('keydown', onKey));
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKey);
+  window.removeEventListener('focus', checkReadiness);
+});
 
-function openSettings() {
-  void browser.runtime.openOptionsPage();
+function openSettings(section?: string) {
+  if (!section) return void browser.runtime.openOptionsPage();
+  void browser.tabs.create({ url: browser.runtime.getURL(`/options.html#${section}`) });
 }
 </script>
 
@@ -55,7 +86,7 @@ function openSettings() {
   <div class="flex min-h-screen flex-col">
     <header class="flex items-center justify-between border-b border-rule px-4 py-3">
       <h1 class="text-base font-[650]">{{ BRAND.name }}</h1>
-      <button class="btn btn-quiet" type="button" @click="openSettings">Settings</button>
+      <button class="btn btn-quiet" type="button" @click="openSettings()">Settings</button>
     </header>
 
     <main class="flex flex-1 flex-col gap-4 px-4 py-4">
@@ -64,11 +95,25 @@ function openSettings() {
         class="flex flex-col items-start gap-3"
         data-state="idle"
       >
-        <p>Snip a question to draft an answer.</p>
-        <button class="btn btn-primary" type="button" :disabled="busy" @click="snip">
-          Snip question
-        </button>
-        <p class="text-[13px] text-graphite-2">Shortcut: {{ shortcut }}</p>
+        <template v-if="readiness === 'needs-key'">
+          <p>Add your API key to start.</p>
+          <button class="btn btn-primary" type="button" @click="openSettings('provider')">
+            Open settings
+          </button>
+        </template>
+        <template v-else-if="readiness === 'needs-profile'">
+          <p>Add your resume so answers have something to draw from.</p>
+          <button class="btn btn-primary" type="button" @click="openSettings('profile')">
+            Add resume
+          </button>
+        </template>
+        <template v-else>
+          <p>Snip a question to draft an answer.</p>
+          <button class="btn btn-primary" type="button" :disabled="busy" @click="snip">
+            Snip question
+          </button>
+          <p class="text-[13px] text-graphite-2">Shortcut: {{ shortcut }}</p>
+        </template>
       </section>
 
       <section
@@ -139,6 +184,7 @@ function openSettings() {
             >No text field found near the question. Copy the answer or pick a field.</template
           >
         </p>
+        <AnswerPanel :state="answer" @open-settings="openSettings" />
         <div class="border-t border-rule pt-3">
           <button class="btn" type="button" :disabled="busy" @click="snip">Snip question</button>
         </div>
