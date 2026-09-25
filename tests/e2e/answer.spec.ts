@@ -79,7 +79,7 @@ test('429 waits for retry-after and retries once', async ({ context, panel }) =>
   await page.goto(`${FIXTURES}/plain-form.html`);
   await snipLabel(panel, page, PYTHON);
 
-  await expect(panel.getByText('Rate limited by the API. Retrying in 1 seconds.')).toBeVisible();
+  await expect(panel.getByText('Rate limited by the API. Retrying in 2 seconds.')).toBeVisible();
   await expect(panel.getByTestId('answer')).toHaveValue('5');
   expect(await mockLog()).toHaveLength(2);
 });
@@ -111,7 +111,7 @@ test('Gemini streams an answer too', async ({ context, panel }) => {
   await snipLabel(panel, page, PYTHON);
 
   await expect(panel.getByTestId('answer')).toHaveValue('5');
-  await expect(panel.getByTestId('usage')).toContainText('Gemini 3.8 Flash.');
+  await expect(panel.getByTestId('usage')).toContainText('Gemini 3.5 Flash.');
   await expect(panel.getByTestId('usage')).toContainText('Free tier');
   const [body] = await mockLog();
   expect(body).toMatchObject({ generationConfig: { thinkingConfig: { thinkingLevel: 'low' } } });

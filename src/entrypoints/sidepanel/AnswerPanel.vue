@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { quirksFor } from '@/config/models';
+import { missingItemHash } from '@/kb/missing';
+import { cutAtLastSentence } from '@/llm/conversation';
 import { costLine, usageLine } from '@/llm/cost';
 import type { useAnswer } from './useAnswer';
 
@@ -12,7 +14,25 @@ const toast = ref('');
 let toastTimer = 0;
 
 const streaming = computed(() => s.phase.value === 'streaming' || s.phase.value === 'drafting');
-const showAnswer = computed(() => ['streaming', 'done', 'stopped'].includes(s.phase.value));
+// Keep the previous answer on screen while a refinement drafts.
+const showAnswer = computed(
+  () =>
+    ['streaming', 'done', 'stopped'].includes(s.phase.value) ||
+    (s.phase.value === 'drafting' && !!s.answer.value),
+);
+const changeRequest = ref('');
+
+function sendChange() {
+  const text = changeRequest.value.trim();
+  if (!text) return;
+  changeRequest.value = '';
+  void s.refine({ kind: 'custom', text });
+}
+
+function cut() {
+  const l = s.limits.value;
+  if (l) s.answer.value = cutAtLastSentence(s.answer.value, l.maxChars);
+}
 
 const counter = computed(() => {
   const l = s.limits.value;
@@ -93,7 +113,7 @@ async function copy() {
           <button
             class="rounded-[6px] bg-carbon-pink px-2 py-1 text-[13px] text-carbon-pink-text"
             type="button"
-            @click="emit('openSettings', 'standard-answers')"
+            @click="emit('openSettings', missingItemHash(item))"
           >
             {{ item }}
           </button>
@@ -112,6 +132,46 @@ async function copy() {
           <button class="btn btn-quiet" type="button" @click="s.retry">Regenerate</button>
         </template>
         <span v-if="toast" role="status" class="text-[13px] text-graphite-2">{{ toast }}</span>
+      </div>
+
+      <div v-if="!streaming && s.answer.value" class="flex flex-col gap-2" data-testid="refine">
+        <div class="flex flex-wrap gap-1">
+          <template v-if="s.overLimit.value">
+            <button class="btn" type="button" @click="s.refine({ kind: 'fit' })">Fit limit</button>
+            <button class="btn" type="button" @click="cut">Cut at last sentence</button>
+          </template>
+          <button class="btn btn-quiet" type="button" @click="s.refine({ kind: 'shorter' })">
+            Shorter
+          </button>
+          <button class="btn btn-quiet" type="button" @click="s.refine({ kind: 'longer' })">
+            Longer
+          </button>
+          <button
+            class="btn btn-quiet"
+            type="button"
+            @click="s.refine({ kind: 'tone', tone: 'formal' })"
+          >
+            More formal
+          </button>
+          <button
+            class="btn btn-quiet"
+            type="button"
+            @click="s.refine({ kind: 'tone', tone: 'casual' })"
+          >
+            More casual
+          </button>
+        </div>
+        <form class="flex gap-2" @submit.prevent="sendChange">
+          <label for="change-request" class="sr-only">Change it</label>
+          <input
+            id="change-request"
+            v-model="changeRequest"
+            class="min-w-0 flex-1 rounded-[6px] border border-rule bg-paper px-3 py-1.5"
+            placeholder="Change it..."
+            data-testid="change-request"
+          />
+          <button class="btn" type="submit" :disabled="!changeRequest.trim()">Send</button>
+        </form>
       </div>
       <p v-if="s.phase.value === 'stopped'" class="text-[13px] text-graphite-2">Stopped.</p>
     </template>

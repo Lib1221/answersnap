@@ -28,11 +28,15 @@ export function useCapture() {
   const status = ref<CaptureStatus | null>(null);
   // Image data lives in panel memory only, for the current question (hard rule 3).
   const capture = shallowRef<PendingCapture | null>(null);
+  /** Job snips feed the job bar and never replace the question on screen. */
+  const jobCapture = shallowRef<PendingCapture | null>(null);
   const busy = ref(false);
 
   const view = computed<PanelView>(() => {
     const s = status.value;
-    const fresh = s && Date.now() - s.updatedAt < STALE_MS;
+    // Job and import snips report their progress elsewhere (job bar, options page).
+    const fresh =
+      s && (s.mode === 'question' || s.mode === 'field') && Date.now() - s.updatedAt < STALE_MS;
     const isCurrent = capture.value && s && capture.value.id === s.captureId;
     if (fresh && !isCurrent) {
       if (s.state === 'selecting') return { kind: 'selecting' };
@@ -45,7 +49,9 @@ export function useCapture() {
 
   async function consume() {
     const next = await takePendingCapture(['question', 'field', 'job']);
-    if (next) capture.value = next;
+    if (!next) return;
+    if (next.mode === 'job') jobCapture.value = next;
+    else capture.value = next;
   }
 
   function setStatus(raw: unknown) {
@@ -96,5 +102,5 @@ export function useCapture() {
   });
   onUnmounted(() => unwatch.forEach((u) => u()));
 
-  return { view, capture, busy, snip, allowAllSites, cancelSelection };
+  return { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSelection };
 }

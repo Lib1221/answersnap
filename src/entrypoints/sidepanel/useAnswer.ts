@@ -1,10 +1,19 @@
 import { computed, ref, shallowRef } from 'vue';
 import { buildSystemBlocks, buildUserTurn, hasCandidateData, todayIso } from '@/kb/contextBuilder';
+import { getJobContext, jobPromptText } from '@/kb/jobContext';
+import { refineInstruction, refineMessages, type RefineAction } from '@/llm/conversation';
 import { LlmError, type LlmErrorKind } from '@/llm/errors';
 import { countWords, parseLimits, type Limits } from '@/llm/limits';
 import { createProvider } from '@/llm/provider';
 import { TagParser, type ParsedAnswer } from '@/llm/tagParser';
-import { EMPTY_USAGE, type AnswerRequest, type ContentPart, type Usage } from '@/llm/types';
+import {
+  EMPTY_USAGE,
+  type ChatMessage,
+  type ContentPart,
+  type LlmProvider,
+  type SystemBlock,
+  type Usage,
+} from '@/llm/types';
 import { loadCandidateData } from '@/kb/candidate';
 import { getApiKey, getSettings } from '@/storage/items';
 import type { PendingCapture, Settings } from '@/storage/schema';
@@ -49,7 +58,8 @@ export function errorMessage(err: LlmError, settings: Settings | null): string {
       return 'The API key was rejected. Check it in Settings.';
     case 'rate_limit':
       if (settings?.provider === 'gemini' && /free_tier/i.test(err.message)) {
-        return "Gemini's free tier allows only a few answers a minute. Wait a minute and try again.";
+        // Free-tier quotas are per model and per minute or per day (about 20 a day on 3.8 Flash).
+        return "You've reached Gemini's free-tier limit for this model. Wait a bit, switch to another Gemini model in Settings, or use a paid key.";
       }
       return 'Rate limited by the API. Wait a minute and try again.';
     case 'overloaded':
@@ -74,8 +84,18 @@ export function useAnswer() {
   const limits = shallowRef<Limits | null>(null);
   const settings = shallowRef<Settings | null>(null);
   const model = ref('');
+  /** Answer text as the model last produced it, to tell whether the user edited it. */
+  const generated = ref('');
   let controller: AbortController | null = null;
   let lastCapture: PendingCapture | null = null;
+
+  // The conversation so far. System blocks stay byte-identical across refinements.
+  let convo: {
+    provider: LlmProvider;
+    system: SystemBlock[];
+    history: ChatMessage[];
+    lastRaw: string;
+  } | null = null;
 
   const chars = computed(() => answer.value.length);
   const words = computed(() => countWords(answer.value));
@@ -84,14 +104,98 @@ export function useAnswer() {
     if (!l) return false;
     return chars.value > l.maxChars || (l.maxWords !== undefined && words.value > l.maxWords);
   });
+  const edited = computed(() => answer.value !== generated.value);
 
   function reset() {
     controller?.abort();
     answer.value = '';
+    generated.value = '';
     parsed.value = null;
     usage.value = EMPTY_USAGE;
     error.value = null;
     retryNote.value = '';
+    convo = null;
+  }
+
+  /** Stream one assistant turn for `messages`. Returns the raw output, or null on failure. */
+  async function streamTurn(
+    messages: ChatMessage[],
+    image?: PendingCapture['image'],
+  ): Promise<string | null> {
+    if (!convo || !settings.value) return null;
+    const s = settings.value;
+    controller = new AbortController();
+    const signal = controller.signal;
+    const before = answer.value;
+    phase.value = 'drafting';
+    error.value = null;
+    let shrunk = false;
+    for (;;) {
+      const parser = new TagParser();
+      try {
+        await convo.provider.stream(
+          { model: s.model, maxTokens: s.maxOutputTokens, system: convo.system, messages },
+          signal,
+          (e) => {
+            if (e.kind === 'text') {
+              parser.push(e.delta);
+              retryNote.value = '';
+              const soFar = parser.answerSoFar;
+              if (soFar) {
+                phase.value = 'streaming';
+                answer.value = soFar;
+              }
+            } else if (e.kind === 'usage') {
+              usage.value = e.usage;
+            } else if (e.kind === 'retry') {
+              retryNote.value =
+                e.reason === 'rate_limit'
+                  ? `Rate limited by the API. Retrying in ${Math.ceil(e.waitMs / 1000)} seconds.`
+                  : e.reason === 'overloaded'
+                    ? 'The AI service is busy. Retrying.'
+                    : "Can't reach the AI service. Retrying.";
+            }
+          },
+        );
+        const result = parser.finish();
+        parsed.value = result;
+        answer.value = result.answer;
+        generated.value = result.answer;
+        retryNote.value = '';
+        phase.value = result.type === 'assessment' ? 'assessment' : 'done';
+        return parser.text;
+      } catch (err) {
+        retryNote.value = '';
+        if (err instanceof LlmError && err.kind === 'aborted') {
+          phase.value = 'stopped';
+          return null;
+        }
+        // Image too large: resize silently to 1092 px and retry once (spec 15).
+        if (err instanceof LlmError && err.kind === 'image_too_large' && !shrunk && image) {
+          shrunk = true;
+          const img = await shrinkImage(image.dataUrl, 1092);
+          messages = messages.map((m, i) =>
+            i === 0
+              ? {
+                  ...m,
+                  content: m.content.map((p) =>
+                    p.type === 'image' ? { type: 'image' as const, ...img } : p,
+                  ),
+                }
+              : m,
+          );
+          convo.history = convo.history.length
+            ? [messages[0]!, ...convo.history.slice(1)]
+            : convo.history;
+          continue;
+        }
+        const e = err instanceof LlmError ? err : new LlmError('bad_request', String(err));
+        error.value = { kind: e.kind, message: errorMessage(e, s) };
+        phase.value = 'error';
+        if (before) answer.value = before;
+        return null;
+      }
+    }
   }
 
   async function run(capture: PendingCapture) {
@@ -113,69 +217,34 @@ export function useAnswer() {
 
     const lim = parseLimits(capture.pageText, capture.field);
     limits.value = lim;
-    const system = buildSystemBlocks(s, data);
-    let content: ContentPart[] = buildUserTurn({
+    const job = await getJobContext(capture.page.hostname);
+    const content: ContentPart[] = buildUserTurn({
       capture,
       settings: s,
       limits: lim,
       today: todayIso(),
+      jobContext: jobPromptText(job),
     });
-    const provider = createProvider(s.provider, key, s.baseUrl);
-    controller = new AbortController();
-    const signal = controller.signal;
-    phase.value = 'drafting';
+    const first: ChatMessage = { role: 'user', content };
+    convo = {
+      provider: createProvider(s.provider, key, s.baseUrl),
+      system: buildSystemBlocks(s, data),
+      history: [first],
+      lastRaw: '',
+    };
+    const raw = await streamTurn([first], capture.image);
+    if (raw !== null && convo) convo.lastRaw = raw;
+  }
 
-    let shrunk = false;
-    for (;;) {
-      const parser = new TagParser();
-      const req: AnswerRequest = {
-        model: s.model,
-        maxTokens: s.maxOutputTokens,
-        system,
-        messages: [{ role: 'user', content }],
-      };
-      try {
-        await provider.stream(req, signal, (e) => {
-          if (e.kind === 'text') {
-            parser.push(e.delta);
-            retryNote.value = '';
-            phase.value = 'streaming';
-            answer.value = parser.answerSoFar;
-          } else if (e.kind === 'usage') {
-            usage.value = e.usage;
-          } else if (e.kind === 'retry') {
-            retryNote.value =
-              e.reason === 'rate_limit'
-                ? `Rate limited by the API. Retrying in ${Math.ceil(e.waitMs / 1000)} seconds.`
-                : e.reason === 'overloaded'
-                  ? 'The AI service is busy. Retrying.'
-                  : "Can't reach the AI service. Retrying.";
-          }
-        });
-        const result = parser.finish();
-        parsed.value = result;
-        answer.value = result.answer;
-        retryNote.value = '';
-        phase.value = result.type === 'assessment' ? 'assessment' : 'done';
-        return;
-      } catch (err) {
-        retryNote.value = '';
-        if (err instanceof LlmError && err.kind === 'aborted') {
-          phase.value = 'stopped';
-          return;
-        }
-        // Image too large: resize silently to 1092 px and retry once (spec 15).
-        if (err instanceof LlmError && err.kind === 'image_too_large' && !shrunk && capture.image) {
-          shrunk = true;
-          const img = await shrinkImage(capture.image.dataUrl, 1092);
-          content = content.map((p) => (p.type === 'image' ? { type: 'image', ...img } : p));
-          continue;
-        }
-        const e = err instanceof LlmError ? err : new LlmError('bad_request', String(err));
-        error.value = { kind: e.kind, message: errorMessage(e, s) };
-        phase.value = 'error';
-        return;
-      }
+  /** Follow-up turn (spec 3.5). Hand edits are swapped into the previous answer first. */
+  async function refine(action: RefineAction) {
+    if (!convo || !limits.value || !convo.lastRaw) return;
+    const instruction = refineInstruction(action, answer.value.length, limits.value);
+    const messages = refineMessages(convo.history, convo.lastRaw, answer.value, instruction);
+    const raw = await streamTurn(messages);
+    if (raw !== null && convo) {
+      convo.history = messages;
+      convo.lastRaw = raw;
     }
   }
 
@@ -200,7 +269,9 @@ export function useAnswer() {
     chars,
     words,
     overLimit,
+    edited,
     run,
+    refine,
     stop,
     retry,
     reset,

@@ -126,12 +126,50 @@ export async function withRetries<T>(
   }
 }
 
-/** Wrap fetch so network failures become LlmError('network'). */
-export async function fetchOrThrow(url: string, init: RequestInit): Promise<Response> {
+/** Streamed requests must start responding within this long. */
+export const STREAM_RESPONSE_TIMEOUT_MS = 60_000;
+/** Non-streamed requests generate everything before responding (profile builds are long). */
+export const COMPLETE_RESPONSE_TIMEOUT_MS = 180_000;
+
+/**
+ * fetch with a deadline for the response headers. Network failures and timeouts become
+ * LlmError('network'); the caller's own abort (Stop) is rethrown as is. The caller's signal
+ * keeps governing the body after the headers arrive.
+ */
+export async function fetchOrThrow(
+  url: string,
+  init: RequestInit,
+  responseTimeoutMs = STREAM_RESPONSE_TIMEOUT_MS,
+): Promise<Response> {
+  const ctrl = new AbortController();
+  const outer = init.signal;
+  if (outer?.aborted) ctrl.abort(outer.reason);
+  else outer?.addEventListener('abort', () => ctrl.abort(outer.reason), { once: true });
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    ctrl.abort();
+  }, responseTimeoutMs);
   try {
-    return await fetch(url, init);
+    return await fetch(url, { ...init, signal: ctrl.signal });
   } catch (err) {
+    if (timedOut) throw new LlmError('network', 'The AI service took too long to respond.');
     if (isAbort(err)) throw err;
     throw new LlmError('network', "Can't reach the AI service. Check your connection.");
+  } finally {
+    clearTimeout(timer);
   }
+}
+
+/** Short user-facing message for errors outside the answer flow. */
+export function describeError(err: unknown): string {
+  if (err instanceof LlmError) {
+    if (err.kind === 'auth') return 'The API key was rejected. Check it in AI provider.';
+    if (err.kind === 'rate_limit') return 'Rate limited by the API. Wait a minute and try again.';
+    if (err.kind === 'overloaded' || err.kind === 'server')
+      return 'The AI service is busy. Try again in a moment.';
+    if (err.kind === 'network') return "Can't reach the AI service. Check your connection.";
+    return err.message;
+  }
+  return 'Something went wrong. Try again.';
 }

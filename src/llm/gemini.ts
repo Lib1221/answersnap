@@ -1,5 +1,5 @@
 import { quirksFor } from '@/config/models';
-import { fetchOrThrow, LlmError, withRetries } from './errors';
+import { COMPLETE_RESPONSE_TIMEOUT_MS, fetchOrThrow, LlmError, withRetries } from './errors';
 import { readSse } from './sse';
 import {
   EMPTY_USAGE,
@@ -219,12 +219,16 @@ export class GeminiProvider implements LlmProvider {
   }
 
   private async generate(body: Record<string, unknown>, model: string, signal?: AbortSignal) {
-    const res = await fetchOrThrow(this.url(model, 'generateContent'), {
-      method: 'POST',
-      headers: this.headers(),
-      body: JSON.stringify(body),
-      signal,
-    });
+    const res = await fetchOrThrow(
+      this.url(model, 'generateContent'),
+      {
+        method: 'POST',
+        headers: this.headers(),
+        body: JSON.stringify(body),
+        signal,
+      },
+      COMPLETE_RESPONSE_TIMEOUT_MS,
+    );
     if (!res.ok) throw await errorFromResponse(res);
     const json = (await res.json()) as Chunk;
     const candidate = json.candidates?.[0];

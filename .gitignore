@@ -8,7 +8,7 @@ stats.html
 test-results
 playwright-report
 evals/profile.local.json
-evals/report.md
+evals/report*.md
 .env
 .env.*
 !.env.example

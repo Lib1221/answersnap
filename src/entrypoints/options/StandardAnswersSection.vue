@@ -1,13 +1,33 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
 import { STANDARD_ANSWER_FIELDS, type StandardAnswers } from '@/kb/profileSchema';
 import { getStandardAnswers, saveStandardAnswers } from '@/storage/items';
 
 const answers = ref<StandardAnswers | null>(null);
 const saved = ref(false);
 
+/** Deep link from a missing-info chip: #standard-answers?field=key or ?ask=question. */
+async function followLink() {
+  const query = new URLSearchParams(location.hash.split('?')[1] ?? '');
+  const field = query.get('field');
+  const ask = query.get('ask');
+  if (!answers.value || (!field && !ask)) return;
+  if (ask && !answers.value.custom.some((c) => c.question === ask)) {
+    answers.value.custom.push({ id: crypto.randomUUID(), question: ask, answer: '' });
+  }
+  await nextTick();
+  const target = field
+    ? document.querySelector<HTMLInputElement>(`[data-testid="sa-${CSS.escape(field)}"]`)
+    : document.querySelector<HTMLInputElement>(
+        `[aria-label="Answer ${answers.value.custom.length}"]`,
+      );
+  target?.focus();
+  target?.scrollIntoView({ block: 'center' });
+}
+
 onMounted(async () => {
   answers.value = await getStandardAnswers();
+  await followLink();
 });
 
 async function save() {

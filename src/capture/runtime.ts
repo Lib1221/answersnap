@@ -57,7 +57,9 @@ function beginSelection(captureId: string, mode: SnipMode) {
   overlay = mountOverlay(mode, checker, {
     onSelect: async (rect) => {
       const host = overlay?.host ?? null;
-      const { text, hiddenTextChars } = extractVisibleText(rect, checker, { skip: host });
+      // Job posts and imports can be long; questions keep the 4,000 character cap (spec 9.5).
+      const cap = mode === 'job' || mode === 'import' ? 20_000 : undefined;
+      const { text, hiddenTextChars } = extractVisibleText(rect, checker, { skip: host, cap });
       const candidates = findCandidates(rect, activeAtStart, checker);
       const viewport = { w: window.innerWidth, h: window.innerHeight };
       teardown();

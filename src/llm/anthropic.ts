@@ -1,5 +1,5 @@
 import { quirksFor } from '@/config/models';
-import { fetchOrThrow, LlmError, withRetries } from './errors';
+import { COMPLETE_RESPONSE_TIMEOUT_MS, fetchOrThrow, LlmError, withRetries } from './errors';
 import { readSse } from './sse';
 import {
   EMPTY_USAGE,
@@ -198,12 +198,16 @@ export class AnthropicProvider implements LlmProvider {
   }
 
   private async post(body: Record<string, unknown>, signal?: AbortSignal) {
-    const res = await fetchOrThrow(`${this.baseUrl}/v1/messages`, {
-      method: 'POST',
-      headers: this.headers(),
-      body: JSON.stringify(body),
-      signal,
-    });
+    const res = await fetchOrThrow(
+      `${this.baseUrl}/v1/messages`,
+      {
+        method: 'POST',
+        headers: this.headers(),
+        body: JSON.stringify(body),
+        signal,
+      },
+      COMPLETE_RESPONSE_TIMEOUT_MS,
+    );
     if (!res.ok) throw await errorFromResponse(res);
     return (await res.json()) as {
       content?: { type: string; text?: string; input?: unknown }[];

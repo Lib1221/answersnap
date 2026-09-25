@@ -24,6 +24,7 @@ export function defaultSettings(provider: Provider = 'anthropic'): Settings {
     fastModel: defaultModel(provider, 'fast'),
     styleRules: DEFAULT_STYLE_RULES,
     prices: DEFAULT_PRICES,
-    baseUrl: import.meta.env.MODE === 'e2e' ? E2E_BASE_URL : undefined,
+    // import.meta.env is undefined outside Vite (the eval runner runs in plain Node).
+    baseUrl: import.meta.env?.MODE === 'e2e' ? E2E_BASE_URL : undefined,
   });
 }

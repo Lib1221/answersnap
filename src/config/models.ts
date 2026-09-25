@@ -18,7 +18,8 @@ export const FALLBACK_MODELS: Record<ProviderId, ModelInfo[]> = {
     { id: 'claude-opus-5-5', displayName: 'Opus 5.5', role: 'best' },
   ],
   gemini: [
-    { id: 'gemini-3.8-flash', displayName: 'Gemini 3.8 Flash', role: 'default' },
+    { id: 'gemini-3.5-flash', displayName: 'Gemini 3.5 Flash', role: 'default' },
+    { id: 'gemini-3.8-flash', displayName: 'Gemini 3.8 Flash' },
     { id: 'gemini-3.5-flash-lite', displayName: 'Gemini 3.5 Flash-Lite', role: 'fast' },
     { id: 'gemini-3.1-pro-preview', displayName: 'Gemini 3.1 Pro Preview', role: 'best' },
   ],
@@ -33,6 +34,7 @@ export const DEFAULT_PRICES: Record<string, ModelPrice> = {
   'claude-sonnet-5': { input: 2, output: 10, cacheRead: 0.2, cacheWrite5m: 2.5 },
   'claude-haiku-4-5-20251001': { input: 1, output: 5, cacheRead: 0.1, cacheWrite5m: 1.25 },
   'claude-opus-5-5': { input: 4, output: 20, cacheRead: 0.2, cacheWrite5m: 5 },
+  'gemini-3.5-flash': { input: 0.75, output: 3.75, cacheRead: 0.075, cacheWrite5m: 0 },
   'gemini-3.8-flash': { input: 0.75, output: 3.75, cacheRead: 0.075, cacheWrite5m: 0 },
   'gemini-3.5-flash-lite': { input: 0.3, output: 2.5, cacheRead: 0, cacheWrite5m: 0 },
 };

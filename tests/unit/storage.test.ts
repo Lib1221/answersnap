@@ -31,7 +31,7 @@ describe('settings', () => {
     });
     const s = await getSettings();
     expect(s.tone).toBe('friendly');
-    expect(s.model).toBe('gemini-3.8-flash');
+    expect(s.model).toBe('gemini-3.5-flash');
     expect(s.sendScreenshot).toBe(true);
   });
 

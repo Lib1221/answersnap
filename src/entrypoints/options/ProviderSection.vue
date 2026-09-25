@@ -211,6 +211,22 @@ onMounted(load);
       I'm on the free tier (hide cost estimates)
     </label>
 
+    <label class="flex items-start gap-2">
+      <input
+        type="checkbox"
+        class="mt-1"
+        :checked="settings.prewarmCache"
+        @change="update({ prewarmCache: ($event.target as HTMLInputElement).checked })"
+      />
+      <span>
+        Warm up the prompt cache when the side panel opens
+        <span class="block text-[13px] text-graphite-2">
+          Anthropic only. The first answer starts faster; costs a small cache write about once every
+          few minutes of use.
+        </span>
+      </span>
+    </label>
+
     <div v-if="showBaseUrl" class="flex flex-col gap-2">
       <label for="base-url" class="font-medium">API base URL (development only)</label>
       <input

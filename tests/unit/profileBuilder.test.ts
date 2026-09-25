@@ -122,15 +122,13 @@ describe('structured output fallbacks', () => {
   });
 
   it('Anthropic uses output_config.format first', async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValue(
-        json(200, {
-          content: [{ type: 'text', text: JSON.stringify(profile) }],
-          stop_reason: 'end_turn',
-          usage: {},
-        }),
-      );
+    const fetchMock = vi.fn().mockResolvedValue(
+      json(200, {
+        content: [{ type: 'text', text: JSON.stringify(profile) }],
+        stop_reason: 'end_turn',
+        usage: {},
+      }),
+    );
     vi.stubGlobal('fetch', fetchMock);
     const out = await new AnthropicProvider('k').complete(req('claude-sonnet-5'));
     expect(out.json).toEqual(profile);

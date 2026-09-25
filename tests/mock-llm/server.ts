@@ -3,7 +3,7 @@
 //
 // Scenarios are chosen by API key:
 //   bad-key         401 (Anthropic) / 400 API_KEY_INVALID (Gemini)
-//   rate-limit-key  first request 429 with retry-after 1, then success
+//   rate-limit-key  first request 429 with retry-after 2, then success
 //   overloaded-key  first two requests 529, then success
 //   slow-key        streams one word every 300 ms (for Stop)
 // GET /__log returns logged bodies; POST /__reset clears the log and counters.
@@ -116,7 +116,7 @@ function scenario(res: ServerResponse, key: string, gemini: boolean): boolean {
       res,
       429,
       { type: 'error', error: { type: 'rate_limit_error', message: 'Rate limited' } },
-      { 'retry-after': '1' },
+      { 'retry-after': '2' },
     );
     return true;
   }
@@ -252,8 +252,8 @@ createServer(async (req, res) => {
       return json(res, 200, {
         models: [
           {
-            name: 'models/gemini-3.8-flash',
-            displayName: 'Gemini 3.8 Flash',
+            name: 'models/gemini-3.5-flash',
+            displayName: 'Gemini 3.5 Flash',
             supportedGenerationMethods: ['generateContent'],
           },
         ],

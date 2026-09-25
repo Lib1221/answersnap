@@ -346,3 +346,56 @@ describe('GeminiProvider', () => {
     ]);
   });
 });
+
+describe('timeouts', () => {
+  it('treats a stream that goes quiet as a network error and retries it once', async () => {
+    vi.useFakeTimers();
+    const hanging = () =>
+      new Response(
+        new ReadableStream({
+          start(c) {
+            c.enqueue(new TextEncoder().encode('event: ping\ndata: {"type":"ping"}\n\n'));
+          },
+        }),
+        { status: 200 },
+      );
+    const fetchMock = vi.fn().mockImplementation(async () => hanging());
+    vi.stubGlobal('fetch', fetchMock);
+    const p = new AnthropicProvider('k').stream(req, new AbortController().signal, () => {});
+    const assertion = expect(p).rejects.toMatchObject({
+      kind: 'network',
+      message: 'The AI service stopped responding.',
+    });
+    await vi.advanceTimersByTimeAsync(130_000);
+    await assertion;
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('gives up waiting for response headers after the deadline', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockImplementation(
+          (_u: string, init: RequestInit) =>
+            new Promise((_, reject) =>
+              init.signal!.addEventListener('abort', () =>
+                reject(new DOMException('Aborted', 'AbortError')),
+              ),
+            ),
+        ),
+    );
+    const p = new GeminiProvider('k').stream(
+      { ...req, model: 'gemini-3.5-flash' },
+      new AbortController().signal,
+      () => {},
+    );
+    const assertion = expect(p).rejects.toMatchObject({
+      kind: 'network',
+      message: 'The AI service took too long to respond.',
+    });
+    await vi.advanceTimersByTimeAsync(130_000);
+    await assertion;
+  });
+});

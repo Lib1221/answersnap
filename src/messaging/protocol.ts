@@ -35,8 +35,13 @@ export interface MessageMap {
     msg: { type: 'SELECTION_CANCELLED'; captureId: string };
     reply: void;
   };
+  /** Panel asks the SW to (re)inject the capture script before messaging the page. */
+  ENSURE_CAPTURE: {
+    msg: { type: 'ENSURE_CAPTURE'; tabId: number };
+    reply: { ok: true } | { ok: false; error: StartSnipError };
+  };
   READ_PAGE_TEXT: {
-    msg: { type: 'READ_PAGE_TEXT'; scope: 'selection' | 'page' };
+    msg: { type: 'READ_PAGE_TEXT'; scope: 'selection' | 'page' | 'job' };
     reply: { title: string; text: string; url: string };
   };
   /** Test-only, compiled out of production (spec 16.2). */

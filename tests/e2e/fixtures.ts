@@ -105,16 +105,21 @@ export const JAMIE_RESUME = readFileSync(
 /** Seed extension storage from an extension page: provider, key, and a pasted profile. */
 export async function seed(
   panel: Page,
-  opts: { provider?: 'anthropic' | 'gemini'; key?: string | null; profile?: boolean } = {},
+  opts: {
+    provider?: 'anthropic' | 'gemini';
+    key?: string | null;
+    profile?: boolean;
+    prewarm?: boolean;
+  } = {},
 ) {
   const provider = opts.provider ?? 'anthropic';
   const key = opts.key === undefined ? 'test-key' : opts.key;
   await fetch(`${MOCK_LLM}/__reset`, { method: 'POST' });
   await panel.evaluate(
-    async ({ provider, key, profile, resume }) => {
+    async ({ provider, key, profile, resume, prewarm }) => {
       const models: Record<string, [string, string]> = {
         anthropic: ['claude-sonnet-5', 'claude-haiku-4-5-20251001'],
-        gemini: ['gemini-3.8-flash', 'gemini-3.5-flash-lite'],
+        gemini: ['gemini-3.5-flash', 'gemini-3.5-flash-lite'],
       };
       const data: Record<string, unknown> = {
         settings: {
@@ -122,6 +127,8 @@ export async function seed(
           provider,
           model: models[provider]![0],
           fastModel: models[provider]![1],
+          // Off unless a test is about it: a warm-up request would shift the mock log.
+          prewarmCache: prewarm,
         },
       };
       if (key) data[`apiKey:${provider}`] = key;
@@ -141,8 +148,17 @@ export async function seed(
       await chrome.storage.local.clear();
       await chrome.storage.local.set(data);
     },
-    { provider, key, profile: opts.profile ?? true, resume: JAMIE_RESUME },
+    {
+      provider,
+      key,
+      profile: opts.profile ?? true,
+      resume: JAMIE_RESUME,
+      prewarm: opts.prewarm ?? false,
+    },
   );
+  // Start the panel from the seeded state: its mount-time reads (readiness, pre-warm) would
+  // otherwise race the writes above.
+  await panel.reload();
 }
 
 export async function mockLog(): Promise<Record<string, unknown>[]> {

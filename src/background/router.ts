@@ -1,4 +1,5 @@
 import { createRouter } from '@/messaging/send';
+import { classifyInjectError, ensureCaptureScript, isRestrictedUrl } from './inject';
 import {
   handleRegionSelected,
   handleSelectionCancelled,
@@ -12,6 +13,18 @@ export function registerRouter(): void {
     START_SNIP: async (msg) => {
       const tab = await browser.tabs.get(msg.tabId);
       return startSnip({ tabId: msg.tabId, windowId: tab.windowId, url: tab.url }, msg.mode);
+    },
+    ENSURE_CAPTURE: async (msg) => {
+      const tab = await browser.tabs.get(msg.tabId);
+      if (isRestrictedUrl(tab.url))
+        return { ok: false as const, error: 'RESTRICTED_PAGE' as const };
+      try {
+        await ensureCaptureScript(msg.tabId);
+        return { ok: true as const };
+      } catch (err) {
+        const code = classifyInjectError(err);
+        return { ok: false as const, error: code === 'CAPTURE_FAILED' ? 'INJECT_FAILED' : code };
+      }
     },
     REGION_SELECTED: (msg, sender) => handleRegionSelected(msg, sender),
     SELECTION_CANCELLED: async (msg) => {

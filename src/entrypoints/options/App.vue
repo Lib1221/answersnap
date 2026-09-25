@@ -6,12 +6,14 @@ import ProfileSection from './ProfileSection.vue';
 import ProviderSection from './ProviderSection.vue';
 import SourcesSection from './SourcesSection.vue';
 import StandardAnswersSection from './StandardAnswersSection.vue';
+import WritingStyleSection from './WritingStyleSection.vue';
 
 const SECTIONS = [
   { id: 'provider', title: 'AI provider' },
   { id: 'sources', title: 'Sources' },
   { id: 'profile', title: 'Profile' },
   { id: 'standard-answers', title: 'Standard answers' },
+  { id: 'writing-style', title: 'Writing style' },
 ] as const;
 type SectionId = (typeof SECTIONS)[number]['id'];
 
@@ -19,7 +21,7 @@ const current = ref<SectionId>('provider');
 const corrupt = ref<string[]>([]);
 
 function fromHash() {
-  const id = location.hash.slice(1);
+  const id = location.hash.slice(1).split('?')[0]!;
   if (SECTIONS.some((s) => s.id === id)) current.value = id as SectionId;
 }
 
@@ -66,6 +68,7 @@ async function dismissCorrupt() {
       <SourcesSection v-else-if="current === 'sources'" />
       <ProfileSection v-else-if="current === 'profile'" />
       <StandardAnswersSection v-else-if="current === 'standard-answers'" />
+      <WritingStyleSection v-else-if="current === 'writing-style'" />
     </main>
   </div>
 </template>

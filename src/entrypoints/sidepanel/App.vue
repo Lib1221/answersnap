@@ -7,20 +7,44 @@ import { getApiKey, getSettings } from '@/storage/items';
 import type { CaptureErrorCode, FieldInfo } from '@/storage/schema';
 import CropThumb from '@/ui/CropThumb.vue';
 import AnswerPanel from './AnswerPanel.vue';
+import JobBar from './JobBar.vue';
+import { prewarmIfNeeded } from './prewarm';
 import { useAnswer } from './useAnswer';
 import { useCapture } from './useCapture';
+import { useJob } from './useJob';
 
-const { view, capture, busy, snip, allowAllSites, cancelSelection } = useCapture();
+const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSelection } =
+  useCapture();
 const answer = useAnswer();
+const job = useJob();
 
-// A new capture starts a draft right away.
+// A new capture starts a draft right away; a job snip becomes the site's job context.
 watch(
   () => capture.value?.id,
-  () => {
+  async () => {
     const c = capture.value;
-    if (c && c.mode === 'question') void answer.run(c);
+    if (!c) return;
+    await job.setHost(c.page.hostname);
+    void answer.run(c);
   },
 );
+watch(
+  () => jobCapture.value?.id,
+  () => {
+    if (jobCapture.value) void job.fromCapture(jobCapture.value);
+  },
+);
+// Job snip progress shows in the job bar.
+watch(status, (s) => {
+  if (s?.mode !== 'job') return;
+  if (s.state === 'selecting') job.busy.value = 'Drag around the job post. Esc cancels.';
+  else if (s.state === 'cancelled' || s.state === 'error') job.busy.value = '';
+});
+
+async function detectHost() {
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+  if (tab?.url?.startsWith('http')) await job.setHost(new URL(tab.url).hostname);
+}
 
 /** What the idle state asks for first (spec 13.2): an API key, then candidate data. */
 const readiness = ref<'ready' | 'needs-key' | 'needs-profile' | 'unknown'>('unknown');
@@ -60,7 +84,7 @@ const target = computed(() => {
 
 function onKey(e: KeyboardEvent) {
   if (e.key !== 'Escape') return;
-  if (view.value.kind === 'selecting') void cancelSelection();
+  if (status.value?.state === 'selecting') void cancelSelection();
   else if (['drafting', 'streaming'].includes(answer.phase.value)) answer.stop();
 }
 
@@ -68,6 +92,8 @@ onMounted(async () => {
   window.addEventListener('keydown', onKey);
   window.addEventListener('focus', checkReadiness);
   void checkReadiness();
+  void prewarmIfNeeded();
+  void detectHost();
   const commands = await browser.commands.getAll();
   const snipCommand = commands.find((c) => c.name === 'snip-question');
   if (snipCommand?.shortcut) shortcut.value = snipCommand.shortcut;
@@ -90,6 +116,7 @@ function openSettings(section?: string) {
       <button class="btn btn-quiet" type="button" @click="openSettings()">Settings</button>
     </header>
 
+    <JobBar :state="job" />
     <main class="flex flex-1 flex-col gap-4 px-4 py-4">
       <section
         v-if="view.kind === 'idle'"

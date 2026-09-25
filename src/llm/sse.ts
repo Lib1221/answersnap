@@ -1,3 +1,8 @@
+import { LlmError } from './errors';
+
+/** A stream that goes quiet this long is treated as a dropped connection. */
+export const STREAM_IDLE_TIMEOUT_MS = 60_000;
+
 // Incremental Server-Sent Events parser (spec 11.2). Handles events split across chunks,
 // CRLF line endings, comments, and multi-line data fields.
 
@@ -52,6 +57,7 @@ function parseBlock(block: string): SseEvent | null {
 export async function* readSse(
   body: ReadableStream<Uint8Array>,
   signal?: AbortSignal,
+  idleMs = STREAM_IDLE_TIMEOUT_MS,
 ): AsyncGenerator<SseEvent> {
   const reader = body.getReader();
   const decoder = new TextDecoder();
@@ -60,7 +66,20 @@ export async function* readSse(
   signal?.addEventListener('abort', onAbort, { once: true });
   try {
     for (;;) {
-      const { value, done } = await reader.read();
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      let idle = false;
+      const quiet = new Promise<never>((_, reject) => {
+        timer = setTimeout(() => {
+          idle = true;
+          reject(new LlmError('network', 'The AI service stopped responding.'));
+          void reader.cancel().catch(() => undefined);
+        }, idleMs);
+      });
+      const { value, done } = await Promise.race([reader.read(), quiet]).finally(() =>
+        clearTimeout(timer),
+      );
+      // Cancelling ends the read "normally"; it must still count as a dropped stream.
+      if (idle) throw new LlmError('network', 'The AI service stopped responding.');
       if (done) break;
       yield* parser.push(decoder.decode(value, { stream: true }));
     }

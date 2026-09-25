@@ -12,14 +12,4 @@ export async function configuredProvider(): Promise<{ provider: LlmProvider; set
   return { provider: createProvider(settings.provider, key, settings.baseUrl), settings };
 }
 
-export function describeError(err: unknown): string {
-  if (err instanceof LlmError) {
-    if (err.kind === 'auth') return 'The API key was rejected. Check it in AI provider.';
-    if (err.kind === 'rate_limit') return 'Rate limited by the API. Wait a minute and try again.';
-    if (err.kind === 'overloaded' || err.kind === 'server')
-      return 'The AI service is busy. Try again in a moment.';
-    if (err.kind === 'network') return "Can't reach the AI service. Check your connection.";
-    return err.message;
-  }
-  return 'Something went wrong. Try again.';
-}
+export { describeError } from '@/llm/errors';
