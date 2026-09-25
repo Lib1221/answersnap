@@ -1,0 +1,14 @@
+node_modules
+.output
+.wxt
+dist
+stats.html
+*.log
+.DS_Store
+test-results
+playwright-report
+evals/profile.local.json
+evals/report.md
+.env
+.env.*
+!.env.example

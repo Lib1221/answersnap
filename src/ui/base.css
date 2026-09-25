@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/public-sans';
+@import './tokens.css';
+
+@theme {
+  --font-sans: 'Public Sans Variable', system-ui, sans-serif;
+  --color-paper: var(--paper);
+  --color-canary: var(--canary);
+  --color-ink: var(--ink);
+  --color-carbon-pink: var(--carbon-pink);
+  --color-carbon-pink-text: var(--carbon-pink-text);
+  --color-graphite: var(--graphite);
+  --color-graphite-2: var(--graphite-2);
+  --color-rule: var(--rule);
+  --radius-control: 6px;
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--graphite);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

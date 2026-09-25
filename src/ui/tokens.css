@@ -1,0 +1,25 @@
+/* Design tokens (spec 13.1). Carbonless form sets and ballpoint ink. */
+:root {
+  --paper: #ffffff;
+  --canary: #fff6c9;
+  --ink: #2447b8;
+  --carbon-pink: #fbe3e6;
+  --carbon-pink-text: #9e1f35;
+  --graphite: #23262b;
+  --graphite-2: #5b616b;
+  --rule: #d7deea;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #15171b;
+    --canary: #3a3421;
+    --ink: #8fa8ff;
+    --carbon-pink: #3b1e24;
+    --carbon-pink-text: #ff9aa8;
+    --graphite: #eceef2;
+    --graphite-2: #a3a9b3;
+    --rule: #2c313a;
+  }
+}
