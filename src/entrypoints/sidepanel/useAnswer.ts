@@ -15,7 +15,9 @@ import {
   type Usage,
 } from '@/llm/types';
 import { loadCandidateData } from '@/kb/candidate';
-import { getApiKey, getSettings } from '@/storage/items';
+import { getLibrary, updateEntry, upsertEntry, type LibraryEntry } from '@/kb/library';
+import { rankMatches, STRONG_MATCH } from '@/kb/similarity';
+import { getApiKey, getSettings, lastRequestItem } from '@/storage/items';
 import type { PendingCapture, Settings } from '@/storage/schema';
 
 export type AnswerPhase =
@@ -27,6 +29,7 @@ export type AnswerPhase =
   | 'done'
   | 'stopped'
   | 'assessment'
+  | 'match'
   | 'error';
 
 export interface AnswerError {
@@ -74,6 +77,36 @@ export function errorMessage(err: LlmError, settings: Settings | null): string {
   }
 }
 
+/**
+ * The last request as sent, for Privacy > "What gets sent" (spec 14.2). The key is never part
+ * of it, and the screenshot is described, not stored (hard rule 3).
+ */
+async function recordLastRequest(
+  s: Settings,
+  system: SystemBlock[],
+  messages: ChatMessage[],
+  image: PendingCapture['image'],
+) {
+  const redacted = messages.map((m) => ({
+    role: m.role,
+    content: m.content.map((p) =>
+      p.type === 'image'
+        ? {
+            type: 'image',
+            note: `Screenshot, ${image?.width ?? '?'} x ${image?.height ?? '?'} px (not stored)`,
+          }
+        : p,
+    ),
+  }));
+  await lastRequestItem.setValue({
+    at: new Date().toISOString(),
+    provider: s.provider,
+    model: s.model,
+    system: system.map((b) => b.text),
+    messages: redacted,
+  });
+}
+
 export function useAnswer() {
   const phase = ref<AnswerPhase>('idle');
   const answer = ref('');
@@ -88,6 +121,9 @@ export function useAnswer() {
   const generated = ref('');
   let controller: AbortController | null = null;
   let lastCapture: PendingCapture | null = null;
+  /** A saved answer that closely matches this question (spec 3.6). */
+  const match = shallowRef<{ entry: LibraryEntry; score: number } | null>(null);
+  const canRefine = ref(false);
 
   // The conversation so far. System blocks stay byte-identical across refinements.
   let convo: {
@@ -115,6 +151,8 @@ export function useAnswer() {
     error.value = null;
     retryNote.value = '';
     convo = null;
+    match.value = null;
+    canRefine.value = false;
   }
 
   /** Stream one assistant turn for `messages`. Returns the raw output, or null on failure. */
@@ -129,6 +167,7 @@ export function useAnswer() {
     const before = answer.value;
     phase.value = 'drafting';
     error.value = null;
+    void recordLastRequest(s, convo.system, messages, image ?? lastCapture?.image);
     let shrunk = false;
     for (;;) {
       const parser = new TagParser();
@@ -198,7 +237,13 @@ export function useAnswer() {
     }
   }
 
-  async function run(capture: PendingCapture) {
+  /** The question as matched against the library: the snipped text, trimmed. */
+  function questionOf(capture: PendingCapture): string {
+    return capture.pageText.slice(0, 400) || capture.field?.label || '';
+  }
+
+  async function run(capture: PendingCapture, opts: { force?: 'new' | 'adapt' } = {}) {
+    const adaptFrom = opts.force === 'adapt' ? match.value?.entry : undefined;
     reset();
     lastCapture = capture;
     const s = await getSettings();
@@ -217,6 +262,21 @@ export function useAnswer() {
 
     const lim = parseLimits(capture.pageText, capture.field);
     limits.value = lim;
+
+    // Library first (spec 3.6): a strong match pauses for Reuse / Adapt / Write new.
+    const matches = rankMatches(questionOf(capture), await getLibrary());
+    if (!opts.force && matches[0] && matches[0].score >= STRONG_MATCH) {
+      match.value = matches[0];
+      phase.value = 'match';
+      return;
+    }
+    const examples = adaptFrom
+      ? [adaptFrom]
+      : matches
+          .filter((m) => m.score < STRONG_MATCH)
+          .slice(0, 3)
+          .map((m) => m.entry);
+
     const job = await getJobContext(capture.page.hostname);
     const content: ContentPart[] = buildUserTurn({
       capture,
@@ -224,6 +284,7 @@ export function useAnswer() {
       limits: lim,
       today: todayIso(),
       jobContext: jobPromptText(job),
+      savedAnswers: examples.map((e) => ({ question: e.question, answer: e.answer })),
     });
     const first: ChatMessage = { role: 'user', content };
     convo = {
@@ -233,7 +294,60 @@ export function useAnswer() {
       lastRaw: '',
     };
     const raw = await streamTurn([first], capture.image);
-    if (raw !== null && convo) convo.lastRaw = raw;
+    if (raw !== null && convo) {
+      convo.lastRaw = raw;
+      canRefine.value = true;
+    }
+  }
+
+  /** Reuse: the saved answer, no API call. */
+  async function reuse(entry: LibraryEntry | undefined = match.value?.entry) {
+    if (!entry) return;
+    match.value = null;
+    convo = null;
+    canRefine.value = false;
+    answer.value = entry.answer;
+    generated.value = entry.answer;
+    parsed.value = {
+      question: entry.question,
+      type: entry.questionType as ParsedAnswer['type'],
+      answer: entry.answer,
+      missing: [],
+      notes: '',
+      usedFallback: false,
+    };
+    usage.value = EMPTY_USAGE;
+    error.value = null;
+    phase.value = 'done';
+    await updateEntry(entry.id, { uses: entry.uses + 1 });
+  }
+
+  async function adapt() {
+    if (lastCapture) await run(lastCapture, { force: 'adapt' });
+  }
+
+  async function writeNew() {
+    if (lastCapture) await run(lastCapture, { force: 'new' });
+  }
+
+  /**
+   * Save the final answer to the library: on Insert and Copy when history is on, and always on
+   * an explicit Save (spec 3.2 step 9).
+   */
+  async function save(reason: 'insert' | 'copy' | 'explicit'): Promise<boolean> {
+    const c = lastCapture;
+    const text = answer.value.trim();
+    if (!c || !text || phase.value !== 'done') return false;
+    if (reason !== 'explicit' && settings.value && !settings.value.history.enabled) return false;
+    await upsertEntry({
+      hostname: c.page.hostname,
+      pageTitle: c.page.title,
+      question: parsed.value?.question || questionOf(c).split('\n')[0]!,
+      questionType: parsed.value?.type ?? 'unclear',
+      answer: text,
+      model: model.value,
+    });
+    return true;
   }
 
   /** Follow-up turn (spec 3.5). Hand edits are swapped into the previous answer first. */
@@ -270,7 +384,13 @@ export function useAnswer() {
     words,
     overLimit,
     edited,
+    match,
+    canRefine,
     run,
+    reuse,
+    adapt,
+    writeNew,
+    save,
     refine,
     stop,
     retry,

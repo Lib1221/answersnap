@@ -106,3 +106,17 @@ Ambiguities in `SPEC.md`, deviations from it, and the option picked. One line ea
 - The clipboard can refuse writes when the panel isn't focused; the copy fallback then tells the user to copy the text by hand instead of claiming it was copied.
 - The Insert split button: "Replace" (default) plus a ▾ that shows "Append", only when the field already has content. With no text field (dropdown, radios), Copy becomes the primary button until choice fields arrive in M6.
 - Test-only dev dependencies for fixtures: react, react-dom, quill, and esbuild (bundles the React fixture when the fixture server starts). Vue's browser ESM build comes from the existing runtime dependency. Nothing is loaded from a CDN.
+
+## M6 (library and more entry points)
+
+- Library matching compares the snipped text (first 400 characters) against each saved entry's question, which is the model's one-line reading of the question when there was one.
+- The same question on the same site updates the earlier library entry (and its use count) instead of adding a duplicate.
+- After Reuse there is no model conversation, so the refine buttons are hidden; Adapt or Regenerate start one.
+- A library row that fails validation is dropped on read instead of discarding the whole library.
+- "Answer this field": the SW reuses `BEGIN_SELECTION` with mode `field`; the capture script uses the focused field (Chrome focuses text fields on right-click). If nothing fillable is focused, it falls back to a normal snip overlay rather than guessing. The crop has no padding and outlines the field (`REGION_SELECTED.outline`). The field's label is prepended to the page text when the region text doesn't include it.
+- "Use selection as job post": the SW reads the selection through the capture script's visibility filter (Chrome's `selectionText` can include white-on-white text) and writes `session:pendingJob`; the panel builds the job context, since only the panel may call the model (spec 4).
+- Choice fields: checkbox answers are split on commas and new lines; radio and select take the whole answer. With no match, the panel says so and nothing is clicked. The primary button reads "Select" for choice targets.
+- "What gets sent" shows the last request from `session:lastRequest` with the screenshot described ("Screenshot, W x H px (not stored)") instead of a thumbnail, since storing a thumbnail would conflict with hard rule 3.
+- Export includes settings (minus the dev-only base URL), sources, profile, standard answers, and library; never API keys. Import replaces those and leaves keys alone.
+- "Delete all data" clears local and session storage and removes every host permission not in the manifest's required list.
+- The eval runner skips the remaining questions after three in a row fail on quota, and still writes the report.

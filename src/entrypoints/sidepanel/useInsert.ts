@@ -6,6 +6,8 @@ import type { FieldInfo, PendingCapture } from '@/storage/schema';
 import type { useAnswer } from './useAnswer';
 
 const TEXT_KINDS: FieldInfo['kind'][] = ['input', 'textarea', 'contenteditable'];
+const CHOICE_KINDS: FieldInfo['kind'][] = ['select', 'radio-group', 'checkbox-group'];
+export const NO_MATCH = 'None of the options matched the answer. Pick it on the page.';
 const PASTE_KEY = /mac/i.test(navigator.platform) ? 'Cmd+V' : 'Ctrl+V';
 
 export const COPY_FALLBACK = `Couldn't fill this field directly. The answer is copied. Click the field and press ${PASTE_KEY}.`;
@@ -38,11 +40,16 @@ export function useInsert(
     },
   );
 
-  const hasExisting = computed(() => !!target.value?.currentValue?.trim());
+  const isChoice = computed(() => !!target.value && CHOICE_KINDS.includes(target.value.kind));
+  const hasExisting = computed(() => !isChoice.value && !!target.value?.currentValue?.trim());
   const answerReady = computed(() => answer.phase.value === 'done' && !!answer.answer.value.trim());
-  const fillable = computed(() => !!target.value && TEXT_KINDS.includes(target.value.kind));
+  const fillable = computed(
+    () => !!target.value && (TEXT_KINDS.includes(target.value.kind) || isChoice.value),
+  );
   /** Never truncate silently: over the limit, Insert waits for Fit limit or Cut (spec 12). */
-  const canInsert = computed(() => answerReady.value && fillable.value && !answer.overLimit.value);
+  const canInsert = computed(
+    () => answerReady.value && fillable.value && (isChoice.value || !answer.overLimit.value),
+  );
 
   function flash(text: string) {
     toast.value = text;
@@ -83,6 +90,35 @@ export function useInsert(
     message.value = '';
     if (t.inIframe) return copyFallback(COPY_FALLBACK);
     busy.value = true;
+    if (isChoice.value) {
+      try {
+        // One option for single choice, a comma separated list for checkboxes (spec 11.4 rule 7).
+        const labels =
+          t.kind === 'checkbox-group'
+            ? answer.answer.value.split(/\s*[,\n]\s*/)
+            : [answer.answer.value];
+        const result = await toPage<'APPLY_CHOICE'>({
+          type: 'APPLY_CHOICE',
+          targetId: t.targetId,
+          labels,
+        });
+        if (result.ok) {
+          flash('Selected');
+          await answer.save('insert');
+        } else
+          message.value =
+            result.reason === 'NO_MATCH'
+              ? NO_MATCH
+              : result.reason === 'TARGET_GONE'
+                ? TARGET_GONE
+                : COPY_FALLBACK;
+      } catch (err) {
+        message.value = err instanceof ScriptUnavailable ? NEEDS_GESTURE : TARGET_GONE;
+      } finally {
+        busy.value = false;
+      }
+      return;
+    }
     try {
       const result = await toPage<'INSERT_ANSWER'>({
         type: 'INSERT_ANSWER',
@@ -92,6 +128,7 @@ export function useInsert(
       });
       if (result.ok) {
         flash('Inserted');
+        await answer.save('insert');
         target.value = {
           ...t,
           currentValue:
@@ -112,8 +149,10 @@ export function useInsert(
   }
 
   async function copy() {
-    if (await writeClipboard()) flash('Copied');
-    else message.value = "Couldn't copy. Select the answer text and copy it with Ctrl+C.";
+    if (await writeClipboard()) {
+      flash('Copied');
+      await answer.save('copy');
+    } else message.value = "Couldn't copy. Select the answer text and copy it with Ctrl+C.";
   }
 
   async function pick() {
@@ -137,7 +176,13 @@ export function useInsert(
     );
   }
 
+  async function saveToLibrary() {
+    if (await answer.save('explicit')) flash('Saved');
+  }
+
   return {
+    saveToLibrary,
+    isChoice,
     target,
     picking,
     busy,

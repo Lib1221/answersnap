@@ -1,6 +1,8 @@
 import { registerCommands } from '@/background/commands';
 import { createMenus, registerMenuClicks } from '@/background/menus';
 import { registerRouter } from '@/background/router';
+import { pruneLibrary } from '@/kb/library';
+import { getSettings } from '@/storage/items';
 
 export default defineBackground(() => {
   // All listeners are registered synchronously at top level (spec 4).
@@ -11,6 +13,9 @@ export default defineBackground(() => {
     createMenus();
     if (reason === 'install') void browser.runtime.openOptionsPage();
   });
+
+  // History retention runs at start-up; no alarms permission needed (spec 14.2).
+  void getSettings().then((s) => pruneLibrary(s.history.retentionDays));
 
   registerCommands();
   registerMenuClicks();

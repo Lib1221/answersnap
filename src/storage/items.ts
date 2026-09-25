@@ -56,6 +56,23 @@ export async function takePendingCapture(modes: SnipMode[]): Promise<PendingCapt
   return parseOrNull(PendingCaptureSchema, raw);
 }
 
+/** The last answer request, for "What gets sent" (no key, no image data). */
+export const lastRequestItem = storage.defineItem<{
+  at: string;
+  provider: string;
+  model: string;
+  system: string[];
+  messages: unknown[];
+}>('session:lastRequest');
+
+/** Selected job post text from the "Use selection as job post" menu, for the panel to store. */
+export const pendingJobItem = storage.defineItem<{
+  hostname: string;
+  title: string;
+  text: string;
+  createdAt: number;
+}>('session:pendingJob');
+
 /** Text read from an open tab by "Import this page into AnswerSnap", waiting for review. */
 export const pendingImportItem = storage.defineItem<PendingImport>('session:pendingImport');
 

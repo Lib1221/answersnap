@@ -4,6 +4,7 @@ import {
   handleRegionSelected,
   handleSelectionCancelled,
   importPageFromTab,
+  jobFromSelection,
   startSnip,
 } from './capture';
 
@@ -38,6 +39,10 @@ export function registerRouter(): void {
               { tabId: msg.tabId, windowId: tab.windowId, url: tab.url },
               msg.mode ?? 'question',
             );
+          },
+          E2E_JOB_SELECTION: async (msg) => {
+            await jobFromSelection(await browser.tabs.get(msg.tabId), undefined);
+            return { ok: true as const };
           },
           E2E_IMPORT_PAGE: async (msg) => {
             await importPageFromTab(await browser.tabs.get(msg.tabId));

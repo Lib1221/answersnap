@@ -12,7 +12,7 @@ import { transcribeImage } from '@/kb/profileBuilder';
 import { describeError, LlmError } from '@/llm/errors';
 import { createProvider } from '@/llm/provider';
 import { sendToBackground, sendToTab } from '@/messaging/send';
-import { getApiKey, getSettings } from '@/storage/items';
+import { getApiKey, getSettings, pendingJobItem } from '@/storage/items';
 import type { PendingCapture } from '@/storage/schema';
 
 const MIN_SNIP_TEXT = 200;
@@ -36,7 +36,28 @@ export function useJob() {
     unwatch = host ? watchJobContext(host, () => void load()) : null;
     await load();
   }
-  onUnmounted(() => unwatch?.());
+  // "Use selection as job post" from the page's context menu (spec 9.1).
+  async function takePendingJob() {
+    const pending = await pendingJobItem.getValue();
+    if (!pending) return;
+    await pendingJobItem.removeValue();
+    busy.value = 'Saving the job post';
+    try {
+      await save(pending.hostname, pending.title, pending.text, false);
+    } catch (err) {
+      error.value = describeError(err);
+    } finally {
+      busy.value = '';
+    }
+  }
+  const unwatchPending = pendingJobItem.watch((v) => {
+    if (v) void takePendingJob();
+  });
+  void takePendingJob();
+  onUnmounted(() => {
+    unwatch?.();
+    unwatchPending();
+  });
 
   async function summarizer() {
     const settings = await getSettings();

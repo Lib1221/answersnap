@@ -44,7 +44,7 @@ export function planCrop(
   bitmap: Size,
   sel: Rect,
   viewport: Size,
-  opts: { pad: boolean },
+  opts: { pad: boolean; outline?: Rect },
 ): CropPlan {
   const sx = bitmap.w / viewport.w;
   const sy = bitmap.h / viewport.h;
@@ -70,12 +70,14 @@ export function planCrop(
   );
   const out = { w: Math.max(1, Math.round(src.w * k)), h: Math.max(1, Math.round(src.h * k)) };
 
-  const outline = opts.pad
+  // The user's selection when padded, or an explicit rect (the field in "Answer this field").
+  const mark = opts.outline ? clampRect(opts.outline, viewport) : opts.pad ? selection : null;
+  const outline = mark
     ? {
-        x: (selection.x - r.x) * sx * k,
-        y: (selection.y - r.y) * sy * k,
-        w: selection.w * sx * k,
-        h: selection.h * sy * k,
+        x: (mark.x - r.x) * sx * k,
+        y: (mark.y - r.y) * sy * k,
+        w: mark.w * sx * k,
+        h: mark.h * sy * k,
       }
     : null;
 
@@ -97,7 +99,7 @@ export async function cropCapture(
   dataUrl: string,
   sel: Rect,
   viewport: Size,
-  opts: { pad: boolean },
+  opts: { pad: boolean; outline?: Rect },
 ): Promise<CapturedImage> {
   const bmp = await createImageBitmap(await (await fetch(dataUrl)).blob());
   try {

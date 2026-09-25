@@ -1,9 +1,10 @@
 // Inserting answers into page fields (spec 12). Runs only after the user clicks Insert.
 
 export type InsertMode = 'replace' | 'append';
-export type InsertFailure = 'TARGET_GONE' | 'NOT_FILLABLE' | 'VERIFY_FAILED' | 'IN_IFRAME';
+export type InsertFailure =
+  'TARGET_GONE' | 'NOT_FILLABLE' | 'VERIFY_FAILED' | 'IN_IFRAME' | 'NO_MATCH';
 export type InsertResult =
-  | { ok: true; method: 'native-setter' | 'exec-command' | 'paste' | 'paragraphs' }
+  | { ok: true; method: 'native-setter' | 'exec-command' | 'paste' | 'paragraphs' | 'choice' }
   | { ok: false; reason: InsertFailure };
 
 export function normalizeWs(text: string): string {

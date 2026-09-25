@@ -28,6 +28,18 @@ const counters = new Map<string, number>();
 
 const CANNED: [RegExp, string][] = [
   [
+    /Rate your English proficiency/i,
+    '<question>Rate your English proficiency.</question>\n<type>single_choice</type>\n<answer>Fluent</answer>\n<missing></missing>\n<notes></notes>',
+  ],
+  [
+    /Which of these frameworks have you used/i,
+    '<question>Which of these frameworks have you used?</question>\n<type>multi_choice</type>\n<answer>Django, Flask</answer>\n<missing></missing>\n<notes></notes>',
+  ],
+  [
+    /Time zone/i,
+    '<question>Time zone</question>\n<type>single_choice</type>\n<answer>UTC+00:00 London Lisbon</answer>\n<missing></missing>\n<notes></notes>',
+  ],
+  [
     /years of professional Python/i,
     '<question>How many years of professional Python experience do you have?</question>\n<type>number</type>\n<answer>5</answer>\n<missing></missing>\n<notes></notes>',
   ],

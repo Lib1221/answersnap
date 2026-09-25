@@ -5,6 +5,7 @@ import {
   getSettings,
   pendingCaptureItem,
   pendingImportItem,
+  pendingJobItem,
   readCaptureStatus,
 } from '@/storage/items';
 import type {
@@ -107,8 +108,8 @@ export async function handleRegionSelected(
     try {
       const shot = await captureVisibleTab(windowId);
       // Context padding helps the model find a question; imports and job posts need only the region.
-      const pad = opts.contextPadding && (mode === 'question' || mode === 'field');
-      image = await cropCapture(shot, msg.rect, msg.viewport, { pad });
+      const pad = opts.contextPadding && mode === 'question';
+      image = await cropCapture(shot, msg.rect, msg.viewport, { pad, outline: msg.outline });
     } catch (err) {
       console.warn('[AnswerSnap] capture failed', err);
       await setStatus({ ...base, state: 'error', code: 'CAPTURE_FAILED' });
@@ -158,4 +159,35 @@ export async function importPageFromTab(tab: Browser.tabs.Tab | undefined): Prom
   }
   await pendingImportItem.setValue(pending);
   await browser.tabs.create({ url: browser.runtime.getURL('/options.html#sources') });
+}
+
+/** "Use selection as job post": read the visible selection, and let the panel store it. */
+export async function jobFromSelection(
+  tab: Browser.tabs.Tab | undefined,
+  selectionText: string | undefined,
+): Promise<void> {
+  if (!tab?.id || tab.windowId === undefined) return;
+  let text = selectionText ?? '';
+  let url = tab.url ?? '';
+  let title = tab.title ?? '';
+  if (!isRestrictedUrl(tab.url)) {
+    try {
+      await ensureCaptureScript(tab.id);
+      // Visible text only: selected hidden text must not reach the job context.
+      const read = await sendToTab<'READ_PAGE_TEXT'>(tab.id, {
+        type: 'READ_PAGE_TEXT',
+        scope: 'selection',
+      });
+      if (read.text.trim()) ({ text, url, title } = read);
+    } catch (err) {
+      console.warn('[AnswerSnap] selection read failed', err);
+    }
+  }
+  if (!text.trim() || !url) return;
+  await pendingJobItem.setValue({
+    hostname: new URL(url).hostname,
+    title,
+    text,
+    createdAt: Date.now(),
+  });
 }

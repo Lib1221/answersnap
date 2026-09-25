@@ -1,7 +1,9 @@
 import { createRouter } from '@/messaging/send';
 import type { Message } from '@/messaging/protocol';
 import type { PageInfo, SnipMode } from '@/storage/schema';
-import { findCandidates, resolveTarget } from './fields';
+import { collectFillable, describeField, findCandidates, resolveTarget } from './fields';
+import { clampRect, elementRect } from './geometry';
+import { applyChoice } from './choice';
 import { insertText } from './insert';
 import { flash, pickField, setHighlight } from './picker';
 import { createVisibilityChecker } from './hiddenText';
@@ -44,6 +46,47 @@ function send(msg: Message<'REGION_SELECTED'> | Message<'SELECTION_CANCELLED'>) 
   browser.runtime
     .sendMessage(msg)
     .catch((err: unknown) => console.warn('[AnswerSnap] send failed', err));
+}
+
+/**
+ * "Answer this field" (spec 3.3): the right-clicked field is focused. Capture from 200 px above
+ * it to 40 px below it, outline the field, and take the question from its label.
+ */
+async function answerField(captureId: string) {
+  const checker = createVisibilityChecker();
+  const active = deepActiveElement();
+  const field = collectFillable(document, checker).find(
+    (f) =>
+      f.el === active ||
+      f.members.includes(active as HTMLInputElement) ||
+      (f.kind === 'contenteditable' && !!active && f.el.contains(active)),
+  );
+  const viewport = { w: window.innerWidth, h: window.innerHeight };
+  if (!field) {
+    // Nothing fillable is focused: fall back to a normal snip.
+    beginSelection(captureId, 'question');
+    return;
+  }
+  const box = field.members.length ? field.rect : elementRect(field.el);
+  const region = clampRect(
+    { x: box.x - 40, y: box.y - 200, w: box.w + 80, h: box.h + 240 },
+    viewport,
+  );
+  const info = describeField(field, 'focused', checker);
+  const { text, hiddenTextChars } = extractVisibleText(region, checker);
+  const pageText = info.label && !text.includes(info.label) ? `${info.label}\n${text}` : text;
+  await afterRepaint();
+  send({
+    type: 'REGION_SELECTED',
+    captureId,
+    rect: region,
+    viewport,
+    pageText,
+    hiddenTextChars,
+    candidates: [info],
+    page: pageInfo(),
+    outline: clampRect(box, viewport),
+  });
 }
 
 function beginSelection(captureId: string, mode: SnipMode) {
@@ -89,7 +132,8 @@ function beginSelection(captureId: string, mode: SnipMode) {
 export function startCaptureRuntime(): void {
   createRouter({
     BEGIN_SELECTION: (msg) => {
-      beginSelection(msg.captureId, msg.mode);
+      if (msg.mode === 'field') void answerField(msg.captureId);
+      else beginSelection(msg.captureId, msg.mode);
       return { ok: true };
     },
     READ_PAGE_TEXT: (msg) => readPageText(msg.scope),
@@ -99,6 +143,13 @@ export function startCaptureRuntime(): void {
       const el = resolveTarget(msg.targetId);
       const result = await insertText(el, msg.text, msg.mode);
       if (result.ok && el) flash(el);
+      return result;
+    },
+    APPLY_CHOICE: (msg) => {
+      setHighlight(msg.targetId, false);
+      const el = resolveTarget(msg.targetId);
+      const result = applyChoice(el, msg.labels);
+      if (result.ok && el) flash(el.closest('fieldset, [role="radiogroup"], [role="group"]') ?? el);
       return result;
     },
     HIGHLIGHT_FIELD: (msg) => setHighlight(msg.targetId, msg.on),

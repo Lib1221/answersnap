@@ -29,6 +29,8 @@ export interface MessageMap {
       hiddenTextChars: number;
       candidates: FieldInfo[];
       page: PageInfo;
+      /** Rect to outline instead of the selection ("Answer this field" outlines the field). */
+      outline?: Rect;
     };
     reply: { ok: true };
   };
@@ -38,6 +40,10 @@ export interface MessageMap {
   };
   INSERT_ANSWER: {
     msg: { type: 'INSERT_ANSWER'; targetId: string; text: string; mode: InsertMode };
+    reply: InsertResult;
+  };
+  APPLY_CHOICE: {
+    msg: { type: 'APPLY_CHOICE'; targetId: string; labels: string[] };
     reply: InsertResult;
   };
   HIGHLIGHT_FIELD: {
@@ -61,6 +67,11 @@ export interface MessageMap {
   E2E_START_SNIP: {
     msg: { type: 'E2E_START_SNIP'; tabId: number; mode?: SnipMode };
     reply: { ok: true } | { ok: false; error: StartSnipError };
+  };
+  /** Test-only: run the "Use selection as job post" menu action on a tab. */
+  E2E_JOB_SELECTION: {
+    msg: { type: 'E2E_JOB_SELECTION'; tabId: number };
+    reply: { ok: true };
   };
   /** Test-only: run the "Import this page" menu action on a tab. */
   E2E_IMPORT_PAGE: {

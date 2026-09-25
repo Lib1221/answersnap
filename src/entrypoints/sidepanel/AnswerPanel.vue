@@ -145,7 +145,7 @@ const cacheOff = computed(() => {
               title="Ctrl+Enter"
               @click="ins.insert('replace')"
             >
-              {{ ins.hasExisting.value ? 'Replace' : 'Insert' }}
+              {{ ins.isChoice.value ? 'Select' : ins.hasExisting.value ? 'Replace' : 'Insert' }}
             </button>
             <button
               v-if="ins.hasExisting.value"
@@ -177,6 +177,7 @@ const cacheOff = computed(() => {
           >
             Copy
           </button>
+          <button class="btn btn-quiet" type="button" @click="ins.saveToLibrary">Save</button>
           <button class="btn btn-quiet" type="button" @click="s.retry">Regenerate</button>
         </template>
         <span v-if="ins.toast.value" role="status" class="text-[13px] text-graphite-2">{{
@@ -187,7 +188,11 @@ const cacheOff = computed(() => {
         {{ ins.message.value }}
       </p>
 
-      <div v-if="!streaming && s.answer.value" class="flex flex-col gap-2" data-testid="refine">
+      <div
+        v-if="!streaming && s.answer.value && s.canRefine.value"
+        class="flex flex-col gap-2"
+        data-testid="refine"
+      >
         <div class="flex flex-wrap gap-1">
           <template v-if="s.overLimit.value">
             <button class="btn" type="button" @click="s.refine({ kind: 'fit' })">Fit limit</button>
@@ -228,6 +233,23 @@ const cacheOff = computed(() => {
       </div>
       <p v-if="s.phase.value === 'stopped'" class="text-[13px] text-graphite-2">Stopped.</p>
     </template>
+
+    <div
+      v-else-if="s.phase.value === 'match' && s.match.value"
+      class="flex flex-col gap-2 bg-canary p-3"
+      data-testid="reuse-card"
+    >
+      <p class="font-medium">You answered this before</p>
+      <p class="text-[13px] text-graphite-2">
+        {{ s.match.value.entry.question }} ({{ s.match.value.entry.hostname }})
+      </p>
+      <p class="whitespace-pre-wrap">{{ s.match.value.entry.answer }}</p>
+      <div class="flex flex-wrap gap-2">
+        <button class="btn btn-primary" type="button" @click="s.reuse()">Reuse</button>
+        <button class="btn" type="button" @click="s.adapt">Adapt</button>
+        <button class="btn btn-quiet" type="button" @click="s.writeNew">Write new</button>
+      </div>
+    </div>
 
     <p v-else-if="s.phase.value === 'assessment'" data-testid="assessment">
       This looks like a test question. AnswerSnap only drafts answers about your own background.

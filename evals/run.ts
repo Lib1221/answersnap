@@ -98,8 +98,25 @@ interface Row {
   error?: string;
 }
 const rows: Row[] = [];
+/** Consecutive questions lost to quota errors; three in a row means the daily cap is gone. */
+let quotaStreak = 0;
 
 for (const [i, q] of questions.entries()) {
+  if (quotaStreak >= 3) {
+    console.log(`#${q.id} skipped: the provider's quota looks used up for today.`);
+    rows.push({
+      q,
+      answer: '',
+      type: '',
+      missing: [],
+      notes: '',
+      usage: EMPTY_USAGE,
+      ms: 0,
+      checks: [],
+      error: 'Skipped: quota used up',
+    });
+    continue;
+  }
   if (i > 0 && delayMs) await new Promise((r) => setTimeout(r, delayMs));
   const field: FieldInfo = {
     targetId: 'f',
@@ -169,6 +186,7 @@ for (const [i, q] of questions.entries()) {
     });
     const failed = checks.filter((c) => !c.ok && !c.flag);
     console.log(failed.length ? `FAIL (${failed.map((c) => c.name).join('; ')})` : 'ok');
+    quotaStreak = 0;
     rows.push({
       q,
       answer: parsed.answer,
@@ -180,6 +198,7 @@ for (const [i, q] of questions.entries()) {
       checks,
     });
   } catch (err) {
+    if (err instanceof LlmError && err.kind === 'rate_limit') quotaStreak++;
     console.log(`ERROR ${String(err).slice(0, 200)}`);
     rows.push({
       q,

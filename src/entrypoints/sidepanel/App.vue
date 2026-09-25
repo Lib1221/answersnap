@@ -8,6 +8,8 @@ import type { CaptureErrorCode } from '@/storage/schema';
 import CropThumb from '@/ui/CropThumb.vue';
 import AnswerPanel from './AnswerPanel.vue';
 import JobBar from './JobBar.vue';
+import LibraryTab from './LibraryTab.vue';
+import { pruneLibrary } from '@/kb/library';
 import { prewarmIfNeeded } from './prewarm';
 import { useAnswer } from './useAnswer';
 import { useCapture } from './useCapture';
@@ -19,6 +21,12 @@ const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSele
 const answer = useAnswer();
 const job = useJob();
 const insert = useInsert(capture, answer);
+const tab = ref<'answer' | 'library'>('answer');
+
+function useSaved(entry: import('@/kb/library').LibraryEntry) {
+  tab.value = 'answer';
+  void answer.reuse(entry);
+}
 
 // A new capture starts a draft right away; a job snip becomes the site's job context.
 watch(
@@ -26,6 +34,7 @@ watch(
   async () => {
     const c = capture.value;
     if (!c) return;
+    tab.value = 'answer';
     await job.setHost(c.page.hostname);
     void answer.run(c);
   },
@@ -85,6 +94,7 @@ onMounted(async () => {
   window.addEventListener('focus', checkReadiness);
   void checkReadiness();
   void prewarmIfNeeded();
+  void getSettings().then((st) => pruneLibrary(st.history.retentionDays));
   void detectHost();
   const commands = await browser.commands.getAll();
   const snipCommand = commands.find((c) => c.name === 'snip-question');
@@ -109,7 +119,31 @@ function openSettings(section?: string) {
     </header>
 
     <JobBar :state="job" />
-    <main class="flex flex-1 flex-col gap-4 px-4 py-4">
+    <nav class="flex gap-1 border-b border-rule px-3" role="tablist" aria-label="Panel">
+      <button
+        v-for="t in [
+          ['answer', 'Answer'],
+          ['library', 'Library'],
+        ] as const"
+        :key="t[0]"
+        role="tab"
+        type="button"
+        class="border-b-2 px-2 py-1.5 text-[13px]"
+        :class="
+          tab === t[0]
+            ? 'border-ink font-medium text-graphite'
+            : 'border-transparent text-graphite-2'
+        "
+        :aria-selected="tab === t[0]"
+        @click="tab = t[0]"
+      >
+        {{ t[1] }}
+      </button>
+    </nav>
+    <main v-if="tab === 'library'" class="flex flex-1 flex-col gap-4 px-4 py-4">
+      <LibraryTab :can-use="view.kind === 'captured'" @use="useSaved" />
+    </main>
+    <main v-else class="flex flex-1 flex-col gap-4 px-4 py-4">
       <section
         v-if="view.kind === 'idle'"
         class="flex flex-col items-start gap-3"

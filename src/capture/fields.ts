@@ -195,7 +195,7 @@ function groupContainer(members: HTMLInputElement[]): Element {
   return c ?? members[0]!;
 }
 
-function choiceLabel(input: HTMLInputElement, checker: VisibilityChecker): string {
+export function choiceLabel(input: HTMLInputElement, checker: VisibilityChecker): string {
   const t = Array.from(input.labels ?? [], (l) => visibleTextOf(l, checker)).find(Boolean);
   return (
     t ||

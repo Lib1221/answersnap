@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Choices</title>
+    <style>
+      body {
+        font: 16px/1.5 sans-serif;
+        margin: 40px;
+        width: 640px;
+      }
+      fieldset {
+        margin-bottom: 24px;
+      }
+      select {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset id="english">
+      <legend id="english-label">Rate your English proficiency.</legend>
+      <label><input type="radio" name="english" value="b" /> Basic</label>
+      <label><input type="radio" name="english" value="c" /> Conversational</label>
+      <label><input type="radio" name="english" value="f" /> Fluent</label>
+      <label><input type="radio" name="english" value="n" /> Native</label>
+    </fieldset>
+    <label for="tz" id="tz-label">Time zone</label>
+    <select id="tz">
+      <option value="">Choose one</option>
+      <option>UTC-08:00 Pacific Time</option>
+      <option>UTC-05:00 Eastern Time</option>
+      <option>UTC+00:00 London, Lisbon</option>
+      <option>UTC+01:00 Berlin, Paris</option>
+      <option>UTC+03:00 Nairobi, Addis Ababa</option>
+      <option>UTC+05:30 India</option>
+      <option>UTC+09:00 Tokyo</option>
+    </select>
+    <fieldset id="frameworks" style="margin-top: 24px">
+      <legend id="frameworks-label">Which of these frameworks have you used?</legend>
+      <label><input type="checkbox" name="fw" value="django" /> Django</label>
+      <label><input type="checkbox" name="fw" value="flask" /> Flask</label>
+      <label><input type="checkbox" name="fw" value="fastapi" /> FastAPI</label>
+      <label><input type="checkbox" name="fw" value="spring" /> Spring</label>
+    </fieldset>
+  </body>
+</html>
