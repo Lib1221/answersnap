@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { neutralize } from '@/kb/contextBuilder';
 import type { AnswerType } from './tagParser';
 import type { LlmProvider, SystemBlock } from './types';
 
@@ -80,10 +81,11 @@ export function factCheckUserText(
   question: string,
   jobContext?: string | null,
 ): string {
-  const numbered = sentences.map((s, i) => `${i + 1}. ${s}`).join('\n');
+  // Answer, question, and job text can carry page text: keep it from closing our tags.
+  const numbered = sentences.map((s, i) => `${i + 1}. ${neutralize(s)}`).join('\n');
   return [
-    jobContext?.trim() ? `<job_context>\n${jobContext.trim()}\n</job_context>` : '',
-    question.trim() ? `<question>${question.trim()}</question>` : '',
+    jobContext?.trim() ? `<job_context>\n${neutralize(jobContext.trim())}\n</job_context>` : '',
+    question.trim() ? `<question>${neutralize(question.trim())}</question>` : '',
     `<answer_sentences>\n${numbered}\n</answer_sentences>`,
     'Check every numbered sentence.',
   ]

@@ -174,6 +174,15 @@ describe('labelFor', () => {
     expect(labelFor(document.getElementById('x')!, checker())).toBe('Rate');
   });
 
+  it("doesn't take the next field's label as helper text", () => {
+    setBody(`
+      <label for="n" data-rect="0,0,200,20">Full name</label>
+      <input id="n" data-rect="0,24,200,24">
+      <label for="e" data-rect="0,56,200,20">Email</label>
+      <input id="e" data-rect="0,80,200,24">`);
+    expect(hintFor(document.getElementById('n')!, checker())).toBeUndefined();
+  });
+
   it('reads helper text from aria-describedby first', () => {
     setBody(
       `<input id="h" aria-describedby="help" data-rect="0,0,100,20"><p id="help" data-rect="0,30,100,20">Max 300 characters</p>`,

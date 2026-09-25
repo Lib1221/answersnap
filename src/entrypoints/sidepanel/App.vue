@@ -8,7 +8,9 @@ import type { CaptureErrorCode } from '@/storage/schema';
 import CropThumb from '@/ui/CropThumb.vue';
 import AnswerPanel from './AnswerPanel.vue';
 import JobBar from './JobBar.vue';
+import FormFillTab from './FormFillTab.vue';
 import LibraryTab from './LibraryTab.vue';
+import { useFormFill } from './useFormFill';
 import ProfileTab from './ProfileTab.vue';
 import { profileStatus } from './profileSummary';
 import { pruneLibrary } from '@/kb/library';
@@ -24,7 +26,15 @@ const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSele
 const answer = useAnswer();
 const job = useJob();
 const insert = useInsert(capture, answer);
-const tab = ref<'answer' | 'library' | 'profile'>('answer');
+const form = useFormFill();
+// A scan from the "Fill this form" menu opens the Form tab.
+watch(
+  () => form.fields.value,
+  (f) => {
+    if (f.length) tab.value = 'form';
+  },
+);
+const tab = ref<'answer' | 'form' | 'library' | 'profile'>('answer');
 const profileLine = ref<string | null>(null);
 
 function useSaved(entry: import('@/kb/library').LibraryEntry) {
@@ -139,6 +149,7 @@ function openSettings(section?: string) {
       <button
         v-for="tb in [
           ['answer', 'Answer'],
+          ['form', 'Form'],
           ['library', 'Library'],
           ['profile', 'Profile'],
         ] as const"
@@ -159,6 +170,9 @@ function openSettings(section?: string) {
     </nav>
     <main v-if="tab === 'library'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <LibraryTab :can-use="view.kind === 'captured'" @use="useSaved" />
+    </main>
+    <main v-else-if="tab === 'form'" class="flex flex-1 flex-col gap-4 px-4 py-4">
+      <FormFillTab :state="form" />
     </main>
     <main v-else-if="tab === 'profile'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <ProfileTab @open-settings="openSettings" />

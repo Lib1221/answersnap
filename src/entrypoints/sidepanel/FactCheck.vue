@@ -47,9 +47,7 @@ function fix() {
       data-testid="fact-check-ok"
     >
       ✓ Fact check:
-      {{
-        checkable.length === 1 ? 'the sentence is' : `all ${checkable.length} sentences are`
-      }}
+      {{ checkable.length === 1 ? 'the sentence is' : `all ${checkable.length} sentences are` }}
       backed by your profile.
     </p>
 

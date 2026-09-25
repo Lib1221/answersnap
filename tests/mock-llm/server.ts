@@ -15,6 +15,51 @@ import { join } from 'node:path';
 const PROFILE = readFileSync(join(import.meta.dirname, '../fixtures/profile.json'), 'utf8');
 const TRANSCRIPT = 'Jamie Park\nBackend Engineer, Lisbon\nPayments APIs with Django at Ledgerly';
 
+/** "Fill form": answer each <field> with the canned answer for its question, as JSON. */
+function batchJson(raw: string): string {
+  const body = JSON.parse(raw) as { messages?: unknown; contents?: unknown };
+  const turn = JSON.parse(
+    `"${(JSON.stringify(body.messages ?? body.contents ?? '').match(/<fields>(.*?)<\/fields>/) ?? [])[1] ?? ''}"`,
+  ) as string;
+  const answers = [...turn.matchAll(/<field id="([^"]+)"[^>]*>\n<question>(.*?)<\/question>/g)].map(
+    ([, id, question]) => {
+      const q = question!;
+      if (/full name/i.test(q))
+        return {
+          id,
+          question: q,
+          type: 'short_text',
+          answer: 'Jamie Park',
+          missing: [],
+          notes: '',
+        };
+      if (/email/i.test(q))
+        return {
+          id,
+          question: q,
+          type: 'short_text',
+          answer: 'jamie.park@example.com',
+          missing: [],
+          notes: '',
+        };
+      const c = CANNED.find(([re]) => re.test(q))?.[1] ?? FALLBACK;
+      const tag = (t: string) => c.match(new RegExp(`<${t}>([\\s\\S]*?)</${t}>`))?.[1] ?? '';
+      return {
+        id,
+        question: q,
+        type: tag('type') || 'unclear',
+        answer: tag('answer'),
+        missing: tag('missing')
+          .split(';')
+          .map((m) => m.trim())
+          .filter(Boolean),
+        notes: tag('notes'),
+      };
+    },
+  );
+  return JSON.stringify({ answers });
+}
+
 /** Fact check: sentences mentioning "struggling" aren't in Jamie's resume; the rest are. */
 function factCheckJson(raw: string): string {
   const body = JSON.parse(raw) as { messages?: unknown; contents?: unknown };
@@ -51,6 +96,7 @@ function factCheckJson(raw: string): string {
 
 /** Non-streamed replies: structured profile JSON, tool use, or an image transcription. */
 function completeText(raw: string): string {
+  if (/Write an answer for every field/.test(raw)) return batchJson(raw);
   if (/You check a drafted job application answer/.test(raw)) return factCheckJson(raw);
   if (/Transcribe all readable text/.test(raw)) return TRANSCRIPT;
   if (/Extract the candidate's profile/.test(raw)) return PROFILE;

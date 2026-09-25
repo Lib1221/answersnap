@@ -19,7 +19,7 @@ export interface CandidateData {
 }
 
 const OUR_TAGS =
-  'page_meta|page_text|field_info|job_context|saved_answers|example|options|candidate_profile|standard_answers|source_documents|source|question|type|answer|missing|notes';
+  'page_meta|page_text|field_info|job_context|saved_answers|example|options|candidate_profile|standard_answers|source_documents|source|question|type|answer|missing|notes|fields|field|placeholder|current_value|answer_sentences';
 const TAG_LIKE = new RegExp(`<(/?)(${OUR_TAGS})\\b`, 'gi');
 
 /** Page content is untrusted: stop it from closing or opening our tags. */

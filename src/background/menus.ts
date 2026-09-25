@@ -1,10 +1,16 @@
 import { t } from '@/ui/i18n';
-import { importPageFromTab, jobFromSelection, startSnipFromGesture } from './capture';
+import {
+  importPageFromTab,
+  jobFromSelection,
+  scanFormFromTab,
+  startSnipFromGesture,
+} from './capture';
 
 export const MENU_SNIP_QUESTION = 'snip-question';
 export const MENU_IMPORT_PAGE = 'import-page';
 export const MENU_ANSWER_FIELD = 'answer-field';
 export const MENU_JOB_SELECTION = 'job-selection';
+export const MENU_FILL_FORM = 'fill-form';
 
 /** Context menus are created once per install or update. Chrome groups them under the name. */
 export function createMenus(): void {
@@ -25,6 +31,11 @@ export function createMenus(): void {
       contexts: ['selection'],
     });
     browser.contextMenus.create({
+      id: MENU_FILL_FORM,
+      title: t('menuFillForm', 'Fill this form with AnswerSnap'),
+      contexts: ['page', 'editable'],
+    });
+    browser.contextMenus.create({
       id: MENU_IMPORT_PAGE,
       title: t('menuImportPage', 'Import this page into AnswerSnap'),
       contexts: ['page'],
@@ -41,6 +52,10 @@ export function registerMenuClicks(): void {
       if (tab?.windowId !== undefined)
         void browser.sidePanel.open({ windowId: tab.windowId }).catch(() => undefined);
       void jobFromSelection(tab, info.selectionText);
+    } else if (info.menuItemId === MENU_FILL_FORM) {
+      if (tab?.windowId !== undefined)
+        void browser.sidePanel.open({ windowId: tab.windowId }).catch(() => undefined);
+      void scanFormFromTab(tab);
     } else if (info.menuItemId === MENU_IMPORT_PAGE) void importPageFromTab(tab);
   });
 }

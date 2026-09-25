@@ -269,3 +269,25 @@ export function findCandidates(
   scored.sort((a, b) => b.s.score - a.s.score);
   return scored.slice(0, MAX_CANDIDATES).map(({ f, s }) => describeField(f, s.confidence, checker));
 }
+
+// ---------------------------------------------------------------------------------------------
+// "Fill form": every visible field on the page, in document order.
+
+export const MAX_FORM_FIELDS = 40;
+
+export function scanForm(doc: Document, checker: VisibilityChecker): FieldInfo[] {
+  const fields = collectFillable(doc, checker)
+    .filter((f) => !f.inIframe)
+    .sort((a, b) =>
+      a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+    );
+  const out: FieldInfo[] = [];
+  for (const f of fields) {
+    const info = describeField(f, 'inside', checker);
+    // A field with no label, placeholder, or helper text has no question to answer.
+    if (!info.label && !info.placeholder && !info.hint) continue;
+    out.push(info);
+    if (out.length >= MAX_FORM_FIELDS) break;
+  }
+  return out;
+}

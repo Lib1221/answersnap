@@ -1,37 +1,12 @@
-import { ratio } from '@/kb/similarity';
+import { matchOption } from '@/kb/similarity';
 import { choiceLabel } from './fields';
 import { createVisibilityChecker } from './hiddenText';
 import type { InsertResult } from './insert';
-import { collapse } from './visibleText';
 
 // Native choice fields (spec 12): selects, radio groups, and checkbox groups. Custom dropdowns
 // (React-Select, Workday widgets) only show the chosen option in the panel; no auto-clicking.
 
-export const FUZZY_MIN = 0.8;
-
-export function normalizeLabel(text: string): string {
-  return collapse(text)
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N} ]/gu, '')
-    .trim();
-}
-
-/** Index of the option matching `wanted`: exact on normalized text, else fuzzy >= 0.8. */
-export function matchOption(options: string[], wanted: string): number {
-  const w = normalizeLabel(wanted);
-  const exact = options.findIndex((o) => normalizeLabel(o) === w);
-  if (exact !== -1) return exact;
-  let best = -1;
-  let bestScore = FUZZY_MIN;
-  options.forEach((o, i) => {
-    const score = ratio(normalizeLabel(o), w);
-    if (score >= bestScore) {
-      best = i;
-      bestScore = score;
-    }
-  });
-  return best;
-}
+export { FUZZY_MIN, matchOption, normalizeLabel } from '@/kb/similarity';
 
 function groupMembers(input: HTMLInputElement): HTMLInputElement[] {
   const root = input.form ?? input.ownerDocument;

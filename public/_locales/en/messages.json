@@ -8,18 +8,50 @@
   },
   "actionTitle": {
     "message": "Snip a question ($SHORTCUT$)",
-    "placeholders": { "shortcut": { "content": "$1", "example": "Alt+Shift+Q" } }
+    "placeholders": {
+      "shortcut": {
+        "content": "$1",
+        "example": "Alt+Shift+Q"
+      }
+    }
   },
-  "commandSnip": { "message": "Snip a question and draft an answer" },
-  "menuSnipQuestion": { "message": "Snip question" },
-  "menuAnswerField": { "message": "Answer this field" },
-  "menuJobSelection": { "message": "Use selection as job post" },
-  "menuImportPage": { "message": "Import this page into AnswerSnap" },
-  "panelIdle": { "message": "Snip a question to draft an answer." },
-  "panelNeedsKey": { "message": "Add your API key to start." },
-  "panelNeedsProfile": { "message": "Add your resume so answers have something to draw from." },
-  "panelSelecting": { "message": "Select the question on the page. Esc cancels." },
-  "buttonSnipQuestion": { "message": "Snip question" },
-  "buttonOpenSettings": { "message": "Open settings" },
-  "buttonAddResume": { "message": "Add resume" }
+  "commandSnip": {
+    "message": "Snip a question and draft an answer"
+  },
+  "menuSnipQuestion": {
+    "message": "Snip question"
+  },
+  "menuAnswerField": {
+    "message": "Answer this field"
+  },
+  "menuJobSelection": {
+    "message": "Use selection as job post"
+  },
+  "menuImportPage": {
+    "message": "Import this page into AnswerSnap"
+  },
+  "panelIdle": {
+    "message": "Snip a question to draft an answer."
+  },
+  "panelNeedsKey": {
+    "message": "Add your API key to start."
+  },
+  "panelNeedsProfile": {
+    "message": "Add your resume so answers have something to draw from."
+  },
+  "panelSelecting": {
+    "message": "Select the question on the page. Esc cancels."
+  },
+  "buttonSnipQuestion": {
+    "message": "Snip question"
+  },
+  "buttonOpenSettings": {
+    "message": "Open settings"
+  },
+  "buttonAddResume": {
+    "message": "Add resume"
+  },
+  "menuFillForm": {
+    "message": "Fill this form with AnswerSnap"
+  }
 }

@@ -160,3 +160,16 @@ Ambiguities in `SPEC.md`, deviations from it, and the option picked. One line ea
 - Skipped for value answers (number, yes/no, choice, URL, date, salary, assessment), answers under 40 characters of prose, and Reuse. Never blocks Insert. Editing the answer marks the check stale with a "Check again" button.
 - "Fix it" is a refinement (`fix-facts`) that lists the flagged sentences and their issues; the rewrite is checked again automatically.
 - `pnpm eval --fact-check` runs the same check on prose answers and marks unsupported sentences for review in the report.
+
+## After v1: fill the whole form
+
+- Scan every visible field in document order (top frame, max 40, skipping fields with no label, placeholder, or hint). Fields that already have a value start unticked.
+- One request drafts every ticked field (20 per request; more makes a second request) with `renderBatchRules`: the same hard and style rules as single answers, with a JSON reply per field id via structured outputs. The single-answer rules stay byte-identical (snapshot tests unchanged). No screenshot in batch mode.
+- Saved answers that closely match a field are reused without asking the model, but essays only from the same site (so "why Acme" never lands in Globex's form); short answers (links, numbers, choices) are reused anywhere.
+- Single-choice answers are snapped to the exact option label (shared `matchOption`, moved to `kb/similarity`), so the review dropdown and insertion agree.
+- Backstop for skills tests: questions that look like code or quiz items ("what does this print", "time complexity", code snippets) get no answer even if the model drafts one. Found live: Gemini 3.1 Flash-Lite answered "What does this print?" in batch mode.
+- Review before insert: editable answers, choice dropdowns, placeholders and test items unticked, per-field ✓ or ✗ after inserting. Never submits (E2E checks the form's submit handler never ran).
+- Entry points: the panel's Form tab ("Scan this form"), and a new "Fill this form with AnswerSnap" context menu (page and editable contexts), which also grants activeTab.
+- Bug found by this feature: `hintFor` took the next field's label as a field's helper text (a label below a field belongs to the next field). Fixed for single snips too.
+- `neutralize` now also covers `fields`, `field`, `placeholder`, `current_value`, and `answer_sentences`, so page text can't close the batch or fact-check tags.
+- Live check (September 25, 2026): 9 fields drafted in one Gemini request in 8 s; name, email, years, placeholder rate, choices, and checkboxes correct.

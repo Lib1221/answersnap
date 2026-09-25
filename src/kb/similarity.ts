@@ -86,3 +86,32 @@ export function ratio(a: string, b: string): number {
   }
   return 1 - prev[y.length]! / Math.max(x.length, y.length);
 }
+
+export const FUZZY_MIN = 0.8;
+
+export function normalizeLabel(text: string): string {
+  return text
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N} ]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** Index of the option matching `wanted`: exact on normalized text, else fuzzy >= 0.8. */
+export function matchOption(options: string[], wanted: string): number {
+  const w = normalizeLabel(wanted);
+  const exact = options.findIndex((o) => normalizeLabel(o) === w);
+  if (exact !== -1) return exact;
+  let best = -1;
+  let bestScore = FUZZY_MIN;
+  options.forEach((o, i) => {
+    const score = ratio(normalizeLabel(o), w);
+    if (score >= bestScore) {
+      best = i;
+      bestScore = score;
+    }
+  });
+  return best;
+}

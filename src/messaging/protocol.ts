@@ -54,6 +54,11 @@ export interface MessageMap {
     msg: { type: 'PICK_FIELD' };
     reply: FieldInfo | null;
   };
+  /** "Fill form": every visible field on the page. */
+  SCAN_FORM: {
+    msg: { type: 'SCAN_FORM' };
+    reply: { page: PageInfo; fields: FieldInfo[] };
+  };
   /** Is a capture runtime listening in this tab? */
   PING: {
     msg: { type: 'PING' };
@@ -72,6 +77,11 @@ export interface MessageMap {
   E2E_START_SNIP: {
     msg: { type: 'E2E_START_SNIP'; tabId: number; mode?: SnipMode };
     reply: { ok: true } | { ok: false; error: StartSnipError };
+  };
+  /** Test-only: run the "Fill this form" menu action on a tab. */
+  E2E_FILL_FORM: {
+    msg: { type: 'E2E_FILL_FORM'; tabId: number };
+    reply: { ok: true };
   };
   /** Test-only: run the "Use selection as job post" menu action on a tab. */
   E2E_JOB_SELECTION: {

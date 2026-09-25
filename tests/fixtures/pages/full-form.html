@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Apply: Backend Engineer at Northwind Pay</title>
+    <style>
+      body {
+        font: 16px/1.5 sans-serif;
+        margin: 40px;
+        width: 640px;
+      }
+      label,
+      legend {
+        display: block;
+        margin-top: 16px;
+      }
+      input:not([type='radio']):not([type='checkbox']),
+      textarea,
+      select {
+        width: 560px;
+      }
+    </style>
+  </head>
+  <body>
+    <form
+      id="apply"
+      onsubmit="
+        window.submitted = true;
+        return false;
+      "
+    >
+      <label for="name">Full name</label><input id="name" /> <label for="email">Email</label
+      ><input id="email" type="email" />
+      <label for="years">How many years of professional Python experience do you have?</label
+      ><input id="years" type="number" /> <label for="why">Why do you want to join us?</label
+      ><textarea id="why" rows="4" maxlength="1000"></textarea>
+      <label for="rate">What is your expected hourly rate (USD)?</label><input id="rate" />
+      <fieldset>
+        <legend>Rate your English proficiency.</legend>
+        <label><input type="radio" name="english" value="basic" /> Basic</label>
+        <label><input type="radio" name="english" value="fluent" /> Fluent</label>
+        <label><input type="radio" name="english" value="native" /> Native</label>
+      </fieldset>
+      <label for="tz">Time zone</label>
+      <select id="tz">
+        <option value="">Choose one</option>
+        <option>UTC-05:00 Eastern Time</option>
+        <option>UTC+00:00 London, Lisbon</option>
+        <option>UTC+03:00 Nairobi</option>
+      </select>
+      <fieldset>
+        <legend>Which of these frameworks have you used?</legend>
+        <label><input type="checkbox" name="fw" value="django" /> Django</label>
+        <label><input type="checkbox" name="fw" value="flask" /> Flask</label>
+        <label><input type="checkbox" name="fw" value="spring" /> Spring</label>
+      </fieldset>
+      <label for="quiz">What does this print? print(0.1 + 0.2 == 0.3)</label><input id="quiz" />
+      <label for="ref">How did you hear about us?</label><input id="ref" value="A friend" />
+      <button type="submit">Submit application</button>
+    </form>
+  </body>
+</html>

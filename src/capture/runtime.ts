@@ -1,7 +1,7 @@
 import { createRouter } from '@/messaging/send';
 import type { Message } from '@/messaging/protocol';
 import type { PageInfo, SnipMode } from '@/storage/schema';
-import { collectFillable, describeField, findCandidates, resolveTarget } from './fields';
+import { collectFillable, describeField, findCandidates, resolveTarget, scanForm } from './fields';
 import { clampRect, elementRect } from './geometry';
 import { applyChoice } from './choice';
 import { insertText } from './insert';
@@ -137,6 +137,7 @@ export function startCaptureRuntime(): void {
       return { ok: true };
     },
     PING: () => ({ ok: true }),
+    SCAN_FORM: () => ({ page: pageInfo(), fields: scanForm(document, createVisibilityChecker()) }),
     READ_PAGE_TEXT: (msg) => readPageText(msg.scope),
     // Only ever runs after the user clicks Insert in the panel (hard rule 5).
     INSERT_ANSWER: async (msg) => {

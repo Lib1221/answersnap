@@ -5,6 +5,7 @@ import {
   getSettings,
   pendingCaptureItem,
   pendingImportItem,
+  pendingFormItem,
   pendingJobItem,
   readCaptureStatus,
 } from '@/storage/items';
@@ -199,4 +200,22 @@ export async function jobFromSelection(
     text,
     createdAt: Date.now(),
   });
+}
+
+/** "Fill this form with AnswerSnap": scan the page's fields for the panel to draft. */
+export async function scanFormFromTab(tab: Browser.tabs.Tab | undefined): Promise<void> {
+  if (!tab?.id || isRestrictedUrl(tab.url)) return;
+  try {
+    const ping = await sendToTab<'PING'>(tab.id, { type: 'PING' }).catch(() => null);
+    if (!ping?.ok) await ensureCaptureScript(tab.id);
+    const scan = await sendToTab<'SCAN_FORM'>(tab.id, { type: 'SCAN_FORM' });
+    await pendingFormItem.setValue({
+      tabId: tab.id,
+      page: scan.page,
+      fields: scan.fields,
+      createdAt: Date.now(),
+    });
+  } catch (err) {
+    console.warn('[AnswerSnap] form scan failed', err);
+  }
 }

@@ -30,6 +30,22 @@ export function renderSystemRules(styleRules: string[]): string {
   return SYSTEM_RULES.replace('{{STYLE_RULES}}', rules || '(none)');
 }
 
+const TAG_FORMAT_START = 'Reply with exactly these tags';
+
+/**
+ * Rules for "Fill form": the same hard and style rules, with a JSON reply for many fields at
+ * once instead of the one-answer tags.
+ */
+export function renderBatchRules(styleRules: string[]): string {
+  const single = renderSystemRules(styleRules);
+  const base = single.slice(0, single.indexOf(TAG_FORMAT_START)).trimEnd();
+  return `${base}
+
+This request covers every field of one application form, listed in <fields>. The rules above apply to each field on its own: each field's kind, options, and character limit are in its <field> entry, and there is no screenshot.
+
+Reply with JSON: one entry in "answers" per field, in the same order, using the field's id. For each entry: "question" as you read it, on one line; "type" (short_text, long_text, number, yes_no, single_choice, multi_choice, url, date, salary, assessment, or unclear); "answer", the final text ready to paste (for a choice field the exact option label, comma separated for checkboxes; empty for an assessment item); "missing", the placeholders you used; "notes", one short note or empty. Don't tell the same story in several answers unless the questions ask for it.`;
+}
+
 export const REFINE = {
   shorter: 'Rewrite the answer about 40% shorter. Keep the strongest specific facts. Same tags.',
   longer: (maxChars: number) =>

@@ -6,6 +6,7 @@ import {
   handleSelectionCancelled,
   importPageFromTab,
   jobFromSelection,
+  scanFormFromTab,
   startSnip,
 } from './capture';
 
@@ -43,6 +44,10 @@ export function registerRouter(): void {
               { tabId: msg.tabId, windowId: tab.windowId, url: tab.url },
               msg.mode ?? 'question',
             );
+          },
+          E2E_FILL_FORM: async (msg) => {
+            await scanFormFromTab(await browser.tabs.get(msg.tabId));
+            return { ok: true as const };
           },
           E2E_JOB_SELECTION: async (msg) => {
             await jobFromSelection(await browser.tabs.get(msg.tabId), undefined);

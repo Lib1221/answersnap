@@ -56,6 +56,14 @@ export async function takePendingCapture(modes: SnipMode[]): Promise<PendingCapt
   return parseOrNull(PendingCaptureSchema, raw);
 }
 
+/** A form scan from the "Fill this form" menu, for the panel to draft. */
+export const pendingFormItem = storage.defineItem<{
+  tabId: number;
+  page: import('./schema').PageInfo;
+  fields: import('./schema').FieldInfo[];
+  createdAt: number;
+}>('session:pendingForm');
+
 /** The last answer request, for "What gets sent" (no key, no image data). */
 export const lastRequestItem = storage.defineItem<{
   at: string;
