@@ -175,7 +175,9 @@ test('privacy: last request, export, import with summary, delete all', async ({
 
   await options.getByRole('button', { name: 'Delete all data' }).click();
   await options.getByRole('button', { name: 'Delete everything' }).click();
-  await options.waitForLoadState();
+  // The page reloads to Getting started; let that finish before navigating again.
+  await expect(options).toHaveURL(/#welcome$/);
+  await expect(options.getByRole('heading', { name: 'Getting started' })).toBeVisible();
   expect(
     await panel.evaluate(async () => Object.keys(await chrome.storage.local.get(null))),
   ).toEqual([]);

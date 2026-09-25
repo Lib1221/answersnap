@@ -61,7 +61,8 @@ async function confirmImport() {
 async function deleteEverything() {
   await deleteAllData();
   confirmDelete.value = false;
-  location.hash = '#provider';
+  // Start over from the checklist with fresh state.
+  location.hash = '#welcome';
   location.reload();
 }
 </script>
