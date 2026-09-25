@@ -48,6 +48,7 @@ export type StreamEvent =
   | { kind: 'text'; delta: string }
   | { kind: 'usage'; usage: Usage }
   | { kind: 'stop'; reason: string }
+  | { kind: 'fallback'; from: string; to: string; reason: 'minute' | 'day' }
   | {
       kind: 'retry';
       reason: 'rate_limit' | 'overloaded' | 'network';
@@ -59,9 +60,13 @@ export interface StreamResult {
   text: string;
   stopReason: string;
   usage: Usage;
+  /** The model that answered, when a fallback switched it. */
+  model?: string;
 }
 
 export interface CompleteResult {
+  /** The model that answered, when a fallback switched it. */
+  model?: string;
   text: string;
   json?: unknown;
   stopReason: string;

@@ -104,6 +104,8 @@ test('latency budgets: overlay after the trigger, thumbnail after the drag', asy
     }
     await panel.evaluate(() => chrome.storage.session.remove('captureStatus'));
     await panel.reload();
+    // captureVisibleTab allows about 2 calls a second; don't measure the throttle.
+    await page.waitForTimeout(1100);
   }
 });
 

@@ -11,6 +11,9 @@ export type LlmErrorKind =
   | 'aborted'
   | 'no_key';
 
+/** Which free-tier quota ran out, when the provider says (Gemini's QuotaFailure details). */
+export type QuotaScope = 'minute' | 'day';
+
 export class LlmError extends Error {
   constructor(
     readonly kind: LlmErrorKind,
@@ -18,6 +21,7 @@ export class LlmError extends Error {
     readonly status?: number,
     /** Seconds to wait, when the API said so. */
     readonly retryAfter?: number,
+    readonly quota?: QuotaScope,
   ) {
     super(redactKeys(message));
     this.name = 'LlmError';
@@ -57,6 +61,8 @@ export function nextRetry(
   textStreamed: boolean,
 ): Extract<StreamEvent, { kind: 'retry' }> | null {
   if (textStreamed) return null;
+  // A used-up daily quota won't come back in seconds, whatever retryDelay says.
+  if (err.kind === 'rate_limit' && err.quota === 'day') return null;
   if (err.kind === 'rate_limit' && state.rateLimitRetries < 1) {
     state.rateLimitRetries++;
     const wait = Math.min(err.retryAfter ?? 5, RETRY_AFTER_CAP_S) * 1000;

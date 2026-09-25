@@ -1,5 +1,11 @@
 import { quirksFor } from '@/config/models';
-import { COMPLETE_RESPONSE_TIMEOUT_MS, fetchOrThrow, LlmError, withRetries } from './errors';
+import {
+  COMPLETE_RESPONSE_TIMEOUT_MS,
+  fetchOrThrow,
+  LlmError,
+  withRetries,
+  type QuotaScope,
+} from './errors';
 import { readSse } from './sse';
 import {
   EMPTY_USAGE,
@@ -91,6 +97,18 @@ function retryDelaySeconds(details: unknown): number | undefined {
   return undefined;
 }
 
+/** "…PerDay…" or "…PerMinute…" from a QuotaFailure violation's quotaId. */
+export function quotaScope(details: unknown): QuotaScope | undefined {
+  if (!Array.isArray(details)) return undefined;
+  for (const d of details as { '@type'?: string; violations?: { quotaId?: string }[] }[]) {
+    if (!d['@type']?.endsWith('QuotaFailure')) continue;
+    const ids = (d.violations ?? []).map((v) => v.quotaId ?? '');
+    if (ids.some((id) => /PerDay/i.test(id))) return 'day';
+    if (ids.some((id) => /PerMinute/i.test(id))) return 'minute';
+  }
+  return undefined;
+}
+
 async function errorFromResponse(res: Response): Promise<LlmError> {
   let message = `The AI service returned ${res.status}.`;
   let status = '';
@@ -115,7 +133,13 @@ async function errorFromResponse(res: Response): Promise<LlmError> {
     return new LlmError('auth', 'The API key was rejected. Check it in Settings.', res.status);
   }
   if (res.status === 429 || status === 'RESOURCE_EXHAUSTED') {
-    return new LlmError('rate_limit', message, 429, retryDelaySeconds(details));
+    return new LlmError(
+      'rate_limit',
+      message,
+      429,
+      retryDelaySeconds(details),
+      quotaScope(details),
+    );
   }
   if (res.status === 503 || status === 'UNAVAILABLE')
     return new LlmError('overloaded', message, res.status);

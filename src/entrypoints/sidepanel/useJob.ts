@@ -10,7 +10,7 @@ import {
 } from '@/kb/jobContext';
 import { transcribeImage } from '@/kb/profileBuilder';
 import { describeError, LlmError } from '@/llm/errors';
-import { createProvider } from '@/llm/provider';
+import { createAppProvider } from '@/llm/provider';
 import { sendToBackground, sendToTab } from '@/messaging/send';
 import { getApiKey, getSettings, pendingJobItem } from '@/storage/items';
 import type { PendingCapture } from '@/storage/schema';
@@ -64,7 +64,7 @@ export function useJob() {
     const key = await getApiKey(settings.provider);
     return key
       ? {
-          provider: createProvider(settings.provider, key, settings.baseUrl),
+          provider: createAppProvider(settings, key),
           model: settings.fastModel,
         }
       : undefined;

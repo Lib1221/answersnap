@@ -146,6 +146,8 @@ export async function seed(
         ];
       }
       await chrome.storage.local.clear();
+      // Session state too (pre-warm time, cooldowns, captures), so each test starts fresh.
+      await chrome.storage.session.clear();
       await chrome.storage.local.set(data);
     },
     {

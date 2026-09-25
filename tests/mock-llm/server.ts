@@ -202,10 +202,33 @@ async function anthropicMessages(req: IncomingMessage, res: ServerResponse) {
   res.end();
 }
 
-async function geminiStream(req: IncomingMessage, res: ServerResponse) {
+/** quota-key: gemini-3.5-flash is out of its daily free quota, like Google's real error. */
+function quotaScenario(res: ServerResponse, key: string, model: string): boolean {
+  if (key !== 'quota-key' || model !== 'gemini-3.5-flash') return false;
+  json(res, 429, {
+    error: {
+      code: 429,
+      message: 'You exceeded your current quota, please check your plan and billing details.',
+      status: 'RESOURCE_EXHAUSTED',
+      details: [
+        {
+          '@type': 'type.googleapis.com/google.rpc.QuotaFailure',
+          violations: [
+            { quotaId: 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', quotaValue: '20' },
+          ],
+        },
+        { '@type': 'type.googleapis.com/google.rpc.RetryInfo', retryDelay: '15s' },
+      ],
+    },
+  });
+  return true;
+}
+
+async function geminiStream(req: IncomingMessage, res: ServerResponse, model: string) {
   const raw = await readBody(req);
-  log.push(JSON.parse(raw));
+  log.push({ ...JSON.parse(raw), _model: model });
   const key = String(req.headers['x-goog-api-key'] ?? '');
+  if (quotaScenario(res, key, model)) return;
   if (scenario(res, key, true)) return;
   res.writeHead(200, { 'content-type': 'text/event-stream' });
   const parts = words(canned(raw));
@@ -264,6 +287,11 @@ createServer(async (req, res) => {
       return json(res, 200, {
         models: [
           {
+            name: 'models/gemini-3.6-flash',
+            displayName: 'Gemini 3.6 Flash',
+            supportedGenerationMethods: ['generateContent'],
+          },
+          {
             name: 'models/gemini-3.5-flash',
             displayName: 'Gemini 3.5 Flash',
             supportedGenerationMethods: ['generateContent'],
@@ -271,12 +299,15 @@ createServer(async (req, res) => {
         ],
       });
     }
+    const geminiModel = url.pathname.match(/^\/v1beta\/models\/([^/:]+):/)?.[1] ?? '';
     if (/^\/v1beta\/models\/[^/]+:streamGenerateContent$/.test(url.pathname))
-      return await geminiStream(req, res);
+      return await geminiStream(req, res, geminiModel);
     if (/^\/v1beta\/models\/[^/]+:generateContent$/.test(url.pathname)) {
       const raw = await readBody(req);
-      log.push(JSON.parse(raw));
-      if (scenario(res, String(req.headers['x-goog-api-key'] ?? ''), true)) return;
+      log.push({ ...JSON.parse(raw), _model: geminiModel });
+      const gkey = String(req.headers['x-goog-api-key'] ?? '');
+      if (quotaScenario(res, gkey, geminiModel)) return;
+      if (scenario(res, gkey, true)) return;
       return json(res, 200, {
         candidates: [
           {

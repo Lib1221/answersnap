@@ -19,6 +19,8 @@ export const FALLBACK_MODELS: Record<ProviderId, ModelInfo[]> = {
   ],
   gemini: [
     { id: 'gemini-3.5-flash', displayName: 'Gemini 3.5 Flash', role: 'default' },
+    { id: 'gemini-3.6-flash', displayName: 'Gemini 3.6 Flash' },
+    { id: 'gemini-3.7-flash', displayName: 'Gemini 3.7 Flash' },
     { id: 'gemini-3.8-flash', displayName: 'Gemini 3.8 Flash' },
     { id: 'gemini-3.5-flash-lite', displayName: 'Gemini 3.5 Flash-Lite', role: 'fast' },
     { id: 'gemini-3.1-pro-preview', displayName: 'Gemini 3.1 Pro Preview', role: 'best' },
@@ -94,4 +96,18 @@ export const API_KEY_LINKS: Record<ProviderId, string> = {
 export const PROVIDER_NAMES: Record<ProviderId, string> = {
   anthropic: 'Anthropic (Claude)',
   gemini: 'Google Gemini',
+};
+
+/**
+ * Automatic fallback when a model hits its free-tier limit (Gemini quotas are per model).
+ * Answers only fall back to full Flash models: in live tests Flash-Lite added details that
+ * weren't in the resume. Fast tasks (summaries, transcription) use the Flash-Lite chain.
+ */
+export const FALLBACK_CHAINS: Record<ProviderId, { answer: string[]; fast: string[] }> = {
+  gemini: {
+    answer: ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.8-flash'],
+    fast: ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-lite-latest'],
+  },
+  // Anthropic limits are per account, not per model; switching models wouldn't help.
+  anthropic: { answer: [], fast: [] },
 };

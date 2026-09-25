@@ -4,7 +4,9 @@ import { getJobContext, jobPromptText } from '@/kb/jobContext';
 import { refineInstruction, refineMessages, type RefineAction } from '@/llm/conversation';
 import { LlmError, type LlmErrorKind } from '@/llm/errors';
 import { countWords, parseLimits, type Limits } from '@/llm/limits';
-import { createProvider } from '@/llm/provider';
+import { shortModelName } from '@/config/models';
+import { AllModelsExhausted } from '@/llm/fallback';
+import { createAppProvider } from '@/llm/provider';
 import { TagParser, type ParsedAnswer } from '@/llm/tagParser';
 import {
   EMPTY_USAGE,
@@ -55,12 +57,23 @@ async function shrinkImage(
   return { data: btoa(binary), mediaType: 'image/jpeg' };
 }
 
+export function hoursFromNow(ms: number): string {
+  const h = Math.max(1, Math.round(ms / 3_600_000));
+  return h === 1 ? 'about an hour' : `about ${h} hours`;
+}
+
 export function errorMessage(err: LlmError, settings: Settings | null): string {
+  if (err instanceof AllModelsExhausted) {
+    return err.quota === 'day'
+      ? `All your Gemini models have reached their free limits for today. They come back in ${hoursFromNow(err.resetsInMs)} (midnight Pacific time). A paid key removes the limit.`
+      : 'All your Gemini models are at their per-minute limit. Try again in a minute.';
+  }
   switch (err.kind) {
     case 'auth':
       return 'The API key was rejected. Check it in Settings.';
     case 'rate_limit':
-      if (settings?.provider === 'gemini' && /free_tier/i.test(err.message)) {
+      // Free-tier quota: Google's QuotaFailure details, or its message naming the free tier.
+      if (settings?.provider === 'gemini' && (err.quota || /free_tier/i.test(err.message))) {
         // Free-tier quotas are per model and per minute or per day (about 20 a day on 3.8 Flash).
         return "You've reached Gemini's free-tier limit for this model. Wait a bit, switch to another Gemini model in Settings, or use a paid key.";
       }
@@ -119,6 +132,8 @@ export function useAnswer() {
   const model = ref('');
   /** Answer text as the model last produced it, to tell whether the user edited it. */
   const generated = ref('');
+  /** Set when automatic fallback switched models for this answer. */
+  const fallbackNote = ref('');
   let controller: AbortController | null = null;
   let lastCapture: PendingCapture | null = null;
   /** A saved answer that closely matches this question (spec 3.6). */
@@ -150,6 +165,7 @@ export function useAnswer() {
     usage.value = EMPTY_USAGE;
     error.value = null;
     retryNote.value = '';
+    fallbackNote.value = '';
     convo = null;
     match.value = null;
     canRefine.value = false;
@@ -186,6 +202,10 @@ export function useAnswer() {
               }
             } else if (e.kind === 'usage') {
               usage.value = e.usage;
+            } else if (e.kind === 'fallback') {
+              model.value = e.to;
+              const limit = e.reason === 'day' ? 'daily' : 'per-minute';
+              fallbackNote.value = `${shortModelName(e.from)} reached its ${limit} free limit, so this answer uses ${shortModelName(e.to)}.`;
             } else if (e.kind === 'retry') {
               retryNote.value =
                 e.reason === 'rate_limit'
@@ -288,7 +308,7 @@ export function useAnswer() {
     });
     const first: ChatMessage = { role: 'user', content };
     convo = {
-      provider: createProvider(s.provider, key, s.baseUrl),
+      provider: createAppProvider(s, key),
       system: buildSystemBlocks(s, data),
       history: [first],
       lastRaw: '',
@@ -384,6 +404,7 @@ export function useAnswer() {
     words,
     overLimit,
     edited,
+    fallbackNote,
     match,
     canRefine,
     run,

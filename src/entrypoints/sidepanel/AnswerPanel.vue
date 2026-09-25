@@ -90,6 +90,14 @@ const cacheOff = computed(() => {
 
 <template>
   <section class="flex flex-col gap-3 border-t border-rule pt-3" data-testid="answer-section">
+    <p
+      v-if="s.fallbackNote.value"
+      class="text-[13px] text-graphite-2"
+      role="status"
+      data-testid="fallback-note"
+    >
+      {{ s.fallbackNote.value }}
+    </p>
     <p v-if="s.phase.value === 'drafting'" role="status">{{ s.retryNote.value || 'Drafting' }}</p>
     <p v-else-if="s.retryNote.value" role="status" class="text-graphite-2">
       {{ s.retryNote.value }}

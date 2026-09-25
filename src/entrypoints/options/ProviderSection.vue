@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import {
   API_KEY_LINKS,
+  FALLBACK_CHAINS,
   FALLBACK_MODELS,
   PROVIDER_NAMES,
   defaultModel,
+  shortModelName,
   type ModelInfo,
 } from '@/config/models';
 import { LlmError } from '@/llm/errors';
+import { storageCooldowns, watchCooldowns } from '@/llm/fallback';
 import { createProvider } from '@/llm/provider';
 import { getApiKey, getSettings, moveApiKeys, saveSettings, setApiKey } from '@/storage/items';
 import type { Provider, Settings } from '@/storage/schema';
@@ -68,18 +71,62 @@ async function testKey() {
       settings.value.baseUrl,
     ).listModels();
     await saveKey();
-    models.value = list;
+    // Recommended models first, then the rest in the provider's order.
+    const preferred = FALLBACK_MODELS[settings.value.provider].map((m) => m.id);
+    const rank = (id: string) =>
+      preferred.includes(id) ? preferred.indexOf(id) : preferred.length;
+    models.value = [...list].sort((a, b) => rank(a.id) - rank(b.id));
     testState.value = 'ok';
     testMessage.value = `The key works. ${list.length} models available.`;
-    const ids = new Set(list.map((m) => m.id));
-    if (ids.size && !ids.has(settings.value.model)) await update({ model: list[0]!.id });
+    const ids = list.map((m) => m.id);
+    const pick = (current: string, role: 'default' | 'fast') => {
+      if (!ids.length || ids.includes(current)) return current;
+      const fallback = defaultModel(settings.value!.provider, role);
+      return ids.includes(fallback) ? fallback : ids[0]!;
+    };
+    await update({
+      availableModels: ids,
+      model: pick(settings.value.model, 'default'),
+      fastModel: pick(settings.value.fastModel, 'fast'),
+    });
   } catch (err) {
     testState.value = 'error';
     testMessage.value = err instanceof LlmError ? err.message : "Couldn't test the key. Try again.";
   }
 }
 
-onMounted(load);
+// Automatic fallback: which models are resting after a quota error, and until when.
+const cooling = ref<Record<string, number>>({});
+const chain = computed(() => {
+  const s = settings.value;
+  if (!s) return [];
+  const answer = FALLBACK_CHAINS[s.provider].answer;
+  const ordered = [s.model, ...answer.filter((m) => m !== s.model)];
+  return s.availableModels.length
+    ? ordered.filter((m) => m === s.model || s.availableModels.includes(m))
+    : ordered;
+});
+
+async function loadCooldowns() {
+  cooling.value = await storageCooldowns.get();
+}
+
+function coolingLabel(model: string): string {
+  const until = cooling.value[model];
+  if (!until) return 'Ready';
+  const mins = Math.round((until - Date.now()) / 60_000);
+  return mins < 2
+    ? 'Resting for a minute'
+    : `Limit reached, back in ${mins < 90 ? `${mins} min` : `${Math.round(mins / 60)} h`}`;
+}
+
+let stopWatch: (() => void) | null = null;
+onMounted(() => {
+  void load();
+  void loadCooldowns();
+  stopWatch = watchCooldowns(() => void loadCooldowns());
+});
+onUnmounted(() => stopWatch?.());
 </script>
 
 <template>
@@ -201,6 +248,37 @@ onMounted(load);
     <p class="text-[13px] text-graphite-2">
       The fast model summarizes long job posts and reads text from images.
     </p>
+
+    <div v-if="provider === 'gemini'" class="flex flex-col gap-2" data-testid="fallback">
+      <label class="flex items-start gap-2">
+        <input
+          type="checkbox"
+          class="mt-1"
+          :checked="settings.autoFallback"
+          @change="update({ autoFallback: ($event.target as HTMLInputElement).checked })"
+        />
+        <span>
+          When a model hits its free limit, switch to the next one automatically
+          <span class="block text-[13px] text-graphite-2">
+            Each Gemini model has its own free quota (about 20 answers a day), so switching gives
+            you several times more.
+          </span>
+        </span>
+      </label>
+      <ol
+        v-if="settings.autoFallback"
+        class="ml-6 flex flex-col gap-0.5 text-[13px]"
+        data-testid="fallback-chain"
+      >
+        <li v-for="(m, i) in chain" :key="m" class="flex gap-2 tabular-nums">
+          <span class="text-graphite-2">{{ i + 1 }}.</span>
+          <span>{{ shortModelName(m) }}</span>
+          <span :class="cooling[m] ? 'text-carbon-pink-text' : 'text-graphite-2'">{{
+            coolingLabel(m)
+          }}</span>
+        </li>
+      </ol>
+    </div>
 
     <label v-if="provider === 'gemini'" class="flex items-center gap-2">
       <input

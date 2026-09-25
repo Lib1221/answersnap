@@ -137,6 +137,10 @@ export const SettingsSchema = z.object({
   prices: z.record(z.string(), ModelPriceSchema).default({}),
   /** Gemini free tier: no charge, but Google may use requests to improve its products. */
   geminiFreeTier: z.boolean().default(true),
+  /** When a model runs out of quota, switch to the next one in its chain. */
+  autoFallback: z.boolean().default(true),
+  /** Model ids the key can use (from Test key), so fallback skips models the key can't reach. */
+  availableModels: z.array(z.string()).default([]),
   baseUrl: z.string().optional(),
   onboardingDone: z.boolean().default(false),
 });
