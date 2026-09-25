@@ -141,6 +141,11 @@ export const SettingsSchema = z.object({
   factCheck: z.boolean().default(true),
   /** Which model checks: the fast model (cheap, separate quota) or the answer model (stricter). */
   factCheckModel: z.enum(['fast', 'main']).default('fast'),
+  /**
+   * Answer confidently: never admit a gap, claim modest experience for skills the data doesn't
+   * show (listed as "Assumed" in the notes). Off by default: answers stick to the data.
+   */
+  fillGaps: z.boolean().default(false),
   /** When a model runs out of quota, switch to the next one in its chain. */
   autoFallback: z.boolean().default(true),
   /** Model ids the key can use (from Test key), so fallback skips models the key can't reach. */

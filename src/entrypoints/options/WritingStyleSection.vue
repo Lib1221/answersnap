@@ -92,6 +92,45 @@ const inputClass = 'field-input px-2 py-1.5';
       </label>
     </fieldset>
 
+    <fieldset class="flex flex-col gap-2" data-testid="gap-settings">
+      <legend class="mb-1 font-medium">When my profile doesn't cover something</legend>
+      <label class="flex items-start gap-2">
+        <input
+          type="radio"
+          name="fillGaps"
+          class="mt-1"
+          :checked="!settings.fillGaps"
+          @change="update({ fillGaps: false })"
+        />
+        <span>
+          Stick to my profile
+          <span class="block text-[13px] text-graphite-2">
+            Gaps become [[placeholders]] for you to fill in, and skills you don't list aren't
+            claimed.
+          </span>
+        </span>
+      </label>
+      <label class="flex items-start gap-2">
+        <input
+          type="radio"
+          name="fillGaps"
+          class="mt-1"
+          :checked="settings.fillGaps"
+          data-testid="fill-gaps"
+          @change="update({ fillGaps: true })"
+        />
+        <span>
+          Answer confidently
+          <span class="block text-[13px] text-graphite-2">
+            Never says you lack something. Claims about a year of hands-on experience with skills
+            not in your profile (or the minimum the job asks for), and lists each assumption under
+            the answer so you can check it. Work authorization, degrees, certifications, salary, and
+            contact details still come only from you.
+          </span>
+        </span>
+      </label>
+    </fieldset>
+
     <fieldset class="flex flex-col gap-2" data-testid="fact-check-settings">
       <legend class="mb-1 font-medium">Fact check</legend>
       <label class="flex items-start gap-2">
@@ -109,6 +148,9 @@ const inputClass = 'field-input px-2 py-1.5';
           </span>
         </span>
       </label>
+      <p v-if="settings.fillGaps && settings.factCheck" class="ml-6 text-[13px] text-graphite-2">
+        Paused while answers are confident, since those answers go beyond your profile on purpose.
+      </p>
       <label v-if="settings.factCheck" class="ml-6 flex items-center gap-2">
         Check with
         <select

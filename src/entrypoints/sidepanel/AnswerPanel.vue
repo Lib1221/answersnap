@@ -150,7 +150,16 @@ const cacheOff = computed(() => {
         </li>
       </ul>
       <FactCheck :state="s" />
-      <p v-if="s.parsed.value?.notes" class="text-[13px] text-graphite-2" data-testid="notes">
+      <p
+        v-if="s.parsed.value?.notes"
+        class="text-[13px]"
+        :class="
+          /^assumed\b/i.test(s.parsed.value.notes)
+            ? 'rounded-control border border-canary-edge bg-canary px-3 py-2 text-ink-strong'
+            : 'text-graphite-2'
+        "
+        data-testid="notes"
+      >
         {{ s.parsed.value.notes }}
       </p>
 

@@ -67,7 +67,7 @@ export function hasCandidateData(data: CandidateData): boolean {
 
 export function buildSystemBlocks(settings: Settings, data: CandidateData): SystemBlock[] {
   return [
-    { text: renderSystemRules(settings.styleRules) },
+    { text: renderSystemRules(settings.styleRules, settings.fillGaps) },
     { text: candidateBlock(data), cache: true },
   ];
 }

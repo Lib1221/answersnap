@@ -175,7 +175,7 @@ export async function draftForm(opts: {
 
   const usage: Usage[] = [];
   const system = [
-    { text: renderBatchRules(opts.settings.styleRules) },
+    { text: renderBatchRules(opts.settings.styleRules, opts.settings.fillGaps) },
     { text: opts.candidateBlock, cache: true },
   ];
   for (let i = 0; i < toModel.length; i += FIELDS_PER_REQUEST) {

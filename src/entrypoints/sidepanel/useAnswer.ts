@@ -343,6 +343,8 @@ export function useAnswer() {
     if (
       !convo ||
       !s?.factCheck ||
+      // Confident answers make claims beyond the data on purpose; flagging them is noise.
+      s.fillGaps ||
       phase.value !== 'done' ||
       !shouldFactCheck(parsed.value?.type, text)
     ) {
