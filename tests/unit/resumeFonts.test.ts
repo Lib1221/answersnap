@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { FONT_KEYS, FONTS, NAME_ONLY_FONT_KEYS } from '@/kb/resume/fonts';
+import { FONT_KEYS, FONTS, NAME_ONLY_FONT_KEYS, nameFontOf } from '@/kb/resume/fonts';
 import { DesignSchema } from '@/kb/resume/model';
 
 const root = join(import.meta.dirname, '../..');
@@ -44,5 +44,19 @@ describe('resume fonts', () => {
       expect(FONTS[k].stack, k).toMatch(
         /'Noto Sans Ethiopic', (sans-serif|serif|monospace|cursive)$/,
       );
+  });
+
+  it('resolves the name font: its own, else the heading font, else the text font', () => {
+    const d = DesignSchema.parse({ font: 'lato' });
+    expect(nameFontOf(d)).toBe('lato');
+    expect(nameFontOf({ ...d, headingFont: 'lora' })).toBe('lora');
+    expect(nameFontOf({ ...d, headingFont: 'lora', nameFont: 'pacifico' })).toBe('pacifico');
+  });
+
+  it('keeps the font catalog out of the schema, which Settings loads for backups', () => {
+    const model = readFileSync(join(root, 'src/kb/resume/model.ts'), 'utf8');
+    const templates = readFileSync(join(root, 'src/kb/resume/templates.ts'), 'utf8');
+    expect(model).not.toMatch(/from '\.\/fonts'/);
+    expect(templates).not.toMatch(/from '\.\/fonts'/);
   });
 });

@@ -2,7 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 import { PAGE_MM } from '@/kb/resume/format';
 import type { Resume } from '@/kb/resume/model';
-import { FONTS } from '@/kb/resume/templates';
+import { FONTS, headingFontOf, nameFontOf } from '@/kb/resume/fonts';
 import { buildBlocks, paginate, type Block, type Page } from './doc/blocks';
 import DocBlock from './doc/DocBlock.vue';
 import './doc/doc.css';
@@ -30,12 +30,7 @@ const bottomMm = computed(() =>
   d.value.footer === 'none' ? d.value.marginY : Math.max(d.value.marginY, 12),
 );
 
-/** The name's font: its own choice, else the heading font, else the body font. */
-const nameFontKey = computed(() => {
-  const x = d.value;
-  if (x.nameFont !== 'same') return x.nameFont;
-  return x.headingFont === 'same' ? x.font : x.headingFont;
-});
+const nameFontKey = computed(() => nameFontOf(d.value));
 
 /**
  * Bundled fonts load on first use. Load the ones this resume uses (regular, bold, italic) before
@@ -43,7 +38,7 @@ const nameFontKey = computed(() => {
  */
 async function fontsLoaded() {
   const x = d.value;
-  const keys = [x.font, x.headingFont === 'same' ? x.font : x.headingFont, nameFontKey.value];
+  const keys = [x.font, headingFontOf(x), nameFontKey.value];
   const loads = [...new Set(keys)].flatMap((k) =>
     FONTS[k].bundled
       ? ['400', '700', 'italic 400'].map((style) =>

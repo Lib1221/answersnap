@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DOC_STRINGS, type DocLang } from './docLang';
-import { FONT_KEYS, NAME_ONLY_FONT_KEYS } from './fonts';
+import { FONT_KEYS, NAME_ONLY_FONT_KEYS } from './fontKeys';
 
 // Resume documents for the builder: content (personal details and sections of entries) plus a
 // design (layout, spacing, colors, fonts, headings, entry layout). A template is a preset design.
@@ -157,7 +157,7 @@ export const PersonalSchema = z.object({
 });
 export type Personal = z.infer<typeof PersonalSchema>;
 
-export { FONT_KEYS, NAME_ONLY_FONT_KEYS, type AnyFontKey, type FontKey } from './fonts';
+export { FONT_KEYS, NAME_ONLY_FONT_KEYS, type AnyFontKey, type FontKey } from './fontKeys';
 
 export const DesignSchema = z.object({
   template: s,

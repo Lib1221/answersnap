@@ -4,6 +4,7 @@ import { computed, h, useId, type FunctionalComponent, type VNodeChild } from 'v
 import { newEntry, type Design } from '@/kb/resume/model';
 import { formatDates, formatMonth } from '@/kb/resume/format';
 import Icon from '@/ui/AppIcon.vue';
+import { FONTS, headingFontOf, nameFontOf } from '@/kb/resume/fonts';
 import FontPicker from './FontPicker.vue';
 
 // FlowCV-style design controls. Every change replaces the design object (never mutates it), so
@@ -34,6 +35,9 @@ function set<K extends keyof Design>(key: K, value: Design[K]) {
   }
   design.value = next;
 }
+
+/** Fonts without a bold (most creative ones) keep the name regular: Bold name has no effect. */
+const nameHasBold = computed(() => FONTS[nameFontOf(design.value)].bold);
 
 function setAccentOn(key: AccentKey, on: boolean) {
   design.value = { ...design.value, accentOn: { ...design.value.accentOn, [key]: on } };
@@ -694,6 +698,7 @@ const inputValue = (e: Event) => (e.target as HTMLInputElement).value;
         label="Heading font"
         testid="cz-headingFont"
         same-label="Same as text"
+        :effective="design.font"
         @update:model-value="set('headingFont', $event as Design['headingFont'])"
       />
       <FontPicker
@@ -701,11 +706,17 @@ const inputValue = (e: Event) => (e.target as HTMLInputElement).value;
         label="Name font"
         testid="cz-nameFont"
         same-label="Same as headings"
+        :effective="headingFontOf(design)"
         creative
         @update:model-value="set('nameFont', $event as Design['nameFont'])"
       />
       <Range field="nameSize" label="Name size" :min="16" :max="40" :step="1" :fmt="pt" />
-      <Check field="nameBold" label="Bold name" />
+      <Check
+        field="nameBold"
+        label="Bold name"
+        :disabled="!nameHasBold"
+        :hint="nameHasBold ? undefined : `${FONTS[nameFontOf(design)].label} has no bold.`"
+      />
     </Card>
 
     <Card title="Section headings">

@@ -21,6 +21,8 @@ const props = defineProps<{
   sameLabel?: string;
   /** Include the display and handwriting fonts (name only). */
   creative?: boolean;
+  /** The font in effect when the value is 'same': its group opens first. */
+  effective?: string;
 }>();
 const model = defineModel<string>({ required: true });
 
@@ -36,15 +38,19 @@ const groupOf = (v: string): FontGroup =>
   v in FONTS ? FONTS[v as AnyFontKey].group : (groups.value[0] ?? 'sans');
 
 /** The group on show: the current font's, until the user opens another. */
-const shown = ref<FontGroup>(groupOf(model.value));
-watch(model, (v) => {
-  if (v !== 'same') shown.value = groupOf(v);
-});
+const current = () => (model.value === 'same' ? (props.effective ?? '') : model.value);
+const shown = ref<FontGroup>(groupOf(current()));
+watch(model, () => (shown.value = groupOf(current())));
 const list = computed(() => keys.value.filter((k) => FONTS[k].group === shown.value));
 </script>
 
 <template>
-  <div class="flex flex-col gap-1.5" :data-testid="testid">
+  <div
+    role="group"
+    :aria-labelledby="`${uid}-label`"
+    class="flex flex-col gap-1.5"
+    :data-testid="testid"
+  >
     <span :id="`${uid}-label`" class="text-[13px] font-medium">{{ label }}</span>
     <button
       v-if="sameLabel"
@@ -84,7 +90,7 @@ const list = computed(() => keys.value.filter((k) => FONTS[k].group === shown.va
     </p>
     <div
       role="group"
-      :aria-labelledby="`${uid}-label`"
+      :aria-label="`${label}: ${FONT_GROUP_LABELS[shown]}`"
       class="grid grid-cols-2 gap-1 rounded-[10px] border border-rule bg-paper p-1"
     >
       <button

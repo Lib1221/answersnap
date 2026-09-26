@@ -3,74 +3,13 @@
 // of the computer. Bundled fonts look the same on every computer and in every saved PDF.
 // Keys are stored in resumes: add new ones, never rename or remove one.
 
+import { FONT_KEYS, NAME_ONLY_FONT_KEYS, type AnyFontKey, type FontKey } from './fontKeys';
+
 /** Only Ethiopic characters (Amharic and others); bundled, and declared for that range only, so it
  * can sit in every stack without taking over Latin text when a font is missing. */
 const ETHIOPIC = "'Noto Sans Ethiopic'";
 
-/** Fonts for the body, headings, and name. */
-export const FONT_KEYS = [
-  'public-sans',
-  'helvetica',
-  'georgia',
-  'palatino',
-  'garamond',
-  'times',
-  'verdana',
-  'trebuchet',
-  'tahoma',
-  'courier',
-  'source-sans-3',
-  'karla',
-  'mulish',
-  'lato',
-  'titillium-web',
-  'work-sans',
-  'barlow',
-  'jost',
-  'fira-sans',
-  'roboto',
-  'rubik',
-  'asap',
-  'nunito',
-  'open-sans',
-  'ibm-plex-sans',
-  'lora',
-  'source-serif-4',
-  'zilla-slab',
-  'pt-serif',
-  'literata',
-  'eb-garamond',
-  'aleo',
-  'crimson-pro',
-  'cormorant-garamond',
-  'vollkorn',
-  'amiri',
-  'crimson-text',
-  'alegreya',
-  'inconsolata',
-  'source-code-pro',
-  'ibm-plex-mono',
-  'overpass-mono',
-  'space-mono',
-  'courier-prime',
-] as const;
-export type FontKey = (typeof FONT_KEYS)[number];
-
-/** Display and handwriting fonts: for the name only, as in FlowCV. */
-export const NAME_ONLY_FONT_KEYS = [
-  'comfortaa',
-  'abril-fatface',
-  'amatic-sc',
-  'bungee-shade',
-  'caveat',
-  'caveat-brush',
-  'elsie',
-  'lobster',
-  'pacifico',
-  'parisienne',
-  'vibur',
-] as const;
-export type AnyFontKey = FontKey | (typeof NAME_ONLY_FONT_KEYS)[number];
+export { FONT_KEYS, NAME_ONLY_FONT_KEYS, type AnyFontKey, type FontKey };
 
 export type FontGroup = 'sans' | 'serif' | 'mono' | 'standard' | 'creative';
 export const FONT_GROUP_LABELS: Record<FontGroup, string> = {
@@ -591,3 +530,11 @@ export const FONTS: Record<AnyFontKey, FontDef> = {
     stack: `'Vibur', ${ETHIOPIC}, cursive`,
   },
 };
+
+type FontChoice = { font: FontKey; headingFont: FontKey | 'same'; nameFont: AnyFontKey | 'same' };
+/** The headings' font: their own choice, else the text font. */
+export const headingFontOf = (d: FontChoice): FontKey =>
+  d.headingFont === 'same' ? d.font : d.headingFont;
+/** The name's font: its own choice, else the heading font, else the text font. */
+export const nameFontOf = (d: FontChoice): AnyFontKey =>
+  d.nameFont === 'same' ? headingFontOf(d) : d.nameFont;

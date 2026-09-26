@@ -2,7 +2,8 @@
 import { nextTick, ref, useId, type CSSProperties } from 'vue';
 import type { Design } from '@/kb/resume/model';
 import { MY_TEMPLATE_PREFIX, type MyTemplate } from '@/kb/resume/store';
-import { FONTS, TEMPLATES, applyTemplate } from '@/kb/resume/templates';
+import { FONTS } from '@/kb/resume/fonts';
+import { TEMPLATES, applyTemplate } from '@/kb/resume/templates';
 import Icon from '@/ui/AppIcon.vue';
 
 // Template picker. A template is a preset over the design controls: picking one replaces the

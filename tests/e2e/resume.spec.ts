@@ -418,8 +418,10 @@ test('FlowCV fonts are bundled: they load, and the PDF embeds them', async ({
   const doc = page.locator('.preview-pages > [data-testid="resume-page"]').first();
   await expect(doc).toHaveCSS('font-family', /^Lora/);
   await expect(doc.locator('.rd-name')).toHaveCSS('font-family', /^Pacifico/);
-  // Pacifico has no bold: the name stays regular instead of a smeared fake bold.
+  // Pacifico has no bold: the name stays regular instead of a smeared fake bold, and Bold name
+  // says why it can't apply.
   await expect(doc.locator('.rd-name')).toHaveCSS('font-weight', '400');
+  await expect(page.getByTestId('cz-nameBold')).toBeDisabled();
   const loaded = () =>
     page.evaluate(() =>
       [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family),

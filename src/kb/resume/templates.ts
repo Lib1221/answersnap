@@ -3,8 +3,6 @@ import { DesignSchema, type Design } from './model';
 // Templates are presets over the design controls, as in FlowCV: picking one sets the controls,
 // and everything stays editable afterwards. Original designs in common resume style families.
 
-export { FONTS } from './fonts';
-
 export interface Template {
   id: string;
   name: string;
