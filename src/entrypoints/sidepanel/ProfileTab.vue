@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { loadCandidateData } from '@/kb/candidate';
 import type { CandidateData } from '@/kb/contextBuilder';
 import type { CandidateProfile } from '@/kb/profileSchema';
+import LinkedInCard from './LinkedInCard.vue';
 
 const emit = defineEmits<{ openSettings: [section: string] }>();
 const data = ref<CandidateData | null>(null);
@@ -58,4 +59,5 @@ const profile = () => data.value?.profile as CandidateProfile | null | undefined
       </button>
     </div>
   </section>
+  <LinkedInCard v-if="data" />
 </template>

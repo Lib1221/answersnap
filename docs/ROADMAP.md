@@ -40,7 +40,7 @@ extension can do is in one place. Items marked "needs Liben's OK" touch a hard r
 - [ ] Keyboard-only flow: snip, draft, insert without the mouse
 - [ ] Per-site memory: remember answers given on a site and reuse them on its later steps
 - [ ] Weekly summary on the Applications page (applied, interviews, offers)
-- [ ] LinkedIn "About" and headline writer from the profile
+- [x] LinkedIn headline options and About section from the profile (Profile tab)
 
 ## Later
 

@@ -19,14 +19,19 @@ for (const scheme of ['light', 'dark'] as const) {
     extensionId,
     panel,
   }) => {
+    // One axe scan per page, a dozen pages: well past the default 30 s on a busy machine.
+    test.setTimeout(120_000);
     await seed(panel);
     const pages = [panel];
     for (const hash of [
       'welcome',
+      'applications',
       'provider',
       'sources',
       'profile',
       'standard-answers',
+      'cover-letter',
+      'stories',
       'writing-style',
       'privacy',
     ]) {

@@ -184,6 +184,17 @@ const RESUME = {
   skills: ['Python', 'Django', 'PostgreSQL', 'Python'],
 };
 
+/** LinkedIn writer. */
+const LINKEDIN = {
+  headlines: [
+    'Backend Engineer | Payments APIs in Python and Django',
+    'Backend Engineer | Payments APIs in Python and Django',
+    'Python engineer who makes billing systems fast: p95 from 900 ms to 240 ms',
+  ],
+  about: 'I build payments APIs at Ledgerly.\n\nI cut invoicing latency from 900 ms to 240 ms.',
+  skills: ['Python', 'Django'],
+};
+
 /** Non-streamed replies: structured profile JSON, tool use, or an image transcription. */
 function completeText(raw: string): string {
   if (/Write an answer for every field/.test(raw)) return batchJson(raw);
@@ -192,6 +203,7 @@ function completeText(raw: string): string {
   if (/You prepare a candidate for a job interview/.test(raw)) return JSON.stringify(INTERVIEW);
   if (/You help a candidate build a bank of STAR stories/.test(raw)) return JSON.stringify(STORIES);
   if (/You tailor a candidate's resume to a job post/.test(raw)) return JSON.stringify(RESUME);
+  if (/You write a candidate's LinkedIn headline/.test(raw)) return JSON.stringify(LINKEDIN);
   if (/Transcribe all readable text/.test(raw)) return TRANSCRIPT;
   if (/Extract the candidate's profile/.test(raw)) return PROFILE;
   return canned(raw);
