@@ -393,3 +393,44 @@ test('in two columns, moving a section follows its own column', async ({
   await expect.poll(side).toEqual(['LANGUAGES', 'SKILLS']);
   await expect(card(page, 'Languages').getByTestId('section-up')).toBeDisabled();
 });
+
+test('FlowCV fonts are bundled: they load, and the PDF embeds them', async ({
+  context,
+  extensionId,
+  panel,
+}) => {
+  test.setTimeout(90_000);
+  await seed(panel);
+  await seedProfile(panel);
+  const page = await openBuilder(context, extensionId);
+  await page.getByTestId('resume-start-profile').click();
+  await shows(page, 'Ledgerly');
+  // An Amharic name renders with the bundled Ethiopic font, whatever the text font is.
+  await page.getByTestId('pd-name').fill('ጀሚ ፓርክ Jamie Park');
+
+  await page.getByTestId('tab-customize').click();
+  await page.getByTestId('cz-font-group-serif').click();
+  await page.getByTestId('cz-font-lora').click();
+  await page.getByTestId('cz-nameFont-group-creative').click();
+  await page.getByTestId('cz-nameFont-pacifico').click();
+  await expect(page.getByTestId('cz-font-lora')).toHaveAttribute('aria-pressed', 'true');
+
+  const doc = page.locator('.preview-pages > [data-testid="resume-page"]').first();
+  await expect(doc).toHaveCSS('font-family', /^Lora/);
+  await expect(doc.locator('.rd-name')).toHaveCSS('font-family', /^Pacifico/);
+  // Pacifico has no bold: the name stays regular instead of a smeared fake bold.
+  await expect(doc.locator('.rd-name')).toHaveCSS('font-weight', '400');
+  const loaded = () =>
+    page.evaluate(() =>
+      [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family),
+    );
+  await expect
+    .poll(loaded)
+    .toEqual(expect.arrayContaining(['Lora', 'Pacifico', 'Noto Sans Ethiopic']));
+
+  const pdf = (await page.pdf({ preferCSSPageSize: true, printBackground: true })).toString(
+    'latin1',
+  );
+  for (const name of ['Lora', 'Pacifico', 'NotoSansEthiopic'])
+    expect(pdf).toMatch(new RegExp(`/BaseFont\\s*/[A-Z]{6}\\+${name}`));
+});

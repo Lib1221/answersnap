@@ -28,7 +28,8 @@ Made by Liben.
   checklist. Personal details are never sent to the AI.
 - **Resume builder:** build your CV in a FlowCV-style editor, starting from your profile. Add,
   hide, rename, and reorder sections, write with bold, italics, and bullets, and style everything
-  (layout, columns, fonts, colors, headings, dates, skill levels) or pick one of 8 templates.
+  (layout, columns, colors, headings, dates, skill levels, and FlowCV's fonts, bundled so the PDF
+  looks the same on every computer) or pick one of 8 templates, or save your own.
   Write it in English, Italian, French, Spanish, or German, with the GDPR consent line Italian
   applications ask for. Download PDF saves real, selectable text that matches the preview page
   for page. Open it from Settings or the Profile tab.

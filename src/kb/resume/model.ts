@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { DOC_STRINGS, type DocLang } from './docLang';
+import { FONT_KEYS, NAME_ONLY_FONT_KEYS } from './fonts';
 
 // Resume documents for the builder: content (personal details and sections of entries) plus a
 // design (layout, spacing, colors, fonts, headings, entry layout). A template is a preset design.
@@ -156,19 +157,7 @@ export const PersonalSchema = z.object({
 });
 export type Personal = z.infer<typeof PersonalSchema>;
 
-export const FONT_KEYS = [
-  'public-sans',
-  'helvetica',
-  'georgia',
-  'palatino',
-  'garamond',
-  'times',
-  'verdana',
-  'trebuchet',
-  'tahoma',
-  'courier',
-] as const;
-export type FontKey = (typeof FONT_KEYS)[number];
+export { FONT_KEYS, NAME_ONLY_FONT_KEYS, type AnyFontKey, type FontKey } from './fonts';
 
 export const DesignSchema = z.object({
   template: s,
@@ -225,6 +214,8 @@ export const DesignSchema = z.object({
   // Typography
   font: z.enum(FONT_KEYS).default('public-sans'),
   headingFont: z.enum([...FONT_KEYS, 'same']).default('same'),
+  /** The name can also use a creative font; 'same' follows the heading font. */
+  nameFont: z.enum([...FONT_KEYS, ...NAME_ONLY_FONT_KEYS, 'same']).default('same'),
   nameSize: z.number().min(16).max(40).default(26),
   nameBold: z.boolean().default(true),
   // Headings

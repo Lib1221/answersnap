@@ -42,4 +42,4 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 
 - [x] Follow-up reminders as Chrome notifications (approved: `alarms`, `notifications`)
 - [x] OpenRouter and Ollama providers (approved; no new manifest permissions needed)
-- [ ] More resume fonts (FlowCV's list): needs `@fontsource` packages, a new dependency
+- [x] Resume fonts: FlowCV's list (sans, serif, mono, creative name fonts) and Noto Sans Ethiopic, bundled (approved)

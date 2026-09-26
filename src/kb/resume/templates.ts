@@ -1,54 +1,9 @@
-import { DesignSchema, type Design, type FontKey } from './model';
+import { DesignSchema, type Design } from './model';
 
 // Templates are presets over the design controls, as in FlowCV: picking one sets the controls,
 // and everything stays editable afterwards. Original designs in common resume style families.
 
-/** Put before the generic family so Amharic (Ethiopic script) renders. 'RD Ethiopic' is declared
- * in doc.css for Ethiopic code points only, so Latin text never falls into an Ethiopic font. */
-const ETHIOPIC = "'RD Ethiopic'";
-
-const RAW_FONTS: Record<FontKey, { label: string; stack: string; serif: boolean }> = {
-  'public-sans': {
-    label: 'Public Sans',
-    stack: "'Public Sans Variable', 'Public Sans', Arial, sans-serif",
-    serif: false,
-  },
-  helvetica: {
-    label: 'Helvetica / Arial',
-    stack: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-    serif: false,
-  },
-  georgia: { label: 'Georgia', stack: "Georgia, 'Times New Roman', serif", serif: true },
-  palatino: {
-    label: 'Palatino',
-    stack: "'Palatino Linotype', Palatino, 'Book Antiqua', serif",
-    serif: true,
-  },
-  garamond: {
-    label: 'Garamond',
-    stack: "Garamond, 'EB Garamond', 'Times New Roman', serif",
-    serif: true,
-  },
-  times: { label: 'Times', stack: "'Times New Roman', Times, serif", serif: true },
-  verdana: { label: 'Verdana', stack: 'Verdana, Geneva, sans-serif', serif: false },
-  trebuchet: {
-    label: 'Trebuchet',
-    stack: "'Trebuchet MS', 'Lucida Grande', sans-serif",
-    serif: false,
-  },
-  tahoma: { label: 'Tahoma', stack: 'Tahoma, Geneva, sans-serif', serif: false },
-  courier: { label: 'Courier', stack: "'Courier New', Courier, monospace", serif: false },
-};
-
-export const FONTS = Object.fromEntries(
-  Object.entries(RAW_FONTS).map(([k, f]) => {
-    const [head, generic] = [
-      f.stack.slice(0, f.stack.lastIndexOf(',')),
-      f.stack.slice(f.stack.lastIndexOf(',') + 1).trim(),
-    ];
-    return [k, { ...f, stack: `${head}, ${ETHIOPIC}, ${generic}` }];
-  }),
-) as Record<FontKey, { label: string; stack: string; serif: boolean }>;
+export { FONTS } from './fonts';
 
 export interface Template {
   id: string;
@@ -64,7 +19,7 @@ export const TEMPLATES: Template[] = [
     description: 'One column, serif, rules under headings. Safe everywhere.',
     design: {
       columns: 'one',
-      font: 'georgia',
+      font: 'pt-serif',
       headerAlign: 'center',
       contactStyle: 'bars',
       headingStyle: 'underline',
@@ -177,7 +132,7 @@ export const TEMPLATES: Template[] = [
     description: 'Centered serif header with a colored band.',
     design: {
       columns: 'one',
-      font: 'palatino',
+      font: 'lora',
       fill: 'header',
       headerAlign: 'center',
       contactStyle: 'bars',
@@ -239,7 +194,7 @@ export const TEMPLATES: Template[] = [
     description: 'Big name, heavy colored bars on headings.',
     design: {
       columns: 'one',
-      font: 'trebuchet',
+      font: 'work-sans',
       headerAlign: 'left',
       contactStyle: 'icons',
       headingStyle: 'bar',
@@ -270,7 +225,7 @@ export const TEMPLATES: Template[] = [
     description: 'Formal serif CV for scholarships and research: dates in a left column.',
     design: {
       columns: 'one',
-      font: 'times',
+      font: 'source-serif-4',
       fontSize: 10.5,
       headerAlign: 'center',
       contactStyle: 'lines',

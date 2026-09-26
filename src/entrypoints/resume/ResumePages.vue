@@ -6,6 +6,7 @@ import { FONTS } from '@/kb/resume/templates';
 import { buildBlocks, paginate, type Block, type Page } from './doc/blocks';
 import DocBlock from './doc/DocBlock.vue';
 import './doc/doc.css';
+import './doc/fonts.css';
 
 // Renders a resume as real pages. Every block is measured at true size, then packed onto pages
 // so that the preview and the printed PDF break in exactly the same places.
@@ -29,11 +30,37 @@ const bottomMm = computed(() =>
   d.value.footer === 'none' ? d.value.marginY : Math.max(d.value.marginY, 12),
 );
 
+/** The name's font: its own choice, else the heading font, else the body font. */
+const nameFontKey = computed(() => {
+  const x = d.value;
+  if (x.nameFont !== 'same') return x.nameFont;
+  return x.headingFont === 'same' ? x.font : x.headingFont;
+});
+
+/**
+ * Bundled fonts load on first use. Load the ones this resume uses (regular, bold, italic) before
+ * measuring, so pages are packed with the real font, not a fallback that is about to change.
+ */
+async function fontsLoaded() {
+  const x = d.value;
+  const keys = [x.font, x.headingFont === 'same' ? x.font : x.headingFont, nameFontKey.value];
+  const loads = [...new Set(keys)].flatMap((k) =>
+    FONTS[k].bundled
+      ? ['400', '700', 'italic 400'].map((style) =>
+          document.fonts.load(`${style} 12px "${FONTS[k].family}"`).catch(() => []),
+        )
+      : [],
+  );
+  await Promise.all(loads);
+  await document.fonts.ready;
+}
+
 const vars = computed(() => {
   const x = d.value;
   const page = PAGE_MM[x.page];
   const font = FONTS[x.font].stack;
   const headingFont = x.headingFont === 'same' ? font : FONTS[x.headingFont].stack;
+  const name = FONTS[nameFontKey.value];
   const muted = `color-mix(in srgb, ${x.text} 55%, #fff)`;
   return {
     '--rd-page-w': `${page.w}mm`,
@@ -44,10 +71,12 @@ const vars = computed(() => {
     '--rd-side-w': `calc((${page.w}mm - ${2 * x.marginX}mm - 7mm) * ${x.sideWidth / 100})`,
     '--rd-font': font,
     '--rd-heading-font': headingFont,
+    '--rd-name-font': name.stack,
     '--rd-size': `${x.fontSize}pt`,
     '--rd-lh': String(x.lineHeight),
     '--rd-name-size': `${x.nameSize}pt`,
-    '--rd-name-weight': x.nameBold ? '700' : '400',
+    // A font without a real bold (most creative fonts) stays regular rather than smeared.
+    '--rd-name-weight': x.nameBold && name.bold ? '700' : '400',
     '--rd-heading-size': `${x.headingSize}em`,
     '--rd-heading-case':
       x.headingCase === 'upper'
@@ -134,13 +163,20 @@ function schedule() {
   clearTimeout(timer);
   timer = window.setTimeout(async () => {
     await nextTick();
-    await document.fonts?.ready;
+    await fontsLoaded();
     measure();
   }, 30);
 }
 watch(() => props.resume, schedule, { deep: true });
-onMounted(schedule);
-onBeforeUnmount(() => clearTimeout(timer));
+onMounted(() => {
+  schedule();
+  // Any font finishing later (an Ethiopic name, a heading font) re-measures the pages.
+  document.fonts.addEventListener('loadingdone', schedule);
+});
+onBeforeUnmount(() => {
+  clearTimeout(timer);
+  document.fonts.removeEventListener('loadingdone', schedule);
+});
 
 const shown = computed(() => (props.firstPageOnly ? pages.value.slice(0, 1) : pages.value));
 

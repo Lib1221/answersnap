@@ -1,24 +1,6 @@
 /* Resume document: the preview and the PDF use exactly these rules. Sizes are in pt and mm so
    the printed page matches the preview. Everything reads CSS variables set from the design. */
 
-/* Installed Ethiopic fonts, used for Ethiopic characters only (Amharic names and places). Named
-   in every font stack before the generic family; Latin text keeps the chosen font. */
-@font-face {
-  font-family: 'RD Ethiopic';
-  src:
-    local('Noto Sans Ethiopic'), local('Noto Sans Ethiopic Regular'),
-    local('NotoSansEthiopic-Regular'), local('Nyala'), local('Abyssinica SIL');
-  unicode-range: U+1200-139F, U+2D80-2DDF, U+AB00-AB2F;
-}
-@font-face {
-  font-family: 'RD Ethiopic';
-  font-weight: 600 900;
-  src:
-    local('Noto Sans Ethiopic Bold'), local('NotoSansEthiopic-Bold'), local('Nyala'),
-    local('Abyssinica SIL');
-  unicode-range: U+1200-139F, U+2D80-2DDF, U+AB00-AB2F;
-}
-
 .rd-page {
   position: relative;
   box-sizing: border-box;
@@ -142,7 +124,7 @@
   color: #fff;
 }
 .rd-name {
-  font-family: var(--rd-heading-font);
+  font-family: var(--rd-name-font);
   font-size: var(--rd-name-size);
   font-weight: var(--rd-name-weight);
   line-height: 1.1;

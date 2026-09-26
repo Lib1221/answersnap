@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { DOC_LANG_NAMES, DOC_LANGS, DOC_STRINGS } from '@/kb/resume/docLang';
 import { computed, h, useId, type FunctionalComponent, type VNodeChild } from 'vue';
-import { FONT_KEYS, newEntry, type Design, type FontKey } from '@/kb/resume/model';
-import { FONTS } from '@/kb/resume/templates';
+import { newEntry, type Design } from '@/kb/resume/model';
 import { formatDates, formatMonth } from '@/kb/resume/format';
 import Icon from '@/ui/AppIcon.vue';
+import FontPicker from './FontPicker.vue';
 
 // FlowCV-style design controls. Every change replaces the design object (never mutates it), so
 // the parent's v-model sees one new value per change and can save or undo it.
@@ -355,13 +355,6 @@ const ACCENT_ON_LIST = (Object.keys(ACCENT_ON) as AccentKey[]).map((key) => ({
   label: ACCENT_ON[key],
 }));
 
-const FONT_OPTS: Opt<FontKey>[] = FONT_KEYS.map((k) => ({
-  value: k,
-  label: FONTS[k].label,
-  title: FONTS[k].serif ? 'Serif' : k === 'courier' ? 'Monospace' : 'Sans serif',
-}));
-const fontStack = (v: string) => FONTS[v as FontKey]?.stack;
-
 const HEADING_STYLES: Opt<Design['headingStyle']>[] = [
   { value: 'plain', label: 'Plain' },
   { value: 'underline', label: 'Underline' },
@@ -690,37 +683,27 @@ const inputValue = (e: Event) => (e.target as HTMLInputElement).value;
     </Card>
 
     <Card title="Typography">
-      <Seg field="font" label="Font" :options="FONT_OPTS" :cols="2">
-        <template #default="{ option }">
-          <span class="text-[14px] font-normal" :style="{ fontFamily: fontStack(option.value) }">
-            {{ option.label }}
-          </span>
-          <span class="text-[11px] font-normal text-graphite-2">{{ option.title }}</span>
-        </template>
-      </Seg>
-
-      <label class="flex flex-col gap-1 text-[13px] font-medium">
-        Heading font
-        <select
-          class="field-input px-2.5 py-1.5 font-normal"
-          :value="design.headingFont"
-          data-testid="cz-headingFont"
-          @change="
-            set('headingFont', ($event.target as HTMLSelectElement).value as Design['headingFont'])
-          "
-        >
-          <option value="same">Same as text</option>
-          <option
-            v-for="k in FONT_KEYS"
-            :key="k"
-            :value="k"
-            :style="{ fontFamily: FONTS[k].stack }"
-          >
-            {{ FONTS[k].label }}
-          </option>
-        </select>
-      </label>
-
+      <FontPicker
+        :model-value="design.font"
+        label="Font"
+        testid="cz-font"
+        @update:model-value="set('font', $event as Design['font'])"
+      />
+      <FontPicker
+        :model-value="design.headingFont"
+        label="Heading font"
+        testid="cz-headingFont"
+        same-label="Same as text"
+        @update:model-value="set('headingFont', $event as Design['headingFont'])"
+      />
+      <FontPicker
+        :model-value="design.nameFont"
+        label="Name font"
+        testid="cz-nameFont"
+        same-label="Same as headings"
+        creative
+        @update:model-value="set('nameFont', $event as Design['nameFont'])"
+      />
       <Range field="nameSize" label="Name size" :min="16" :max="40" :step="1" :fmt="pt" />
       <Check field="nameBold" label="Bold name" />
     </Card>
