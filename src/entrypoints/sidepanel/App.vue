@@ -248,7 +248,7 @@ function openSettings(section?: string) {
           :key="tb.id"
           role="tab"
           type="button"
-          class="flex items-center justify-center gap-1 rounded-[8px] py-1.5 text-[12px] font-medium transition-colors"
+          class="flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-[8px] px-0.5 py-1.5 text-[11.5px] leading-tight font-medium transition-colors"
           :class="
             tab === tb.id
               ? 'bg-paper text-graphite shadow-[var(--shadow-sm)]'
@@ -257,8 +257,9 @@ function openSettings(section?: string) {
           :aria-selected="tab === tb.id"
           @click="tab = tb.id"
         >
-          <Icon :name="tb.icon" :size="14" />
-          {{ tb.label }}
+          <Icon :name="tb.icon" :size="15" />
+          <!-- Icon above the label: room for longer words in other languages. -->
+          <span class="max-w-full truncate" :title="tb.label">{{ tb.label }}</span>
         </button>
       </div>
     </nav>
