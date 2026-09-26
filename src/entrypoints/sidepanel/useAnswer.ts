@@ -1,7 +1,12 @@
 import { computed, ref, shallowRef } from 'vue';
 import { buildSystemBlocks, buildUserTurn, hasCandidateData, todayIso } from '@/kb/contextBuilder';
 import { getJobContext, jobPromptText } from '@/kb/jobContext';
-import { refineInstruction, refineMessages, type RefineAction } from '@/llm/conversation';
+import {
+  refineInstruction,
+  refineLabel,
+  refineMessages,
+  type RefineAction,
+} from '@/llm/conversation';
 import { runFactCheck, shouldFactCheck, type FactCheckResult } from '@/llm/factCheck';
 import { LlmError, type LlmErrorKind } from '@/llm/errors';
 import { countWords, parseLimits, type Limits } from '@/llm/limits';
@@ -154,6 +159,16 @@ export function useAnswer() {
   const match = shallowRef<{ entry: LibraryEntry; score: number } | null>(null);
   const canRefine = ref(false);
 
+  /** Every draft and refinement of this answer, to step back to an earlier one. */
+  interface Version {
+    label: string;
+    text: string;
+    raw: string;
+    history: ChatMessage[];
+  }
+  const versions = shallowRef<Version[]>([]);
+  const versionIndex = ref(0);
+
   // The conversation so far. System blocks stay byte-identical across refinements.
   let convo: {
     provider: LlmProvider;
@@ -185,6 +200,8 @@ export function useAnswer() {
     convo = null;
     match.value = null;
     canRefine.value = false;
+    versions.value = [];
+    versionIndex.value = 0;
   }
 
   /** Stream one assistant turn for `messages`. Returns the raw output, or null on failure. */
@@ -349,6 +366,8 @@ export function useAnswer() {
     const raw = await streamTurn([first], capture.image);
     if (raw !== null && convo) {
       convo.lastRaw = raw;
+      versions.value = [{ label: 'First draft', text: answer.value, raw, history: [first] }];
+      versionIndex.value = 0;
       canRefine.value = true;
       void checkFacts();
     }
@@ -454,8 +473,25 @@ export function useAnswer() {
     if (raw !== null && convo) {
       convo.history = messages;
       convo.lastRaw = raw;
+      versions.value = [
+        ...versions.value,
+        { label: refineLabel(action), text: answer.value, raw, history: messages },
+      ];
+      versionIndex.value = versions.value.length - 1;
       void checkFacts();
     }
+  }
+
+  /** Show an earlier (or later) version; the next refinement builds on it. */
+  function showVersion(i: number) {
+    const v = versions.value[i];
+    if (!v || !convo || ['drafting', 'streaming'].includes(phase.value)) return;
+    versionIndex.value = i;
+    convo.history = v.history;
+    convo.lastRaw = v.raw;
+    answer.value = v.text;
+    generated.value = v.text;
+    void checkFacts();
   }
 
   function stop() {
@@ -492,6 +528,9 @@ export function useAnswer() {
     writeNew,
     save,
     refine,
+    versions,
+    versionIndex,
+    showVersion,
     stop,
     retry,
     reset,

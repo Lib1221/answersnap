@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   cutAtLastSentence,
   refineInstruction,
+  refineLabel,
   refineMessages,
   swapAnswer,
 } from '@/llm/conversation';
@@ -54,5 +55,16 @@ describe('cutAtLastSentence', () => {
     );
     expect(cutAtLastSentence('Short.', 100)).toBe('Short.');
     expect(cutAtLastSentence('no sentence end here at all', 12)).toBe('no sentence');
+  });
+});
+
+describe('versions', () => {
+  it('names each refinement and asks for another angle', () => {
+    expect(refineLabel({ kind: 'tone', tone: 'casual' })).toBe('More casual');
+    expect(refineLabel({ kind: 'angle' })).toBe('Another angle');
+    expect(refineLabel({ kind: 'custom', text: 'x' })).toBe('Your change');
+    expect(refineInstruction({ kind: 'angle' }, 100, limits)).toContain(
+      'lead with a different example or angle',
+    );
   });
 });

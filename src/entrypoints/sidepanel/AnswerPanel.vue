@@ -125,6 +125,34 @@ const cacheOff = computed(() => {
     </p>
 
     <template v-if="showAnswer">
+      <div
+        v-if="s.versions.value.length > 1"
+        class="flex items-center gap-1 text-[13px] text-graphite-2"
+        data-testid="versions"
+      >
+        <button
+          class="btn btn-icon min-h-0 p-1"
+          type="button"
+          aria-label="Previous version"
+          :disabled="streaming || s.versionIndex.value === 0"
+          @click="s.showVersion(s.versionIndex.value - 1)"
+        >
+          ‹
+        </button>
+        <span class="tabular-nums" data-testid="version-label">
+          Version {{ s.versionIndex.value + 1 }} of {{ s.versions.value.length }}:
+          {{ s.versions.value[s.versionIndex.value]?.label }}
+        </span>
+        <button
+          class="btn btn-icon min-h-0 p-1"
+          type="button"
+          aria-label="Next version"
+          :disabled="streaming || s.versionIndex.value === s.versions.value.length - 1"
+          @click="s.showVersion(s.versionIndex.value + 1)"
+        >
+          ›
+        </button>
+      </div>
       <label class="sr-only" for="answer">Answer</label>
       <textarea
         id="answer"
@@ -267,6 +295,9 @@ const cacheOff = computed(() => {
           </button>
           <button class="chip" type="button" @click="s.refine({ kind: 'tone', tone: 'casual' })">
             More casual
+          </button>
+          <button class="chip" type="button" @click="s.refine({ kind: 'angle' })">
+            Another angle
           </button>
         </div>
         <form class="flex gap-2" @submit.prevent="sendChange">

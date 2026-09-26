@@ -12,7 +12,8 @@ export type RefineAction =
   | { kind: 'tone'; tone: 'formal' | 'casual' }
   | { kind: 'fit' }
   | { kind: 'custom'; text: string }
-  | { kind: 'fix-facts'; unsupported: SentenceCheck[] };
+  | { kind: 'fix-facts'; unsupported: SentenceCheck[] }
+  | { kind: 'angle' };
 
 export function refineInstruction(
   action: RefineAction,
@@ -32,6 +33,28 @@ export function refineInstruction(
       return fixFactsInstruction(action.unsupported);
     case 'custom':
       return REFINE.custom(action.text.trim().replace(/\.$/, ''));
+    case 'angle':
+      return REFINE.angle;
+  }
+}
+
+/** Short name for a version made by this refinement, for the version switcher. */
+export function refineLabel(action: RefineAction): string {
+  switch (action.kind) {
+    case 'shorter':
+      return 'Shorter';
+    case 'longer':
+      return 'Longer';
+    case 'tone':
+      return action.tone === 'formal' ? 'More formal' : 'More casual';
+    case 'fit':
+      return 'Fit limit';
+    case 'fix-facts':
+      return 'Facts fixed';
+    case 'custom':
+      return 'Your change';
+    case 'angle':
+      return 'Another angle';
   }
 }
 

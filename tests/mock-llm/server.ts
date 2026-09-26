@@ -180,6 +180,11 @@ const log: unknown[] = [];
 const counters = new Map<string, number>();
 
 const CANNED: [RegExp, string][] = [
+  // "Another angle": a different version of whatever was asked. Listed first so it wins.
+  [
+    /Write a different version of the answer/i,
+    '<question>Why do you want to work here?</question>\n<type>long_text</type>\n<answer>ANOTHER ANGLE: I volunteer on Shift Planner, and I want that same user focus at work.</answer>\n<missing></missing>\n<notes></notes>',
+  ],
   // Job > Email.
   [
     /Write a thank-you email/i,

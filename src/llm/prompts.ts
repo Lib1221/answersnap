@@ -88,6 +88,8 @@ export const REFINE = {
     `Rewrite the answer in a more ${tone} tone. Same facts. Same tags.`,
   fitLimit: (n: number, max: number) =>
     `The answer is ${n} characters and the limit is ${max}. Rewrite it to fit with a 5% margin. Same tags.`,
+  angle:
+    'Write a different version of the answer: lead with a different example or angle from the candidate data, keep about the same length, and stay within the limits. Same tags.',
   custom: (text: string) =>
     `Change request from the candidate: ${text}. Apply it without adding facts that are not in the candidate data. Same tags.`,
 };
