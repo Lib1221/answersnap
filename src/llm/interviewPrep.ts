@@ -18,7 +18,7 @@ export const QUESTION_COUNT = 8;
 
 export function interviewRules(styleRules: string[], fillGaps: boolean): string {
   const facts = fillGaps
-    ? 'Use the candidate data first. When a question needs experience the data does not show, write the answer as a candidate who has about a year of hands-on experience with it, keep it general, and set "assumed" to true.'
+    ? 'Use the candidate data first. When a question needs experience the data does not show, write the answer as a candidate who has about a year of hands-on experience with it, keep it general, and set "assumed" to true. Also set "assumed" to true whenever the answer tells an event, number, or detail the data does not contain.'
     : 'Use only facts from the candidate data. When a question needs experience the data does not show, answer honestly and bridge to the closest real experience, and set "assumed" to false.';
   const style = styleRules.length
     ? `\nStyle for the answers:\n${styleRules.map((r) => `- ${r}`).join('\n')}`

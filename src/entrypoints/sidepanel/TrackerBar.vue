@@ -37,11 +37,11 @@ const t = props.state;
       Track this application
     </button>
     <button
-      class="btn btn-quiet ml-auto min-h-0 text-[12.5px]"
+      class="btn btn-quiet ml-auto min-h-0 text-[12.5px] whitespace-nowrap"
       type="button"
       @click="emit('openSettings', 'applications')"
     >
-      All applications
+      See all
     </button>
   </div>
 </template>

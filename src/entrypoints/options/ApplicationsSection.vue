@@ -142,7 +142,7 @@ function exportCsv() {
         </p>
         <div class="flex flex-wrap items-center gap-2">
           <select
-            class="field-input px-2 py-1 text-[13px]"
+            class="field-input w-auto px-2 py-1 text-[13px]"
             :value="a.status"
             :aria-label="`Status for ${a.role ?? a.hostname}`"
             @change="
