@@ -9,6 +9,8 @@ test('later pages of an application see the answers given earlier on the site', 
   await page.goto(`${FIXTURES}/plain-form.html`);
   await snipLabel(panel, page, 'label[for="years"]');
   await expect(panel.getByTestId('answer')).toHaveValue('5');
+  // Refine shows once the answer has finished; Ctrl+Enter while it still streams does nothing.
+  await expect(panel.getByTestId('refine')).toBeVisible();
   await panel.getByTestId('answer').focus();
   await panel.keyboard.press('Control+Enter');
   await expect(page.locator('#years')).toHaveValue('5');
