@@ -1,8 +1,8 @@
 # AnswerSnap roadmap
 
 A running to-do list of features. Done items stay here, checked, so the history of what the
-extension can do is in one place. Items marked "needs Liben's OK" touch a hard rule in
-`CLAUDE.md` (new permissions, new dependencies, or sending data somewhere new).
+extension can do is in one place. Items under "Needs Liben's OK" touch a hard rule in `CLAUDE.md`
+(new permissions, new dependencies, or sending data somewhere new).
 
 ## Done
 
@@ -13,38 +13,27 @@ extension can do is in one place. Items marked "needs Liben's OK" touch a hard r
 - [x] Fill the whole form at once, with review before insert
 - [x] Modern UI, "Made by Liben", Star on GitHub
 - [x] Answer confidently: no "I have not worked with X" answers
-- [x] Cover letter: your own letter in Settings, and a Letter tab that writes one per job
-
-## Now (building in this order)
-
-- [x] **Job tab**: one place for everything about the job in front: Letter, Fit, Interview,
-      Email. Replaces the Letter tab so the panel keeps five tabs.
-- [x] **Job fit check**: match score, requirements you meet (with evidence from your
-      profile), gaps with what to do about them, keywords to use, and talking points.
-- [x] **Interview prep**: likely questions for this job (behavioral, technical, role,
-      company) with suggested answers from your profile; copy or save to the Library.
-- [x] **Follow-up emails**: thank-you after an interview, follow-up after applying,
-      check-in while waiting, accept or decline an offer, withdraw. Subject line included.
-- [x] **Application tracker**: saving a job post starts tracking it. Status (saved, applied,
-      interviewing, offer, rejected, withdrawn) from the Job tab; a Settings page lists every
-      application with dates, notes, filters, and a CSV export. Included in backups.
-- [x] **Story bank**: STAR stories (situation, task, action, result, skills) in Settings.
-      Answers, letters, and interview prep use them like any source.
+- [x] Cover letter: your own letter in Settings, and one written per job (Job > Letter)
+- [x] Job tab: Letter, Fit, Resume, Interview, and Email for the saved job post
+- [x] Job fit check: score, requirements met with evidence, gaps with advice, keywords
+- [x] Resume tailoring: your bullets reworded for the job, a tailored summary, skills order
+- [x] Interview prep: likely questions with suggested answers; save to the Library
+- [x] Follow-up emails: thank-you, follow-up, check-in, accept, decline, withdraw
+- [x] Application tracker: status, notes, filters, CSV export, included in backups
+- [x] Follow-up radar: last 7 days, reply rate, and applications waiting too long
+- [x] Story bank: STAR stories, with suggestions drafted from your resume
+- [x] Answer versions: every draft and refinement kept; "Another angle"
+- [x] LinkedIn headline options and About section (Profile tab)
+- [x] Keyboard shortcuts: Alt+1 to 5, Alt+C, Alt+R, Alt+arrows, and ? for the list
 
 ## Next
 
-- [ ] Reminders to follow up on applications with no reply after N days (needs the
-      `alarms` and `notifications` permissions: needs Liben's OK)
-- [x] Resume tailoring: your bullets reworded for the job, a tailored summary, and skills order (Job > Resume)
-- [x] Answer versions: every draft and refinement kept; step back and refine from any; "Another angle"
-- [x] Keyboard shortcuts: Alt+1 to 5 tabs, Alt+C copy, Alt+R regenerate, Alt+arrows versions, ? for the list
-- [ ] Per-site memory: remember answers given on a site and reuse them on its later steps
-- [x] Follow-up radar: last 7 days, reply rate, and applications waiting too long (Applications page and Job tab)
-- [x] LinkedIn headline options and About section from the profile (Profile tab)
-
-## Later
-
-- [ ] OpenRouter or local Ollama as providers (new host permissions: needs Liben's OK)
-- [ ] Sync across devices with `storage.sync` (size limits; needs a design)
-- [ ] Firefox build (WXT supports it; side panel differs)
+- [ ] Per-site memory: carry answers across the steps of one multi-page application
 - [ ] Translations of the UI (strings already go through `t()`)
+- [ ] Firefox build (WXT supports it; the side panel becomes a sidebar)
+- [ ] Sync across devices with `storage.sync` (size limits; needs a design)
+
+## Needs Liben's OK
+
+- [ ] Reminders to follow up (the `alarms` and `notifications` permissions)
+- [ ] OpenRouter or local Ollama as providers (new host permissions)
