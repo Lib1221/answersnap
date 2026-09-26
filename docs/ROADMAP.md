@@ -37,7 +37,7 @@ extension can do is in one place. Items marked "needs Liben's OK" touch a hard r
       `alarms` and `notifications` permissions: needs Liben's OK)
 - [x] Resume tailoring: your bullets reworded for the job, a tailored summary, and skills order (Job > Resume)
 - [x] Answer versions: every draft and refinement kept; step back and refine from any; "Another angle"
-- [ ] Keyboard-only flow: snip, draft, insert without the mouse
+- [x] Keyboard shortcuts: Alt+1 to 5 tabs, Alt+C copy, Alt+R regenerate, Alt+arrows versions, ? for the list
 - [ ] Per-site memory: remember answers given on a site and reuse them on its later steps
 - [x] Follow-up radar: last 7 days, reply rate, and applications waiting too long (Applications page and Job tab)
 - [x] LinkedIn headline options and About section from the profile (Profile tab)

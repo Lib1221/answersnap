@@ -300,19 +300,21 @@ export function useAnswer() {
     return capture.pageText.slice(0, 400) || capture.field?.label || '';
   }
 
-  async function run(
-    capture: PendingCapture,
-    opts: {
-      force?: 'new' | 'adapt';
-      /** Letter tab: its own length, limits, and output budget. */
-      length?: string;
-      limits?: Limits;
-      maxTokens?: number;
-    } = {},
-  ) {
+  interface RunOptions {
+    force?: 'new' | 'adapt';
+    /** Letters and emails: their own length, limits, and output budget. */
+    length?: string;
+    limits?: Limits;
+    maxTokens?: number;
+  }
+  /** Options of the last run, so Regenerate keeps a letter a letter. */
+  let lastRunOpts: RunOptions = {};
+
+  async function run(capture: PendingCapture, opts: RunOptions = {}) {
     const adaptFrom = opts.force === 'adapt' ? match.value?.entry : undefined;
     reset();
     lastCapture = capture;
+    lastRunOpts = opts;
     runMaxTokens = opts.maxTokens ?? 0;
     const s = await getSettings();
     settings.value = s;
@@ -437,11 +439,11 @@ export function useAnswer() {
   }
 
   async function adapt() {
-    if (lastCapture) await run(lastCapture, { force: 'adapt' });
+    if (lastCapture) await run(lastCapture, { ...lastRunOpts, force: 'adapt' });
   }
 
   async function writeNew() {
-    if (lastCapture) await run(lastCapture, { force: 'new' });
+    if (lastCapture) await run(lastCapture, { ...lastRunOpts, force: 'new' });
   }
 
   /**
@@ -499,7 +501,7 @@ export function useAnswer() {
   }
 
   async function retry() {
-    if (lastCapture) await run(lastCapture);
+    if (lastCapture) await run(lastCapture, lastRunOpts);
   }
 
   return {

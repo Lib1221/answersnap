@@ -10,6 +10,7 @@ import AnswerPanel from './AnswerPanel.vue';
 import JobBar from './JobBar.vue';
 import FormFillTab from './FormFillTab.vue';
 import JobTab from './JobTab.vue';
+import ShortcutsHelp from './ShortcutsHelp.vue';
 import LibraryTab from './LibraryTab.vue';
 import { useFormFill } from './useFormFill';
 import ProfileTab from './ProfileTab.vue';
@@ -118,7 +119,51 @@ const ERRORS: Record<CaptureErrorCode, string> = {
   INJECT_FAILED: "Couldn't start snipping on this page. Reload the page and try again.",
 };
 
+const showShortcuts = ref(false);
+
+function typing(e: KeyboardEvent): boolean {
+  const el = e.target as HTMLElement | null;
+  return !!el && (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName) || el.isContentEditable);
+}
+
+/** Alt shortcuts, by physical key so Option on a Mac works too. */
+function onAltKey(e: KeyboardEvent): boolean {
+  const n = /^Digit([1-5])$/.exec(e.code)?.[1];
+  if (n) {
+    tab.value = TABS[Number(n) - 1]!.id;
+    return true;
+  }
+  if (tab.value !== 'answer') return false;
+  const phase = answer.phase.value;
+  switch (e.code) {
+    case 'KeyC':
+      if (phase !== 'done') return false;
+      void insert.copy();
+      return true;
+    case 'KeyR':
+      if (['drafting', 'streaming', 'idle'].includes(phase)) return false;
+      void answer.retry();
+      return true;
+    case 'ArrowLeft':
+    case 'ArrowRight': {
+      const i = answer.versionIndex.value + (e.code === 'ArrowLeft' ? -1 : 1);
+      if (i < 0 || i >= answer.versions.value.length) return false;
+      answer.showVersion(i);
+      return true;
+    }
+  }
+  return false;
+}
+
 function onKey(e: KeyboardEvent) {
+  if (e.altKey && !e.ctrlKey && !e.metaKey && onAltKey(e)) {
+    e.preventDefault();
+    return;
+  }
+  if (e.key === '?' && !typing(e)) {
+    showShortcuts.value = !showShortcuts.value;
+    return;
+  }
   // Ctrl+Enter inserts (spec 13.2).
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && insert.canInsert.value) {
     e.preventDefault();
@@ -126,7 +171,8 @@ function onKey(e: KeyboardEvent) {
     return;
   }
   if (e.key !== 'Escape') return;
-  if (status.value?.state === 'selecting') void cancelSelection();
+  if (showShortcuts.value) showShortcuts.value = false;
+  else if (status.value?.state === 'selecting') void cancelSelection();
   else if (['drafting', 'streaming'].includes(answer.phase.value)) answer.stop();
   else if (['drafting', 'streaming'].includes(letter.answer.phase.value)) letter.answer.stop();
   else if (['drafting', 'streaming'].includes(email.answer.phase.value)) email.answer.stop();
@@ -360,8 +406,18 @@ function openSettings(section?: string) {
       </section>
     </main>
 
-    <footer class="border-t border-rule bg-paper px-4 py-2.5">
+    <footer class="flex items-center gap-2 border-t border-rule bg-paper px-4 py-2.5">
       <Credit compact />
+      <button
+        class="btn btn-quiet ml-auto min-h-0 text-[12px]"
+        type="button"
+        aria-label="Keyboard shortcuts"
+        title="Keyboard shortcuts (?)"
+        @click="showShortcuts = true"
+      >
+        <kbd class="kbd">?</kbd>
+      </button>
     </footer>
+    <ShortcutsHelp v-if="showShortcuts" :snip="shortcut" @close="showShortcuts = false" />
   </div>
 </template>
