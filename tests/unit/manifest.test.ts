@@ -16,6 +16,7 @@ interface BuiltManifest {
 }
 
 let lastBuildDir = '';
+const BUILD_TIMEOUT_MS = 60_000;
 
 async function buildManifest(mode: string): Promise<BuiltManifest> {
   const outDir = await mkdtemp(join(tmpdir(), `answersnap-${mode}-`));
@@ -46,9 +47,10 @@ const silentLogger = {
 
 describe('production manifest', () => {
   let manifest: BuiltManifest;
+  // A full production build; it outgrew the default 10 s hook timeout as features were added.
   beforeAll(async () => {
     manifest = await buildManifest('production');
-  });
+  }, BUILD_TIMEOUT_MS);
 
   it('has exactly the permissions from spec section 6', () => {
     expect({
@@ -89,7 +91,7 @@ describe('production manifest', () => {
 describe('performance budgets (spec 17, M7)', () => {
   beforeAll(async () => {
     if (!lastBuildDir) await buildManifest('production');
-  });
+  }, BUILD_TIMEOUT_MS);
 
   it('keeps the capture script under 40 KB minified', async () => {
     const { size } = await stat(join(lastBuildDir, 'capture.js'));
