@@ -10,6 +10,7 @@ import {
 } from '@/storage/exportImport';
 import { getSettings, lastRequestItem, saveSettings } from '@/storage/items';
 import type { Settings } from '@/storage/schema';
+import SyncPanel from './SyncPanel.vue';
 
 const settings = ref<Settings | null>(null);
 const lastRequest = ref<Awaited<ReturnType<typeof lastRequestItem.getValue>>>(null);
@@ -172,6 +173,8 @@ async function deleteEverything() {
         data-testid="last-request"
         >{{ JSON.stringify(lastRequest, null, 2) }}</pre>
     </div>
+
+    <SyncPanel />
 
     <div class="flex flex-col gap-2">
       <h3 class="font-medium">Export and import</h3>

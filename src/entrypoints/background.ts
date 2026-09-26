@@ -4,6 +4,7 @@ import { registerReminders, scheduleReminders } from '@/background/reminders';
 import { registerRouter } from '@/background/router';
 import { pruneLibrary } from '@/kb/library';
 import { getSettings } from '@/storage/items';
+import { pullSync, pushSync, registerSync } from '@/storage/sync';
 
 export default defineBackground(() => {
   // All listeners are registered synchronously at top level (spec 4).
@@ -25,4 +26,7 @@ export default defineBackground(() => {
   registerRouter();
   registerReminders();
   void scheduleReminders();
+  registerSync();
+  // Catch up with other devices at start-up (no-ops while sync is off).
+  void pullSync().then(() => pushSync());
 });

@@ -31,7 +31,7 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [x] Multi-page applications: answers from earlier pages on the same site keep later ones consistent
 - [ ] Translations of the UI (strings already go through `t()`)
 - [ ] Firefox build (WXT supports it; the side panel becomes a sidebar)
-- [ ] Sync across devices with `storage.sync` (size limits; needs a design)
+- [x] Sync across devices (opt-in, Chrome Sync): settings, profile, standard answers, stories, cover letter, applications
 
 ## Needs Liben's OK
 

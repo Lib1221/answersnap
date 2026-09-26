@@ -147,6 +147,8 @@ export const SettingsSchema = z.object({
    * in settings turns it off.
    */
   fillGaps: z.boolean().default(true),
+  /** Sync settings, profile, standard answers, stories, cover letter, and applications. */
+  syncEnabled: z.boolean().default(false),
   /** Where Ollama runs (provider 'ollama'). */
   ollamaUrl: z.string().default('http://localhost:11434'),
   /** A Chrome notification when a tracked application has gone quiet. */

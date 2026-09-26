@@ -61,6 +61,11 @@ after it reaches them.
 When you import a website, AnswerSnap asks Chrome for permission to read that one site, then
 downloads its pages directly from the site.
 
+If you turn on **Sync across devices** (off by default), your settings, profile, standard
+answers, stories, cover letter, and tracked applications are stored in Chrome Sync, under your
+Google account, so your other computers get them. API keys, resume and website sources, and saved
+answers never sync. Turning sync off can also delete the synced copy.
+
 ## What is never collected
 
 No analytics, no telemetry, no tracking, no browsing history, no advertising. Nothing is sold or
