@@ -19,6 +19,7 @@ const KIND_NAMES: Record<KnowledgeSource['kind'], string> = {
   note: 'Note',
   'ai-transcript': 'Read by AI',
   'cover-letter': 'Cover letter',
+  story: 'Story',
 };
 
 async function saveEdit(id: string, value: { label: string; text: string }) {

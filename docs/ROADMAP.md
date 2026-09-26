@@ -28,7 +28,7 @@ extension can do is in one place. Items marked "needs Liben's OK" touch a hard r
 - [x] **Application tracker**: saving a job post starts tracking it. Status (saved, applied,
       interviewing, offer, rejected, withdrawn) from the Job tab; a Settings page lists every
       application with dates, notes, filters, and a CSV export. Included in backups.
-- [ ] **Story bank**: STAR stories (situation, task, action, result, skills) in Settings.
+- [x] **Story bank**: STAR stories (situation, task, action, result, skills) in Settings.
       Answers, letters, and interview prep use them like any source.
 
 ## Next

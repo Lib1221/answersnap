@@ -13,6 +13,7 @@ import ProfileSection from './ProfileSection.vue';
 import ProviderSection from './ProviderSection.vue';
 import SourcesSection from './SourcesSection.vue';
 import StandardAnswersSection from './StandardAnswersSection.vue';
+import StoriesSection from './StoriesSection.vue';
 import WritingStyleSection from './WritingStyleSection.vue';
 
 const SECTIONS = [
@@ -23,6 +24,7 @@ const SECTIONS = [
   { id: 'profile', title: 'Profile', icon: 'user' },
   { id: 'standard-answers', title: 'Standard answers', icon: 'book' },
   { id: 'cover-letter', title: 'Cover letter', icon: 'mail' },
+  { id: 'stories', title: 'Stories', icon: 'bookmark' },
   { id: 'writing-style', title: 'Writing style', icon: 'pen' },
   { id: 'privacy', title: 'Privacy', icon: 'shield' },
 ] as const satisfies readonly { id: string; title: string; icon: IconName }[];
@@ -106,6 +108,7 @@ async function dismissCorrupt() {
           <ProfileSection v-else-if="current === 'profile'" />
           <StandardAnswersSection v-else-if="current === 'standard-answers'" />
           <CoverLetterSection v-else-if="current === 'cover-letter'" />
+          <StoriesSection v-else-if="current === 'stories'" />
           <WritingStyleSection v-else-if="current === 'writing-style'" />
           <PrivacySection v-else-if="current === 'privacy'" />
         </div>

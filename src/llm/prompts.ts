@@ -28,6 +28,7 @@ const COMMON_RULES = [
   `Match the format: a number for numeric questions, one option label for single choice, a comma separated list of option labels for multiple choice, a bare URL for link questions, a date in the format the field shows.`,
   `If the selected content is a skills test or assessment item (a coding problem, a technical quiz, a logic puzzle) rather than a question about the candidate, set <type> to assessment and leave <answer> empty.`,
   `Answer in the language of the question unless <options> says otherwise.`,
+  `For questions about a time the candidate did something, prefer a fitting source labeled "Story:" (the candidate's own STAR stories) and follow its situation, action, and result.`,
 ];
 
 export const SYSTEM_RULES = `You write answers to application questions (jobs, freelance gigs, scholarships) for one candidate. Write in the candidate's own voice, first person, as if they typed it themselves.

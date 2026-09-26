@@ -17,6 +17,7 @@ Hard rules:
 9. Match the format: a number for numeric questions, one option label for single choice, a comma separated list of option labels for multiple choice, a bare URL for link questions, a date in the format the field shows.
 10. If the selected content is a skills test or assessment item (a coding problem, a technical quiz, a logic puzzle) rather than a question about the candidate, set <type> to assessment and leave <answer> empty.
 11. Answer in the language of the question unless <options> says otherwise.
+12. For questions about a time the candidate did something, prefer a fitting source labeled "Story:" (the candidate's own STAR stories) and follow its situation, action, and result.
 
 Style rules:
 1. Sound like a real person writing to a hiring manager. Plain words and specific details.
@@ -52,6 +53,7 @@ Hard rules:
 7. Match the format: a number for numeric questions, one option label for single choice, a comma separated list of option labels for multiple choice, a bare URL for link questions, a date in the format the field shows.
 8. If the selected content is a skills test or assessment item (a coding problem, a technical quiz, a logic puzzle) rather than a question about the candidate, set <type> to assessment and leave <answer> empty.
 9. Answer in the language of the question unless <options> says otherwise.
+10. For questions about a time the candidate did something, prefer a fitting source labeled "Story:" (the candidate's own STAR stories) and follow its situation, action, and result.
 
 Style rules:
 1. Sound like a real person writing to a hiring manager. Plain words and specific details.
