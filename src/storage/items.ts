@@ -1,3 +1,4 @@
+import { NO_KEY_NEEDED } from '@/llm/openaiCompat';
 import { storage } from 'wxt/utils/storage';
 import type { z } from 'zod';
 import { defaultSettings } from '@/config/defaults';
@@ -12,6 +13,7 @@ import {
   CaptureStatusSchema,
   PendingCaptureSchema,
   PendingImportSchema,
+  ProviderSchema,
   SettingsSchema,
   SourcesSchema,
   type CaptureStatus,
@@ -112,7 +114,8 @@ export async function getSettings(): Promise<Settings> {
     if (apiKey) await setApiKey(settings.provider, apiKey, settings.apiKeyStorage);
     return settings;
   }
-  const provider = (raw as { provider?: unknown }).provider === 'gemini' ? 'gemini' : 'anthropic';
+  const parsedProvider = ProviderSchema.safeParse((raw as { provider?: unknown }).provider);
+  const provider = parsedProvider.success ? parsedProvider.data : 'anthropic';
   const result = SettingsSchema.safeParse({ ...defaultSettings(provider), ...(raw as object) });
   if (result.success) return result.data;
   await backupCorrupt('settings', raw);
@@ -140,10 +143,10 @@ function keyName(provider: Provider, area: 'local' | 'session') {
 }
 
 export async function getApiKey(provider: Provider): Promise<string | null> {
-  return (
+  const key =
     (await storage.getItem<string>(keyName(provider, 'session'))) ??
-    (await storage.getItem<string>(keyName(provider, 'local')))
-  );
+    (await storage.getItem<string>(keyName(provider, 'local')));
+  return key ?? (provider === 'ollama' ? NO_KEY_NEEDED : null);
 }
 
 export async function setApiKey(
@@ -159,9 +162,9 @@ export async function setApiKey(
 
 /** Move stored keys when the user switches between local and session-only storage. */
 export async function moveApiKeys(area: 'local' | 'session'): Promise<void> {
-  for (const provider of ['anthropic', 'gemini'] as const) {
+  for (const provider of ProviderSchema.options) {
     const key = await getApiKey(provider);
-    if (key) await setApiKey(provider, key, area);
+    if (key && key !== NO_KEY_NEEDED) await setApiKey(provider, key, area);
   }
 }
 

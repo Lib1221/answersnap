@@ -26,10 +26,17 @@ export const FALLBACK_MODELS: Record<ProviderId, ModelInfo[]> = {
     { id: 'gemini-3.5-flash-lite', displayName: 'Gemini 3.5 Flash-Lite', role: 'fast' },
     { id: 'gemini-3.1-pro-preview', displayName: 'Gemini 3.1 Pro Preview', role: 'best' },
   ],
+  // Live lists come from Test key / Connect; these are placeholders until then.
+  openrouter: [
+    { id: 'openrouter/auto', displayName: 'Auto (OpenRouter picks a model)', role: 'default' },
+  ],
+  ollama: [{ id: 'llama3.2', displayName: 'llama3.2', role: 'default' }],
 };
 
 export function defaultModel(provider: ProviderId, role: 'default' | 'fast'): string {
-  return FALLBACK_MODELS[provider].find((m) => m.role === role)!.id;
+  const list = FALLBACK_MODELS[provider];
+  // Providers without a separate fast model use the default for both.
+  return (list.find((m) => m.role === role) ?? list.find((m) => m.role === 'default'))!.id;
 }
 
 /** USD per million tokens, as of September 2026 (spec 11.3; Gemini paid tier). Editable. */
@@ -93,11 +100,15 @@ export function shortModelName(id: string): string {
 export const API_KEY_LINKS: Record<ProviderId, string> = {
   anthropic: 'https://console.anthropic.com/settings/keys',
   gemini: 'https://aistudio.google.com/apikey',
+  openrouter: 'https://openrouter.ai/settings/keys',
+  ollama: 'https://ollama.com/download',
 };
 
 export const PROVIDER_NAMES: Record<ProviderId, string> = {
   anthropic: 'Anthropic (Claude)',
   gemini: 'Google Gemini',
+  openrouter: 'OpenRouter (hundreds of models, one key)',
+  ollama: 'Ollama (models on your own computer)',
 };
 
 /**
@@ -119,4 +130,6 @@ export const FALLBACK_CHAINS: Record<ProviderId, { answer: string[]; fast: strin
   },
   // Anthropic limits are per account, not per model; switching models wouldn't help.
   anthropic: { answer: [], fast: [] },
+  openrouter: { answer: [], fast: [] },
+  ollama: { answer: [], fast: [] },
 };

@@ -72,7 +72,9 @@ const footer = computed(() => {
   const u = s.usage.value;
   const settings = s.settings.value;
   if (!settings || (u.inputTokens === 0 && u.outputTokens === 0)) return null;
-  const free = settings.provider === 'gemini' && settings.geminiFreeTier;
+  // Ollama runs locally; Gemini's free tier has no charge either.
+  const free =
+    settings.provider === 'ollama' || (settings.provider === 'gemini' && settings.geminiFreeTier);
   return {
     usage: usageLine(s.model.value, u),
     cost: costLine(u, settings.prices[s.model.value], free),

@@ -37,8 +37,8 @@ AnswerSnap has no servers and no accounts.
 
 ## What is sent, and to whom
 
-AnswerSnap sends data only to the AI provider you configure (Anthropic or Google Gemini), using
-your own API key, and only when you act:
+AnswerSnap sends data only to the AI provider you configure (Anthropic, Google Gemini, OpenRouter,
+or Ollama running on your own computer), using your own API key, and only when you act:
 
 - **When you snip a question:** the screenshot of the snipped area (unless you turn screenshots
   off), the visible text in it, the page title and site, the field's label and limits, your job
@@ -51,8 +51,11 @@ your own API key, and only when you act:
 Settings > Privacy > "What gets sent" shows the last request, without the key or image data.
 
 If you use **Google Gemini's free tier**, Google may use the content you send to improve its
-products, under Google's terms. Use a paid key if that isn't acceptable to you. Anthropic's and
-Google's own privacy terms govern what happens to data after it reaches them.
+products, under Google's terms. Use a paid key if that isn't acceptable to you. If you use
+**OpenRouter**, it passes your request to the company that runs the model you pick, under that
+company's terms. With **Ollama**, requests go to the Ollama server on your own computer (or the
+address you enter) and nowhere else. Each provider's own privacy terms govern what happens to data
+after it reaches them.
 
 When you import a website, AnswerSnap asks Chrome for permission to read that one site, then
 downloads its pages directly from the site.

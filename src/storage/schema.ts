@@ -99,7 +99,7 @@ export type CaptureStatus = z.infer<typeof CaptureStatusSchema>;
 // Settings (spec 7.2, plus the Gemini provider). Every field has a default so older or partial
 // stored objects still parse.
 
-export const ProviderSchema = z.enum(['anthropic', 'gemini']);
+export const ProviderSchema = z.enum(['anthropic', 'gemini', 'openrouter', 'ollama']);
 export type Provider = z.infer<typeof ProviderSchema>;
 export const ToneSchema = z.enum(['professional', 'friendly', 'concise']);
 export type Tone = z.infer<typeof ToneSchema>;
@@ -147,6 +147,8 @@ export const SettingsSchema = z.object({
    * in settings turns it off.
    */
   fillGaps: z.boolean().default(true),
+  /** Where Ollama runs (provider 'ollama'). */
+  ollamaUrl: z.string().default('http://localhost:11434'),
   /** A Chrome notification when a tracked application has gone quiet. */
   followUpReminders: z.boolean().default(true),
   /** When a model runs out of quota, switch to the next one in its chain. */

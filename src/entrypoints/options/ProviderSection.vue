@@ -11,7 +11,8 @@ import {
 } from '@/config/models';
 import { LlmError } from '@/llm/errors';
 import { storageCooldowns, watchCooldowns } from '@/llm/fallback';
-import { createProvider } from '@/llm/provider';
+import { NO_KEY_NEEDED } from '@/llm/openaiCompat';
+import { createProvider, providerBaseUrl } from '@/llm/provider';
 import { getApiKey, getSettings, moveApiKeys, saveSettings, setApiKey } from '@/storage/items';
 import type { Provider, Settings } from '@/storage/schema';
 
@@ -23,15 +24,27 @@ const models = ref<ModelInfo[]>([]);
 const showBaseUrl = import.meta.env.MODE !== 'production';
 
 const provider = computed(() => settings.value?.provider ?? 'anthropic');
+/** Ollama runs locally: an address instead of a key. */
+const needsKey = computed(() => provider.value !== 'ollama');
+const PROVIDERS: { id: Provider; note: string }[] = [
+  { id: 'anthropic', note: '' },
+  { id: 'gemini', note: '(free tier available)' },
+  { id: 'openrouter', note: '(Claude, GPT, Llama, and more with one key)' },
+  { id: 'ollama', note: '(free and private: nothing leaves your computer)' },
+];
 const modelOptions = computed(() =>
   models.value.length ? models.value : FALLBACK_MODELS[provider.value],
 );
 
 async function load() {
   settings.value = await getSettings();
-  keyInput.value = (await getApiKey(settings.value.provider)) ?? '';
+  keyInput.value = keyFor(await getApiKey(settings.value.provider));
   models.value = [];
   testState.value = 'idle';
+}
+
+function keyFor(stored: string | null): string {
+  return stored && stored !== NO_KEY_NEEDED ? stored : '';
 }
 
 async function update(patch: Partial<Settings>) {
@@ -44,7 +57,7 @@ async function switchProvider(next: Provider) {
     model: defaultModel(next, 'default'),
     fastModel: defaultModel(next, 'fast'),
   });
-  keyInput.value = (await getApiKey(next)) ?? '';
+  keyInput.value = keyFor(await getApiKey(next));
   models.value = [];
   testState.value = 'idle';
 }
@@ -61,23 +74,36 @@ async function changeStorage(area: 'local' | 'session') {
 
 /** Lists models: proves the key works and fills the dropdown without spending tokens. */
 async function testKey() {
-  if (!settings.value || !keyInput.value.trim()) return;
+  if (!settings.value) return;
+  const key = needsKey.value ? keyInput.value.trim() : NO_KEY_NEEDED;
+  if (!key) return;
   testState.value = 'testing';
   testMessage.value = '';
   try {
+    if (provider.value === 'ollama') {
+      // Asked for inside the click: lets the extension reach the user's own Ollama server.
+      const url = new URL(settings.value.ollamaUrl);
+      await browser.permissions
+        .request({ origins: [`${url.protocol}//${url.hostname}/*`] })
+        .catch(() => false);
+    }
     const list = await createProvider(
       settings.value.provider,
-      keyInput.value.trim(),
-      settings.value.baseUrl,
+      key,
+      providerBaseUrl(settings.value),
     ).listModels();
-    await saveKey();
+    if (needsKey.value) await saveKey();
     // Recommended models first, then the rest in the provider's order.
     const preferred = FALLBACK_MODELS[settings.value.provider].map((m) => m.id);
     const rank = (id: string) =>
       preferred.includes(id) ? preferred.indexOf(id) : preferred.length;
     models.value = [...list].sort((a, b) => rank(a.id) - rank(b.id));
     testState.value = 'ok';
-    testMessage.value = `The key works. ${list.length} models available.`;
+    testMessage.value = needsKey.value
+      ? `The key works. ${list.length} models available.`
+      : list.length
+        ? `Connected to Ollama. ${list.length} ${list.length === 1 ? 'model' : 'models'} installed.`
+        : 'Connected to Ollama, but no models are installed yet. Run "ollama pull llama3.2" first.';
     const ids = list.map((m) => m.id);
     const pick = (current: string, role: 'default' | 'fast') => {
       if (!ids.length || ids.includes(current)) return current;
@@ -140,16 +166,16 @@ onUnmounted(() => stopWatch?.());
 
     <fieldset class="flex flex-col gap-2">
       <legend class="mb-1 font-medium">Provider</legend>
-      <label v-for="p in ['anthropic', 'gemini'] as const" :key="p" class="flex items-center gap-2">
+      <label v-for="p in PROVIDERS" :key="p.id" class="flex items-center gap-2">
         <input
           type="radio"
           name="provider"
-          :value="p"
-          :checked="provider === p"
-          @change="switchProvider(p)"
+          :value="p.id"
+          :checked="provider === p.id"
+          @change="switchProvider(p.id)"
         />
-        {{ PROVIDER_NAMES[p]
-        }}<span v-if="p === 'gemini'" class="text-graphite-2">(free tier available)</span>
+        {{ PROVIDER_NAMES[p.id] }}
+        <span v-if="p.note" class="text-graphite-2">{{ p.note }}</span>
       </label>
     </fieldset>
 
@@ -158,7 +184,54 @@ onUnmounted(() => stopWatch?.());
       to improve its products. Use a paid key if that isn't OK for you.
     </p>
 
-    <div class="flex flex-col gap-2">
+    <p v-if="provider === 'openrouter'" class="notice" data-testid="openrouter-privacy">
+      OpenRouter passes what you send (your profile and the questions you snip) to the company that
+      runs the model you pick. Check that model's data policy on openrouter.ai.
+    </p>
+
+    <div v-if="!needsKey" class="flex flex-col gap-2" data-testid="ollama-setup">
+      <label for="ollama-url" class="font-medium">Ollama address</label>
+      <div class="flex gap-2">
+        <input
+          id="ollama-url"
+          class="w-full max-w-md field-input px-3 py-1.5"
+          :value="settings.ollamaUrl"
+          spellcheck="false"
+          @change="update({ ollamaUrl: ($event.target as HTMLInputElement).value.trim() })"
+        />
+        <button
+          class="btn"
+          type="button"
+          :disabled="testState === 'testing'"
+          data-testid="ollama-connect"
+          @click="testKey"
+        >
+          {{ testState === 'testing' ? 'Connecting' : 'Connect' }}
+        </button>
+      </div>
+      <p class="text-[13px] text-graphite-2">
+        Install Ollama from
+        <a
+          class="text-ink underline"
+          href="https://ollama.com/download"
+          target="_blank"
+          rel="noreferrer"
+          >ollama.com/download</a
+        >, pull a model (<code>ollama pull llama3.2</code>), and start it so extensions may use it:
+        <code class="kbd">OLLAMA_ORIGINS=chrome-extension://* ollama serve</code>. Answers never
+        leave your computer. Small models write weaker answers than cloud ones.
+      </p>
+      <p
+        v-if="testMessage"
+        :class="testState === 'error' ? 'notice' : 'text-graphite-2'"
+        role="status"
+        data-testid="test-result"
+      >
+        {{ testMessage }}
+      </p>
+    </div>
+
+    <div v-if="needsKey" class="flex flex-col gap-2">
       <label for="api-key" class="font-medium">API key</label>
       <div class="flex gap-2">
         <input
@@ -199,7 +272,7 @@ onUnmounted(() => stopWatch?.());
       </p>
     </div>
 
-    <fieldset class="flex flex-col gap-2">
+    <fieldset v-if="needsKey" class="flex flex-col gap-2">
       <legend class="mb-1 font-medium">Where to keep the key</legend>
       <label class="flex items-center gap-2">
         <input

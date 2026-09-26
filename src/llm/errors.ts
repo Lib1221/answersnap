@@ -32,6 +32,8 @@ export class LlmError extends Error {
 export function redactKeys(text: string): string {
   return text
     .replace(/sk-ant-[A-Za-z0-9_-]+/g, 'sk-ant-[redacted]')
+    .replace(/sk-or-v1-[A-Za-z0-9_-]+/g, 'sk-or-v1-[redacted]')
+    .replace(/(Bearer\s+)[A-Za-z0-9._-]{12,}/gi, '$1[redacted]')
     .replace(/AIza[0-9A-Za-z_-]{20,}/g, 'AIza[redacted]')
     .replace(/\bAQ\.[0-9A-Za-z_-]{20,}/g, 'AQ.[redacted]')
     .replace(/([?&]key=)[^&\s]+/g, '$1[redacted]');

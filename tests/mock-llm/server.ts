@@ -470,6 +470,40 @@ async function geminiStream(req: IncomingMessage, res: ServerResponse, model: st
   res.end();
 }
 
+/** OpenAI-compatible chat completions (OpenRouter, Ollama). */
+async function openaiChat(req: IncomingMessage, res: ServerResponse) {
+  const raw = await readBody(req);
+  const body = JSON.parse(raw) as {
+    model: string;
+    stream?: boolean;
+    messages: { role: string; content: unknown }[];
+  };
+  log.push({ ...body, _model: body.model, _auth: req.headers.authorization ?? null });
+  if (req.headers.authorization === 'Bearer bad-key')
+    return json(res, 401, { error: { message: 'Invalid API key', code: 401 } });
+  if (!body.stream) {
+    return json(res, 200, {
+      choices: [
+        { message: { role: 'assistant', content: completeText(raw) }, finish_reason: 'stop' },
+      ],
+      usage: { prompt_tokens: 900, completion_tokens: 60 },
+    });
+  }
+  // Match canned answers on the conversation only; the system message holds the resume.
+  const turns = JSON.stringify({ messages: body.messages.filter((m) => m.role !== 'system') });
+  res.writeHead(200, { 'content-type': 'text/event-stream' });
+  for (const w of words(canned(turns))) {
+    if (res.destroyed) return;
+    res.write(`data: ${JSON.stringify({ choices: [{ delta: { content: w } }] })}\n\n`);
+    await sleep(5);
+  }
+  res.write(
+    `data: ${JSON.stringify({ choices: [{ delta: {}, finish_reason: 'stop' }], usage: { prompt_tokens: 2000, completion_tokens: 40, prompt_tokens_details: { cached_tokens: 1500 } } })}\n\n`,
+  );
+  res.write('data: [DONE]\n\n');
+  res.end();
+}
+
 createServer(async (req, res) => {
   cors(res);
   const url = new URL(req.url ?? '/', `http://127.0.0.1:${PORT}`);
@@ -493,6 +527,8 @@ createServer(async (req, res) => {
     }
     if (url.pathname === '/v1/messages' && req.method === 'POST')
       return await anthropicMessages(req, res);
+    if (url.pathname === '/v1/chat/completions' && req.method === 'POST')
+      return await openaiChat(req, res);
     if (url.pathname === '/v1beta/models') {
       if (req.headers['x-goog-api-key'] === 'bad-key') return void scenario(res, 'bad-key', true);
       return json(res, 200, {

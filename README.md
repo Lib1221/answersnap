@@ -36,6 +36,9 @@ Bring your own key:
 - **Google Gemini:** the free tier works. The default model is Gemini 3.1 Flash-Lite, with
   automatic fallback to other Gemini models when one reaches its daily limit.
 - **Anthropic (Claude)**
+- **OpenRouter:** one key for Claude, GPT, Llama, and hundreds more.
+- **Ollama:** free and private; models run on your own computer, and nothing leaves it. Start
+  Ollama with `OLLAMA_ORIGINS=chrome-extension://*` so the extension may use it.
 
 ## Privacy
 

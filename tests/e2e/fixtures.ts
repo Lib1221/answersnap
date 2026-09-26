@@ -106,7 +106,7 @@ export const JAMIE_RESUME = readFileSync(
 export async function seed(
   panel: Page,
   opts: {
-    provider?: 'anthropic' | 'gemini';
+    provider?: 'anthropic' | 'gemini' | 'openrouter' | 'ollama';
     key?: string | null;
     profile?: boolean;
     prewarm?: boolean;
@@ -122,6 +122,8 @@ export async function seed(
       const models: Record<string, [string, string]> = {
         anthropic: ['claude-sonnet-5', 'claude-haiku-4-5-20251001'],
         gemini: ['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite'],
+        openrouter: ['openrouter/auto', 'openrouter/auto'],
+        ollama: ['llama3.2', 'llama3.2'],
       };
       const data: Record<string, unknown> = {
         settings: {

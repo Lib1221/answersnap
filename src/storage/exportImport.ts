@@ -12,12 +12,19 @@ import {
   saveSources,
   saveStandardAnswers,
 } from './items';
-import { SettingsSchema, SourcesSchema } from './schema';
+import { SettingsSchema, SourcesSchema, type Provider } from './schema';
 
 // Export and import (spec 13.3): one JSON file with settings (never the API keys), sources,
 // profile, standard answers, library, and tracked applications. Import validates everything before replacing.
 
 export const EXPORT_FORMAT = 'answersnap-export';
+
+const PROVIDER_SHORT: Record<Provider, string> = {
+  anthropic: 'Anthropic',
+  gemini: 'Google Gemini',
+  openrouter: 'OpenRouter',
+  ollama: 'Ollama',
+};
 
 export const ExportSchema = z.object({
   format: z.literal(EXPORT_FORMAT),
@@ -74,7 +81,7 @@ export function describeImport(d: ExportData): string[] {
       : 'No profile',
     `${d.library.length} saved ${d.library.length === 1 ? 'answer' : 'answers'}`,
     `${d.applications.length} tracked ${d.applications.length === 1 ? 'application' : 'applications'}`,
-    `Settings: ${d.settings.provider === 'gemini' ? 'Google Gemini' : 'Anthropic'}, ${d.settings.model}`,
+    `Settings: ${PROVIDER_SHORT[d.settings.provider]}, ${d.settings.model}`,
   ];
 }
 
