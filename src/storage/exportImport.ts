@@ -96,10 +96,11 @@ export async function applyImport(d: ExportData): Promise<void> {
   await saveApplications(d.applications);
 }
 
-/** "Delete all data": both storage areas and every optional host permission. */
+/** "Delete all data": every storage area (the synced copy too) and every optional host permission. */
 export async function deleteAllData(): Promise<void> {
   await browser.storage.local.clear();
   await browser.storage.session.clear();
+  await browser.storage.sync.clear();
   const required = new Set(browser.runtime.getManifest().host_permissions ?? []);
   const { origins = [] } = await browser.permissions.getAll();
   const optional = origins.filter((o) => !required.has(o));

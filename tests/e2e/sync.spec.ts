@@ -62,5 +62,6 @@ test("another computer's synced copy asks which data to use", async ({
   await expect(options.getByTestId('sync-choice')).toContainText('already has synced data');
   await options.getByTestId('sync-use-local').click();
   await expect(options.getByTestId('sync-status')).toBeVisible();
-  expect((await meta(options))!.device).not.toBe('other');
+  // The first push lands a moment after the status shows.
+  await expect.poll(async () => (await meta(options))?.device).not.toBe('other');
 });

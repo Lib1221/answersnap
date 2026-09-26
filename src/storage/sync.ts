@@ -67,7 +67,13 @@ const stateItem = storage.defineItem<{
   error: string | null;
 }>('local:syncState', { fallback: { device: '', hash: '', lastSync: null, error: null } });
 
+/** Read-only: showing the sync panel must not write anything (Delete all data stays empty). */
 export async function getSyncState() {
+  return stateItem.getValue();
+}
+
+/** The state with this device's id, created the first time sync actually runs. */
+async function deviceState() {
   const s = await stateItem.getValue();
   if (s.device) return s;
   const next = { ...s, device: crypto.randomUUID() };
@@ -147,13 +153,13 @@ export async function applyBundle(bundle: SyncBundle): Promise<void> {
 }
 
 async function setState(patch: Partial<Awaited<ReturnType<typeof getSyncState>>>) {
-  await stateItem.setValue({ ...(await getSyncState()), ...patch });
+  await stateItem.setValue({ ...(await deviceState()), ...patch });
 }
 
 /** Write local data to sync, unless it hasn't changed since the last push or pull. */
 export async function pushSync(now = new Date()): Promise<'pushed' | 'unchanged' | 'off'> {
   if (!(await getSettings()).syncEnabled) return 'off';
-  const state = await getSyncState();
+  const state = await deviceState();
   const bundle = await buildBundle();
   const hash = hashText(JSON.stringify(bundle));
   if (hash === state.hash) return 'unchanged';
@@ -191,7 +197,7 @@ export async function pushSync(now = new Date()): Promise<'pushed' | 'unchanged'
 /** Apply what another device wrote. */
 export async function pullSync(): Promise<'applied' | 'nothing' | 'off'> {
   if (!(await getSettings()).syncEnabled) return 'off';
-  const state = await getSyncState();
+  const state = await deviceState();
   const { [META_KEY]: raw } = await browser.storage.sync.get(META_KEY);
   const meta = MetaSchema.safeParse(raw);
   if (!meta.success || meta.data.device === state.device || meta.data.hash === state.hash)
@@ -246,5 +252,5 @@ export async function startSync(use: 'remote' | 'local'): Promise<void> {
 export async function stopSync(removeCopy: boolean): Promise<void> {
   await saveSettings({ syncEnabled: false });
   if (removeCopy) await browser.storage.sync.clear();
-  await setState({ hash: '', lastSync: null, error: null });
+  await stateItem.removeValue();
 }
