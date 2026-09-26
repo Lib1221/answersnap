@@ -21,7 +21,7 @@ extension can do is in one place. Items marked "needs Liben's OK" touch a hard r
       Email. Replaces the Letter tab so the panel keeps five tabs.
 - [x] **Job fit check**: match score, requirements you meet (with evidence from your
       profile), gaps with what to do about them, keywords to use, and talking points.
-- [ ] **Interview prep**: likely questions for this job (behavioral, technical, role,
+- [x] **Interview prep**: likely questions for this job (behavioral, technical, role,
       company) with suggested answers from your profile; copy or save to the Library.
 - [ ] **Follow-up emails**: thank-you after an interview, follow-up after applying,
       check-in while waiting, accept or decline an offer, withdraw. Subject line included.

@@ -24,6 +24,7 @@ import Icon, { type IconName } from '@/ui/AppIcon.vue';
 import LogoMark from '@/ui/LogoMark.vue';
 import { useInsert } from './useInsert';
 import { useJob } from './useJob';
+import { useInterview } from './useInterview';
 import { useJobFit } from './useJobFit';
 import { useLetter } from './useLetter';
 
@@ -35,6 +36,7 @@ const insert = useInsert(capture, answer);
 const form = useFormFill();
 const letter = useLetter(job);
 const fit = useJobFit(job);
+const interview = useInterview(job);
 // A scan from the "Fill this form" menu opens the Form tab.
 watch(
   () => form.fields.value,
@@ -201,7 +203,13 @@ function openSettings(section?: string) {
       <LibraryTab :can-use="view.kind === 'captured'" @use="useSaved" />
     </main>
     <main v-else-if="tab === 'job'" class="flex flex-1 flex-col gap-3 px-4 py-4">
-      <JobTab :job="job" :letter="letter" :fit="fit" @open-settings="openSettings" />
+      <JobTab
+        :job="job"
+        :letter="letter"
+        :fit="fit"
+        :interview="interview"
+        @open-settings="openSettings"
+      />
     </main>
     <main v-else-if="tab === 'form'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <FormFillTab :state="form" />

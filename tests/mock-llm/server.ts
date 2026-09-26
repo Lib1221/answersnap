@@ -125,11 +125,35 @@ const FIT = {
   talkingPoints: ['Cut invoicing p95 latency from 900 ms to 240 ms with Celery.'],
 };
 
+/** Interview prep: two questions, one with an assumed answer. */
+const INTERVIEW = {
+  questions: [
+    {
+      question: 'Tell me about a time you made a slow system fast.',
+      kind: 'behavioral',
+      why: 'They want proof you can find and fix bottlenecks.',
+      answer:
+        'At Ledgerly, invoice reports were slow. I moved report generation to Celery workers, and p95 latency dropped from 900 ms to 240 ms.',
+      tip: 'Lead with the result.',
+      assumed: false,
+    },
+    {
+      question: 'How have you used Kubernetes?',
+      kind: 'technical',
+      why: 'The team runs on Kubernetes.',
+      answer: 'I have about a year of hands-on experience deploying services to Kubernetes.',
+      tip: 'Keep it short and concrete.',
+      assumed: true,
+    },
+  ],
+};
+
 /** Non-streamed replies: structured profile JSON, tool use, or an image transcription. */
 function completeText(raw: string): string {
   if (/Write an answer for every field/.test(raw)) return batchJson(raw);
   if (/You check a drafted job application answer/.test(raw)) return factCheckJson(raw);
   if (/You compare a candidate with a job post/.test(raw)) return JSON.stringify(FIT);
+  if (/You prepare a candidate for a job interview/.test(raw)) return JSON.stringify(INTERVIEW);
   if (/Transcribe all readable text/.test(raw)) return TRANSCRIPT;
   if (/Extract the candidate's profile/.test(raw)) return PROFILE;
   return canned(raw);
