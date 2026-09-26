@@ -196,3 +196,26 @@ export async function saveJob(panel: Page, context: import('@playwright/test').B
   await test.expect(panel.getByTestId('job-chip')).toBeVisible();
   return page;
 }
+
+/** Pretend the tracked application was marked applied 9 days ago. */
+export async function backdateApplied(panel: Page) {
+  await panel.evaluate(async () => {
+    const { applications } = (await chrome.storage.local.get('applications')) as {
+      applications: {
+        status: string;
+        history: { status: string; at: string }[];
+        updatedAt: string;
+      }[];
+    };
+    const at = new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString();
+    for (const a of applications) {
+      a.status = 'applied';
+      a.history = [
+        { status: 'saved', at },
+        { status: 'applied', at },
+      ];
+      a.updatedAt = at;
+    }
+    await chrome.storage.local.set({ applications });
+  });
+}

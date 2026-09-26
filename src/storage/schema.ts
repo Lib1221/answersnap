@@ -147,6 +147,8 @@ export const SettingsSchema = z.object({
    * in settings turns it off.
    */
   fillGaps: z.boolean().default(true),
+  /** A Chrome notification when a tracked application has gone quiet. */
+  followUpReminders: z.boolean().default(true),
   /** When a model runs out of quota, switch to the next one in its chain. */
   autoFallback: z.boolean().default(true),
   /** Model ids the key can use (from Test key), so fallback skips models the key can't reach. */

@@ -35,5 +35,5 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 
 ## Needs Liben's OK
 
-- [ ] Reminders to follow up (the `alarms` and `notifications` permissions)
+- [x] Follow-up reminders as Chrome notifications (approved: `alarms`, `notifications`)
 - [ ] OpenRouter or local Ollama as providers (new host permissions)

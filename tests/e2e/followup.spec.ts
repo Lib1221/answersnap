@@ -1,28 +1,4 @@
-import type { Page } from '@playwright/test';
-import { expect, saveJob, seed, test } from './fixtures';
-
-/** Pretend the tracked application was marked applied 9 days ago. */
-async function backdateApplied(panel: Page) {
-  await panel.evaluate(async () => {
-    const { applications } = (await chrome.storage.local.get('applications')) as {
-      applications: {
-        status: string;
-        history: { status: string; at: string }[];
-        updatedAt: string;
-      }[];
-    };
-    const at = new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString();
-    for (const a of applications) {
-      a.status = 'applied';
-      a.history = [
-        { status: 'saved', at },
-        { status: 'applied', at },
-      ];
-      a.updatedAt = at;
-    }
-    await chrome.storage.local.set({ applications });
-  });
-}
+import { backdateApplied, expect, saveJob, seed, test } from './fixtures';
 
 test('quiet applications get a follow-up nudge in the panel and on the Applications page', async ({
   context,

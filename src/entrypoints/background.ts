@@ -1,5 +1,6 @@
 import { registerCommands } from '@/background/commands';
 import { createMenus, registerMenuClicks } from '@/background/menus';
+import { registerReminders, scheduleReminders } from '@/background/reminders';
 import { registerRouter } from '@/background/router';
 import { pruneLibrary } from '@/kb/library';
 import { getSettings } from '@/storage/items';
@@ -22,4 +23,6 @@ export default defineBackground(() => {
   registerCommands();
   registerMenuClicks();
   registerRouter();
+  registerReminders();
+  void scheduleReminders();
 });

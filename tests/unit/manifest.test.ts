@@ -73,6 +73,8 @@ describe('production manifest', () => {
           "storage",
           "sidePanel",
           "contextMenus",
+          "alarms",
+          "notifications",
         ],
       }
     `);

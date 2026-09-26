@@ -14,6 +14,7 @@ import {
   type Application,
   type ApplicationStatus,
 } from '@/kb/applications';
+import { getSettings, saveSettings } from '@/storage/items';
 import Icon from '@/ui/AppIcon.vue';
 
 const list = ref<Application[]>([]);
@@ -22,7 +23,13 @@ const load = async () => {
   list.value = await getApplications();
 };
 let unwatch: (() => void) | null = null;
+const reminders = ref(true);
+async function setReminders(on: boolean) {
+  reminders.value = on;
+  await saveSettings({ followUpReminders: on });
+}
 onMounted(() => {
+  void getSettings().then((s) => (reminders.value = s.followUpReminders));
   void load();
   unwatch = watchApplications(() => void load());
 });
@@ -143,6 +150,23 @@ function exportCsv() {
         </li>
       </ul>
     </div>
+
+    <label class="flex items-start gap-2">
+      <input
+        type="checkbox"
+        class="mt-1"
+        :checked="reminders"
+        data-testid="reminders-toggle"
+        @change="setReminders(($event.target as HTMLInputElement).checked)"
+      />
+      <span>
+        Remind me to follow up
+        <span class="block text-[13px] text-graphite-2">
+          A Chrome notification when an application has had no news for 7 days after applying, or 5
+          days while interviewing. Checked a few times a day, only in this browser.
+        </span>
+      </span>
+    </label>
 
     <ul class="grid grid-cols-3 gap-2 sm:grid-cols-6" data-testid="application-counts">
       <li

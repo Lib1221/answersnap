@@ -18,7 +18,8 @@ where that data lives, and who receives it.
   filling (its label and character limit).
 - **Job posts you choose to add**, from a snip, a selection, or a page.
 - **Your application tracker:** for each job post you save, the site, role, company, the status
-  you set, and your notes. It is never sent to the AI provider.
+  you set, and your notes. It is never sent to the AI provider. Follow-up reminders are checked
+  on this computer and shown as Chrome notifications; you can turn them off.
 - **Your AI provider API key**, which you paste in yourself.
 
 ## Where it is stored

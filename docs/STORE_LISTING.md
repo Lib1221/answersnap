@@ -41,6 +41,8 @@ You need an Anthropic or Google Gemini API key to use AnswerSnap. Gemini's free 
   - `storage`: Keeps settings, the user's profile, and saved answers locally in the browser.
   - `sidePanel`: Shows the answer workspace next to the form.
   - `contextMenus`: Adds right-click entries: Snip question, Answer this field, Use selection as job post, Import this page.
+  - `alarms`: Checks the user's local application tracker a few times a day for applications with no news, to remind them to follow up. Can be turned off.
+  - `notifications`: Shows that follow-up reminder. Nothing is sent anywhere; the check reads local storage only.
   - Host `https://api.anthropic.com/*`: Sends the question and the user's profile to the AI provider the user configured.
   - Optional `<all_urls>`: Requested at runtime only, per site, to import the user's own website, or, if the user opts in, to snip from the panel on any site.
 - **Remote code:** No.

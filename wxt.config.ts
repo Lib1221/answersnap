@@ -23,7 +23,16 @@ export default defineConfig({
       description: '__MSG_extDescription__',
       default_locale: 'en',
       minimum_chrome_version: '116',
-      permissions: ['activeTab', 'scripting', 'storage', 'sidePanel', 'contextMenus'],
+      // alarms and notifications: follow-up reminders (approved by Liben, 2026-09-26).
+      permissions: [
+        'activeTab',
+        'scripting',
+        'storage',
+        'sidePanel',
+        'contextMenus',
+        'alarms',
+        'notifications',
+      ],
       // e2e builds may add <all_urls> (spec section 6). Production never does.
       host_permissions: e2e ? [ANTHROPIC_HOST, '<all_urls>'] : [ANTHROPIC_HOST],
       optional_host_permissions: ['<all_urls>'],
