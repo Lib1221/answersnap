@@ -113,6 +113,36 @@ describe('performance budgets (spec 17, M7)', () => {
   });
 });
 
+describe('Firefox build', () => {
+  let manifest: BuiltManifest & {
+    sidebar_action?: { default_panel?: string };
+    browser_specific_settings?: {
+      gecko?: { id?: string; data_collection_permissions?: { required?: string[] } };
+    };
+    side_panel?: unknown;
+  };
+  beforeAll(async () => {
+    const outDir = await mkdtemp(join(tmpdir(), 'answersnap-firefox-'));
+    dirs.push(outDir);
+    await build({ browser: 'firefox', manifestVersion: 3, outDir, logger: silentLogger });
+    manifest = JSON.parse(await readFile(join(outDir, 'firefox-mv3', 'manifest.json'), 'utf8'));
+  }, BUILD_TIMEOUT_MS);
+
+  it('uses a sidebar instead of the side panel, with a stable add-on id', () => {
+    expect(manifest.sidebar_action?.default_panel).toMatch(/sidepanel\.html$/);
+    expect(manifest.side_panel).toBeUndefined();
+    expect(manifest.permissions).not.toContain('sidePanel');
+    expect(manifest.permissions).toEqual(
+      expect.arrayContaining(['activeTab', 'scripting', 'storage', 'alarms', 'notifications']),
+    );
+    expect(manifest.browser_specific_settings?.gecko?.id).toBe('answersnap@lib1221.github.io');
+    expect(
+      manifest.browser_specific_settings?.gecko?.data_collection_permissions?.required,
+    ).toEqual(['personallyIdentifyingInfo', 'websiteContent']);
+    expect(manifest.minimum_chrome_version).toBeUndefined();
+  });
+});
+
 afterAll(async () => {
   await Promise.all(dirs.map((d) => rm(d, { recursive: true, force: true })));
 });

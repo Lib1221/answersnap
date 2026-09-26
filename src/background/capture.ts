@@ -1,3 +1,4 @@
+import { openPanel } from './panel';
 import type { Message, Reply, StartSnipError } from '@/messaging/protocol';
 import { sendToTab } from '@/messaging/send';
 import {
@@ -75,7 +76,7 @@ export async function startSnip(target: SnipTarget, mode: SnipMode): Promise<Rep
  */
 export function startSnipFromGesture(tab: Browser.tabs.Tab | undefined, mode: SnipMode): void {
   if (!tab?.id || tab.windowId === undefined) return;
-  browser.sidePanel.open({ windowId: tab.windowId }).catch((err: unknown) => {
+  openPanel(tab.windowId).catch((err: unknown) => {
     console.warn('[AnswerSnap] could not open side panel', err);
   });
   void startSnip({ tabId: tab.id, windowId: tab.windowId, url: tab.url }, mode);

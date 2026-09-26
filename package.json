@@ -9,6 +9,8 @@
     "build": "wxt build",
     "build:e2e": "wxt build --mode e2e",
     "zip": "wxt zip",
+    "build:firefox": "wxt build -b firefox --mv3",
+    "zip:firefox": "wxt zip -b firefox --mv3",
     "postinstall": "wxt prepare",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint .",

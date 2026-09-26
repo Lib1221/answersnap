@@ -1,5 +1,6 @@
 import { registerCommands } from '@/background/commands';
 import { createMenus, registerMenuClicks } from '@/background/menus';
+import { configurePanel } from '@/background/panel';
 import { registerReminders, scheduleReminders } from '@/background/reminders';
 import { registerRouter } from '@/background/router';
 import { pruneLibrary } from '@/kb/library';
@@ -9,7 +10,7 @@ import { pullSync, pushSync, registerSync } from '@/storage/sync';
 export default defineBackground(() => {
   // All listeners are registered synchronously at top level (spec 4).
   // The toolbar icon is a capture trigger, so Chrome must not open the panel on its own.
-  void browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
+  configurePanel();
 
   browser.runtime.onInstalled.addListener(({ reason }) => {
     createMenus();

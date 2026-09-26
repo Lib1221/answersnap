@@ -15,20 +15,36 @@ export default defineConfig({
   vite: () => ({
     plugins: [tailwindcss()],
   }),
-  manifest: ({ mode }) => {
+  manifest: ({ mode, browser }) => {
     const e2e = mode === 'e2e';
+    const firefox = browser === 'firefox';
     return {
       // Strings come from public/_locales (spec 13.4); BRAND keeps the same values for code.
       name: '__MSG_extName__',
       description: '__MSG_extDescription__',
       default_locale: 'en',
-      minimum_chrome_version: '116',
+      ...(firefox
+        ? {
+            // Firefox needs a stable id for storage.sync and add-on signing.
+            browser_specific_settings: {
+              gecko: {
+                id: 'answersnap@lib1221.github.io',
+                strict_min_version: '128.0',
+                // Profile and snipped page content go to the AI provider the user configures.
+                data_collection_permissions: {
+                  required: ['personallyIdentifyingInfo', 'websiteContent'],
+                },
+              },
+            },
+          }
+        : { minimum_chrome_version: '116' }),
       // alarms and notifications: follow-up reminders (approved by Liben, 2026-09-26).
       permissions: [
         'activeTab',
         'scripting',
         'storage',
-        'sidePanel',
+        // Firefox has no side panel API; WXT turns the panel into a sidebar there.
+        ...(firefox ? [] : ['sidePanel']),
         'contextMenus',
         'alarms',
         'notifications',

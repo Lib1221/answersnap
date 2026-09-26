@@ -1,3 +1,4 @@
+import { openPanel } from './panel';
 import { t } from '@/ui/i18n';
 import {
   importPageFromTab,
@@ -49,12 +50,10 @@ export function registerMenuClicks(): void {
     else if (info.menuItemId === MENU_ANSWER_FIELD) startSnipFromGesture(tab, 'field');
     else if (info.menuItemId === MENU_JOB_SELECTION) {
       // Open the panel inside the gesture, before any await.
-      if (tab?.windowId !== undefined)
-        void browser.sidePanel.open({ windowId: tab.windowId }).catch(() => undefined);
+      if (tab?.windowId !== undefined) void openPanel(tab.windowId).catch(() => undefined);
       void jobFromSelection(tab, info.selectionText);
     } else if (info.menuItemId === MENU_FILL_FORM) {
-      if (tab?.windowId !== undefined)
-        void browser.sidePanel.open({ windowId: tab.windowId }).catch(() => undefined);
+      if (tab?.windowId !== undefined) void openPanel(tab.windowId).catch(() => undefined);
       void scanFormFromTab(tab);
     } else if (info.menuItemId === MENU_IMPORT_PAGE) void importPageFromTab(tab);
   });
