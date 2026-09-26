@@ -29,8 +29,10 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 ## Next
 
 - [x] Multi-page applications: answers from earlier pages on the same site keep later ones consistent
-- [ ] Translations of the UI (strings already go through `t()`)
-- [ ] Firefox build (WXT supports it; the side panel becomes a sidebar)
+- [x] Side panel in Amharic, Spanish, and French (follows Chrome's language)
+- [ ] Translate the settings pages too
+- [x] Firefox build, experimental (`pnpm build:firefox`; the panel is a sidebar)
+- [ ] Test the Firefox build in a real Firefox and submit it to addons.mozilla.org
 - [x] Sync across devices (opt-in, Chrome Sync): settings, profile, standard answers, stories, cover letter, applications
 
 ## Needs Liben's OK

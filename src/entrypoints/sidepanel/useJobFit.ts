@@ -2,6 +2,7 @@ import { computed, ref, shallowRef, watch } from 'vue';
 import { jobPromptText } from '@/kb/jobContext';
 import { runJobFit, type JobFit } from '@/llm/jobFit';
 import { prepareJobTask, jobTaskError } from './jobTask';
+import { t } from '@/ui/i18n';
 import type { useJob } from './useJob';
 
 /** Fit check for the saved job post; results are kept per job for the session. */
@@ -57,7 +58,11 @@ export function useJobFit(job: ReturnType<typeof useJob>) {
     } catch (err) {
       if (signal.aborted) return;
       status.value = 'error';
-      error.value = jobTaskError(err, task.settings, "Couldn't check the fit. Try again.");
+      error.value = jobTaskError(
+        err,
+        task.settings,
+        t('fit_error', "Couldn't check the fit. Try again."),
+      );
     }
   }
 

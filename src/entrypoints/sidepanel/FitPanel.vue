@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { VERDICT_LABELS } from '@/llm/jobFit';
 import Icon from '@/ui/AppIcon.vue';
+import { t } from '@/ui/i18n';
 import type { useJob } from './useJob';
 import type { useJobFit } from './useJobFit';
 
@@ -39,10 +40,13 @@ async function copyKeywords() {
     <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-soft text-ink">
       <Icon name="target" :size="22" />
     </div>
-    <h2 class="text-[15px] font-[650]">Save the job post first</h2>
+    <h2 class="text-[15px] font-[650]">
+      {{ t('job_save_post_first', 'Save the job post first') }}
+    </h2>
     <p class="text-[13px] text-graphite-2">
-      Use <strong class="text-graphite">Set job</strong> above, then check how well your profile
-      matches it.
+      {{ t('job_use', 'Use') }}
+      <strong class="text-graphite">{{ t('job_set_job', 'Set job') }}</strong>
+      {{ t('fit_needs_job', 'above, then check how well your profile matches it.') }}
     </p>
   </section>
 
@@ -53,9 +57,9 @@ async function copyKeywords() {
           <Icon name="target" :size="18" />
         </span>
         <div class="min-w-0 flex-1">
-          <h2 class="text-[15px] leading-tight font-[650]">Job fit</h2>
+          <h2 class="text-[15px] leading-tight font-[650]">{{ t('fit_title', 'Job fit') }}</h2>
           <p class="truncate text-[12.5px] text-graphite-2">
-            Your profile against {{ props.job.label(props.job.job.value) }}
+            {{ t('fit_against', 'Your profile against $1', props.job.label(props.job.job.value)) }}
           </p>
         </div>
       </div>
@@ -66,7 +70,7 @@ async function copyKeywords() {
         class="flex items-center gap-2 text-[13px] text-graphite-2"
       >
         <span class="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden="true" />
-        Comparing your profile with the job post…
+        {{ t('fit_running', 'Comparing your profile with the job post…') }}
       </p>
       <p v-if="f.error.value" class="notice text-[13px]" role="alert" data-testid="fit-error">
         {{ f.error.value }}
@@ -94,13 +98,13 @@ async function copyKeywords() {
         @click="f.run"
       >
         <Icon :name="fit ? 'refresh' : 'target'" />
-        {{ fit ? 'Check again' : 'Check my fit' }}
+        {{ fit ? t('fit_run_again', 'Check again') : t('fit_run', 'Check my fit') }}
       </button>
     </section>
 
     <template v-if="fit && f.status.value !== 'running'">
       <section class="card flex flex-col gap-2 p-4">
-        <p class="eyebrow">Requirements</p>
+        <p class="eyebrow">{{ t('fit_requirements', 'Requirements') }}</p>
         <ul class="flex flex-col gap-2.5" data-testid="fit-requirements">
           <li v-for="r in fit.requirements" :key="r.requirement" class="flex gap-2">
             <Icon
@@ -112,7 +116,9 @@ async function copyKeywords() {
             <div class="min-w-0 text-[13.5px]">
               <p>
                 {{ r.requirement }}
-                <span v-if="r.mustHave" class="ml-1 text-[11.5px] text-graphite-2">must-have</span>
+                <span v-if="r.mustHave" class="ml-1 text-[11.5px] text-graphite-2">{{
+                  t('fit_must_have', 'must-have')
+                }}</span>
               </p>
               <p v-if="r.met && r.evidence" class="text-[12.5px] text-graphite-2">
                 {{ r.evidence }}
@@ -127,10 +133,10 @@ async function copyKeywords() {
 
       <section v-if="fit.keywords.length" class="card flex flex-col gap-2 p-4">
         <div class="flex items-center justify-between">
-          <p class="eyebrow">Keywords to use</p>
+          <p class="eyebrow">{{ t('fit_keywords', 'Keywords to use') }}</p>
           <button class="btn btn-quiet min-h-0 text-[12.5px]" type="button" @click="copyKeywords">
             <Icon :name="copied ? 'check' : 'copy'" :size="14" />
-            {{ copied ? 'Copied' : 'Copy all' }}
+            {{ copied ? t('fit_copied', 'Copied') : t('fit_copy_all', 'Copy all') }}
           </button>
         </div>
         <ul class="flex flex-wrap gap-1.5" data-testid="fit-keywords">
@@ -139,9 +145,9 @@ async function copyKeywords() {
       </section>
 
       <section v-if="fit.talkingPoints.length" class="card flex flex-col gap-2 p-4">
-        <p class="eyebrow">Talking points</p>
+        <p class="eyebrow">{{ t('fit_talking_points', 'Talking points') }}</p>
         <ol class="flex list-decimal flex-col gap-1.5 pl-5 text-[13.5px]">
-          <li v-for="t in fit.talkingPoints" :key="t">{{ t }}</li>
+          <li v-for="p in fit.talkingPoints" :key="p">{{ p }}</li>
         </ol>
       </section>
     </template>

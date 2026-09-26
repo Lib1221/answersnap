@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { BRAND } from '@/config/brand';
 import Icon from './AppIcon.vue';
+import { t } from '@/ui/i18n';
 
 defineProps<{ compact?: boolean }>();
 </script>
@@ -11,7 +12,7 @@ defineProps<{ compact?: boolean }>();
     data-testid="credit"
   >
     <span>
-      Made by
+      {{ t('credit_made_by', 'Made by') }}
       <a
         :href="BRAND.repoUrl"
         target="_blank"
@@ -30,7 +31,7 @@ defineProps<{ compact?: boolean }>();
     >
       <Icon name="github" :size="14" />
       <Icon name="star" :size="13" />
-      Star on GitHub
+      {{ t('credit_star_on_github', 'Star on GitHub') }}
     </a>
   </div>
 </template>

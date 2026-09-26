@@ -7,9 +7,9 @@
     "message": "Snip an application question. Get a draft answer written from your own resume and website."
   },
   "actionTitle": {
-    "message": "Snip a question ($SHORTCUT$)",
+    "message": "Snip a question ($P1$)",
     "placeholders": {
-      "shortcut": {
+      "p1": {
         "content": "$1",
         "example": "Alt+Shift+Q"
       }
@@ -18,17 +18,1180 @@
   "commandSnip": {
     "message": "Snip a question and draft an answer"
   },
-  "menuSnipQuestion": {
+  "answer_about_an_hour": {
+    "message": "about an hour"
+  },
+  "answer_about_hours": {
+    "message": "about $P1$ hours",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_adapt": {
+    "message": "Adapt"
+  },
+  "answer_another_angle": {
+    "message": "Another angle"
+  },
+  "answer_append": {
+    "message": "Append"
+  },
+  "answer_assessment": {
+    "message": "This looks like a test question. AnswerSnap only drafts answers about your own background."
+  },
+  "answer_cache_off": {
+    "message": "Cache off (profile too short for this model)"
+  },
+  "answer_change": {
+    "message": "Change"
+  },
+  "answer_change_it": {
+    "message": "Change it"
+  },
+  "answer_change_placeholder": {
+    "message": "Change it..."
+  },
+  "answer_copy": {
+    "message": "Copy"
+  },
+  "answer_counter_chars": {
+    "message": "$P1$ / $P2$ characters",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_counter_words": {
+    "message": "$P1$ / $P2$ words",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_cut": {
+    "message": "Cut at last sentence"
+  },
+  "answer_drafting": {
+    "message": "Drafting"
+  },
+  "answer_err_auth": {
+    "message": "The API key was rejected. Check it in Settings."
+  },
+  "answer_err_busy": {
+    "message": "The AI service is busy. Try again in a moment."
+  },
+  "answer_err_gemini_all_day": {
+    "message": "All your Gemini models have reached their free limits for today. They come back in $P1$ (midnight Pacific time). A paid key removes the limit.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_err_gemini_all_minute": {
+    "message": "All your Gemini models are at their per-minute limit. Try again in a minute."
+  },
+  "answer_err_gemini_free_tier": {
+    "message": "You've reached Gemini's free-tier limit for this model. Wait a bit, switch to another Gemini model in Settings, or use a paid key."
+  },
+  "answer_err_network": {
+    "message": "Can't reach the AI service. Check your connection."
+  },
+  "answer_err_rate_limit": {
+    "message": "Rate limited by the API. Wait a minute and try again."
+  },
+  "answer_fallback_day": {
+    "message": "$P1$ reached its daily free limit, so this answer uses $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_fallback_minute": {
+    "message": "$P1$ reached its per-minute free limit, so this answer uses $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_fit_limit": {
+    "message": "Fit limit"
+  },
+  "answer_heading": {
+    "message": "Your answer"
+  },
+  "answer_heading_email": {
+    "message": "Your email"
+  },
+  "answer_heading_letter": {
+    "message": "Your cover letter"
+  },
+  "answer_insert": {
+    "message": "Insert"
+  },
+  "answer_kind_checkbox": {
+    "message": "checkboxes"
+  },
+  "answer_kind_editor": {
+    "message": "editor"
+  },
+  "answer_kind_input": {
+    "message": "input"
+  },
+  "answer_kind_radio": {
+    "message": "choice"
+  },
+  "answer_kind_select": {
+    "message": "dropdown"
+  },
+  "answer_kind_textarea": {
+    "message": "text box"
+  },
+  "answer_label": {
+    "message": "Answer"
+  },
+  "answer_longer": {
+    "message": "Longer"
+  },
+  "answer_missing": {
+    "message": "Missing information"
+  },
+  "answer_more_casual": {
+    "message": "More casual"
+  },
+  "answer_more_formal": {
+    "message": "More formal"
+  },
+  "answer_more_insert": {
+    "message": "More insert options"
+  },
+  "answer_next_version": {
+    "message": "Next version"
+  },
+  "answer_pick_field": {
+    "message": "Pick field"
+  },
+  "answer_picking": {
+    "message": "Click the field on the page. Esc cancels."
+  },
+  "answer_prev_version": {
+    "message": "Previous version"
+  },
+  "answer_ready": {
+    "message": "Answer ready"
+  },
+  "answer_refine": {
+    "message": "Refine"
+  },
+  "answer_regenerate": {
+    "message": "Regenerate"
+  },
+  "answer_replace": {
+    "message": "Replace"
+  },
+  "answer_retry_busy": {
+    "message": "The AI service is busy. Retrying."
+  },
+  "answer_retry_network": {
+    "message": "Can't reach the AI service. Retrying."
+  },
+  "answer_retry_rate_limit": {
+    "message": "Rate limited by the API. Retrying in $P1$ seconds.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_reuse": {
+    "message": "Reuse"
+  },
+  "answer_reuse_title": {
+    "message": "You answered this before"
+  },
+  "answer_save": {
+    "message": "Save"
+  },
+  "answer_select": {
+    "message": "Select"
+  },
+  "answer_send": {
+    "message": "Send"
+  },
+  "answer_shorter": {
+    "message": "Shorter"
+  },
+  "answer_stop": {
+    "message": "Stop"
+  },
+  "answer_stopped": {
+    "message": "Stopped."
+  },
+  "answer_target": {
+    "message": "Target: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_target_email": {
+    "message": "Copy the email, or open it in your email app."
+  },
+  "answer_target_iframe": {
+    "message": "a field inside an embedded frame"
+  },
+  "answer_target_labeled": {
+    "message": "\"$P1$\" $P2$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_target_letter": {
+    "message": "Copy the letter, or pick the cover letter field on the page."
+  },
+  "answer_target_none": {
+    "message": "No text field found near the question. Copy the answer or pick a field."
+  },
+  "answer_version_of": {
+    "message": "Version $P1$ of $P2$: $P3$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "answer_write_new": {
+    "message": "Write new"
+  },
+  "buttonAddResume": {
+    "message": "Add resume"
+  },
+  "buttonOpenSettings": {
+    "message": "Open settings"
+  },
+  "buttonSnipQuestion": {
     "message": "Snip question"
+  },
+  "credit_made_by": {
+    "message": "Made by"
+  },
+  "credit_star_on_github": {
+    "message": "Star on GitHub"
+  },
+  "email_company": {
+    "message": "Company"
+  },
+  "email_kind": {
+    "message": "Email"
+  },
+  "email_kind_accept": {
+    "message": "Accept an offer"
+  },
+  "email_kind_accept_hint": {
+    "message": "Start date, and anything you agreed on"
+  },
+  "email_kind_check_in": {
+    "message": "Check in after an interview"
+  },
+  "email_kind_check_in_hint": {
+    "message": "When you interviewed, and what they said about timing"
+  },
+  "email_kind_decline": {
+    "message": "Decline an offer"
+  },
+  "email_kind_follow_up": {
+    "message": "Follow up after applying"
+  },
+  "email_kind_follow_up_hint": {
+    "message": "When you applied, and anything new since then"
+  },
+  "email_kind_reason_hint": {
+    "message": "A short reason, if you want to give one"
+  },
+  "email_kind_thank_you": {
+    "message": "Thank you after an interview"
+  },
+  "email_kind_thank_you_hint": {
+    "message": "Who you met, and something specific you talked about"
+  },
+  "email_kind_withdraw": {
+    "message": "Withdraw my application"
+  },
+  "email_notes": {
+    "message": "What to mention (optional)"
+  },
+  "email_open": {
+    "message": "Open in email app"
+  },
+  "email_role": {
+    "message": "Role"
+  },
+  "email_subtitle": {
+    "message": "Thank-you notes, follow-ups, and offer replies."
+  },
+  "email_title": {
+    "message": "Emails"
+  },
+  "email_to": {
+    "message": "To (optional)"
+  },
+  "email_to_ph": {
+    "message": "Dana Reyes"
+  },
+  "email_write": {
+    "message": "Write email"
+  },
+  "email_write_again": {
+    "message": "Write again"
+  },
+  "factcheck_check_again": {
+    "message": "Check again"
+  },
+  "factcheck_checking": {
+    "message": "Checking facts against your profile…"
+  },
+  "factcheck_error": {
+    "message": "Couldn't run the fact check."
+  },
+  "factcheck_fix": {
+    "message": "Fix it"
+  },
+  "factcheck_flagged_many": {
+    "message": "Fact check: $P1$ of $P2$ sentences aren’t backed by your profile.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "factcheck_flagged_one": {
+    "message": "Fact check: $P1$ of $P2$ sentence isn’t backed by your profile.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "factcheck_keep": {
+    "message": "Keep anyway"
+  },
+  "factcheck_kept_many": {
+    "message": "Fact check: you kept $P1$ sentences it couldn't match to your profile.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "factcheck_kept_one": {
+    "message": "Fact check: you kept 1 sentence it couldn't match to your profile."
+  },
+  "factcheck_ok_many": {
+    "message": "✓ Fact check: all $P1$ sentences are backed by your profile.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "factcheck_ok_one": {
+    "message": "✓ Fact check: the sentence is backed by your profile."
+  },
+  "factcheck_stale": {
+    "message": "You edited the answer since the fact check."
+  },
+  "factcheck_try_again": {
+    "message": "Try again"
+  },
+  "fit_against": {
+    "message": "Your profile against $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "fit_copied": {
+    "message": "Copied"
+  },
+  "fit_copy_all": {
+    "message": "Copy all"
+  },
+  "fit_error": {
+    "message": "Couldn't check the fit. Try again."
+  },
+  "fit_keywords": {
+    "message": "Keywords to use"
+  },
+  "fit_must_have": {
+    "message": "must-have"
+  },
+  "fit_needs_job": {
+    "message": "above, then check how well your profile matches it."
+  },
+  "fit_requirements": {
+    "message": "Requirements"
+  },
+  "fit_run": {
+    "message": "Check my fit"
+  },
+  "fit_run_again": {
+    "message": "Check again"
+  },
+  "fit_running": {
+    "message": "Comparing your profile with the job post…"
+  },
+  "fit_talking_points": {
+    "message": "Talking points"
+  },
+  "fit_title": {
+    "message": "Job fit"
+  },
+  "fit_verdict_good": {
+    "message": "Good fit"
+  },
+  "fit_verdict_long_shot": {
+    "message": "Long shot"
+  },
+  "fit_verdict_stretch": {
+    "message": "Stretch"
+  },
+  "fit_verdict_strong": {
+    "message": "Strong fit"
+  },
+  "form_already_filled": {
+    "message": "already filled"
+  },
+  "form_answer_for": {
+    "message": "Answer for $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_assessment": {
+    "message": "A test question, so no answer is drafted"
+  },
+  "form_cant_read": {
+    "message": "Couldn't read the fields on this page."
+  },
+  "form_char_count": {
+    "message": "$P1$ / $P2$ characters",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_check_page": {
+    "message": "Check the page, then submit it yourself."
+  },
+  "form_draft_failed": {
+    "message": "Couldn't draft the answers. Try again."
+  },
+  "form_draft_field": {
+    "message": "Draft $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_draft_many": {
+    "message": "Draft $P1$ answers",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_draft_one": {
+    "message": "Draft $P1$ answer",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_n": {
+    "message": "Drafting $P1$ answers",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_one": {
+    "message": "Drafting $P1$ answer",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_range": {
+    "message": "Drafting answers $P1$ to $P2$ of $P3$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "form_fill_failed": {
+    "message": "Couldn't fill it directly. Copy the answer and paste it."
+  },
+  "form_found_many": {
+    "message": "Found $P1$ fields.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_found_many_on": {
+    "message": "Found $P1$ fields on $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_found_one": {
+    "message": "Found $P1$ field.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_found_one_on": {
+    "message": "Found $P1$ field on $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_from_library": {
+    "message": "From your saved answers"
+  },
+  "form_gesture_hint": {
+    "message": "Right-click the page and choose \"Fill this form with AnswerSnap\", or press Alt+Shift+Q there first."
+  },
+  "form_insert_selected": {
+    "message": "Insert $P1$ selected",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_inserted": {
+    "message": "Inserted"
+  },
+  "form_inserted_n": {
+    "message": "Inserted $P1$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_inserting": {
+    "message": "Inserting"
+  },
+  "form_intro": {
+    "message": "Draft answers for every field on this form at once. You review everything before anything is filled."
+  },
+  "form_kind_checkbox": {
+    "message": "checkboxes"
+  },
+  "form_kind_editor": {
+    "message": "editor"
+  },
+  "form_kind_input": {
+    "message": "input"
+  },
+  "form_kind_radio": {
+    "message": "choice"
+  },
+  "form_kind_select": {
+    "message": "dropdown"
+  },
+  "form_kind_textarea": {
+    "message": "text box"
+  },
+  "form_menu_hint": {
+    "message": "Or right-click the page and choose \"Fill this form with AnswerSnap\"."
+  },
+  "form_need_look": {
+    "message": "$P1$ need a look.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_needs_key": {
+    "message": "Add your API key to start."
+  },
+  "form_needs_profile": {
+    "message": "Add your resume so answers have something to draw from."
+  },
+  "form_no_answer": {
+    "message": "No answer"
+  },
+  "form_no_fields": {
+    "message": "No fillable fields found on this page."
+  },
+  "form_no_match": {
+    "message": "None of the options matched."
+  },
+  "form_reading": {
+    "message": "Reading the form"
+  },
+  "form_required": {
+    "message": "required"
+  },
+  "form_review_intro": {
+    "message": "Check each answer, untick anything you don't want, then insert. AnswerSnap never submits the form."
+  },
+  "form_scan": {
+    "message": "Scan this form"
+  },
+  "form_scan_again": {
+    "message": "Scan again"
+  },
+  "form_stop": {
+    "message": "Stop"
+  },
+  "form_target_gone": {
+    "message": "The field is gone. Scan the form again."
+  },
+  "form_tick_one": {
+    "message": "Tick at least one field to draft."
+  },
+  "form_title": {
+    "message": "Fill the whole form"
+  },
+  "form_unlabeled": {
+    "message": "Unlabeled field"
+  },
+  "form_unreachable": {
+    "message": "Couldn't reach the page."
+  },
+  "form_untick": {
+    "message": "Untick any you'll answer yourself."
+  },
+  "insert_copied": {
+    "message": "Copied"
+  },
+  "insert_copy_blocked": {
+    "message": "Couldn't fill this field directly. Select the answer text, copy it, and paste it into the field."
+  },
+  "insert_copy_failed": {
+    "message": "Couldn't copy. Select the answer text and copy it with Ctrl+C."
+  },
+  "insert_copy_fallback": {
+    "message": "Couldn't fill this field directly. The answer is copied. Click the field and press $P1$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "insert_inserted": {
+    "message": "Inserted"
+  },
+  "insert_needs_gesture": {
+    "message": "Press Alt+Shift+Q or click the AnswerSnap icon on the page, then try again."
+  },
+  "insert_no_match": {
+    "message": "None of the options matched the answer. Pick it on the page."
+  },
+  "insert_saved": {
+    "message": "Saved"
+  },
+  "insert_selected": {
+    "message": "Selected"
+  },
+  "insert_target_gone": {
+    "message": "The page changed since the snip. Pick the field again, or copy the answer."
+  },
+  "interview_assumed": {
+    "message": "Assumed"
+  },
+  "interview_assumed_title": {
+    "message": "This answer claims experience your profile doesn't show"
+  },
+  "interview_copied": {
+    "message": "Copied"
+  },
+  "interview_copy": {
+    "message": "Copy"
+  },
+  "interview_error": {
+    "message": "Couldn't prepare the questions. Try again."
+  },
+  "interview_for": {
+    "message": "For $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "interview_hide_answer": {
+    "message": "Hide answer"
+  },
+  "interview_kind_behavioral": {
+    "message": "Behavioral"
+  },
+  "interview_kind_motivation": {
+    "message": "Motivation"
+  },
+  "interview_kind_role": {
+    "message": "Role"
+  },
+  "interview_kind_technical": {
+    "message": "Technical"
+  },
+  "interview_needs_job": {
+    "message": "above, then get the questions this interviewer is likely to ask, with answers from your profile."
+  },
+  "interview_run": {
+    "message": "Prepare questions"
+  },
+  "interview_run_again": {
+    "message": "New questions"
+  },
+  "interview_running": {
+    "message": "Writing likely questions and answers…"
+  },
+  "interview_save": {
+    "message": "Save to Library"
+  },
+  "interview_saved": {
+    "message": "Saved"
+  },
+  "interview_show_answer": {
+    "message": "Show suggested answer"
+  },
+  "interview_title": {
+    "message": "Interview prep"
+  },
+  "job_add_key": {
+    "message": "Add your API key to start."
+  },
+  "job_add_resume": {
+    "message": "Add your resume so there is something to compare."
+  },
+  "job_busy_job": {
+    "message": "Reading the job post"
+  },
+  "job_busy_page": {
+    "message": "Reading the page"
+  },
+  "job_busy_saving": {
+    "message": "Saving the job post"
+  },
+  "job_busy_selection": {
+    "message": "Reading the selection"
+  },
+  "job_capture_not_ready": {
+    "message": "Press Alt+Shift+Q or click the AnswerSnap icon on the page first, then try again."
+  },
+  "job_no_text": {
+    "message": "No readable text on this page."
+  },
+  "job_read_failed": {
+    "message": "Couldn't read the page. Try snipping the job post instead."
+  },
+  "job_restricted": {
+    "message": "Chrome doesn't let extensions read this page."
+  },
+  "job_save_post_first": {
+    "message": "Save the job post first"
+  },
+  "job_select_first": {
+    "message": "Select the job post text on the page first."
+  },
+  "job_set_job": {
+    "message": "Set job"
+  },
+  "job_sub_email": {
+    "message": "Email"
+  },
+  "job_sub_fit": {
+    "message": "Fit"
+  },
+  "job_sub_interview": {
+    "message": "Interview"
+  },
+  "job_sub_letter": {
+    "message": "Letter"
+  },
+  "job_sub_resume": {
+    "message": "Resume"
+  },
+  "job_tools": {
+    "message": "Job tools"
+  },
+  "job_use": {
+    "message": "Use"
+  },
+  "jobbar_add_more": {
+    "message": "Add more"
+  },
+  "jobbar_clear": {
+    "message": "Clear"
+  },
+  "jobbar_clear_job": {
+    "message": "Clear job"
+  },
+  "jobbar_job": {
+    "message": "Job: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "jobbar_no_job": {
+    "message": "No job post set for this site."
+  },
+  "jobbar_read_page": {
+    "message": "Read whole page"
+  },
+  "jobbar_set_job": {
+    "message": "Set job"
+  },
+  "jobbar_snip_job": {
+    "message": "Snip job post"
+  },
+  "jobbar_use_selection": {
+    "message": "Use selected text"
+  },
+  "letter_add_own": {
+    "message": "Add your own cover letter"
+  },
+  "letter_company": {
+    "message": "Company"
+  },
+  "letter_company_ph": {
+    "message": "Acme"
+  },
+  "letter_job_saved": {
+    "message": "Tailored to the job post saved for $P1$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "letter_length": {
+    "message": "Length"
+  },
+  "letter_length_long": {
+    "message": "Long"
+  },
+  "letter_length_short": {
+    "message": "Short"
+  },
+  "letter_length_standard": {
+    "message": "Standard"
+  },
+  "letter_notes": {
+    "message": "Anything to mention (optional)"
+  },
+  "letter_notes_ph": {
+    "message": "For example: I can start in two weeks, or mention my open source work"
+  },
+  "letter_role": {
+    "message": "Role"
+  },
+  "letter_role_ph": {
+    "message": "Backend Engineer"
+  },
+  "letter_subtitle": {
+    "message": "Written from your profile."
+  },
+  "letter_subtitle_sample": {
+    "message": "Written from your profile and your own cover letter."
+  },
+  "letter_tip_rest": {
+    "message": "above to save the job post, and the letter will match it. Or just fill in the company and role."
+  },
+  "letter_tip_use": {
+    "message": "Tip: use"
+  },
+  "letter_title": {
+    "message": "Cover letter"
+  },
+  "letter_write": {
+    "message": "Write cover letter"
+  },
+  "letter_write_again": {
+    "message": "Write again"
+  },
+  "library_cancel": {
+    "message": "Cancel"
+  },
+  "library_copied": {
+    "message": "Copied"
+  },
+  "library_copy": {
+    "message": "Copy"
+  },
+  "library_copy_failed": {
+    "message": "Couldn't copy. Select the text and copy it."
+  },
+  "library_delete": {
+    "message": "Delete"
+  },
+  "library_edit": {
+    "message": "Edit"
+  },
+  "library_edit_label": {
+    "message": "Edit saved answer"
+  },
+  "library_empty": {
+    "message": "Answers you insert, copy, or save show up here, so you can reuse them."
+  },
+  "library_no_match": {
+    "message": "No saved answers match."
+  },
+  "library_pin": {
+    "message": "Pin"
+  },
+  "library_pinned": {
+    "message": "pinned"
+  },
+  "library_save": {
+    "message": "Save"
+  },
+  "library_search": {
+    "message": "Search saved answers"
+  },
+  "library_unpin": {
+    "message": "Unpin"
+  },
+  "library_use": {
+    "message": "Use for this question"
+  },
+  "library_used_n": {
+    "message": "used $P1$ times",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "linkedin_about": {
+    "message": "About"
+  },
+  "linkedin_again": {
+    "message": "Write again"
+  },
+  "linkedin_copied": {
+    "message": "Copied"
+  },
+  "linkedin_copy": {
+    "message": "Copy"
+  },
+  "linkedin_copy_headline": {
+    "message": "Copy headline $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "linkedin_failed": {
+    "message": "Couldn't write the LinkedIn draft. Try again."
+  },
+  "linkedin_headlines": {
+    "message": "Headlines"
+  },
+  "linkedin_intro": {
+    "message": "Headline options and an About section."
+  },
+  "linkedin_role_label": {
+    "message": "Aim it at a role (optional)"
+  },
+  "linkedin_role_placeholder": {
+    "message": "Senior Backend Engineer"
+  },
+  "linkedin_run": {
+    "message": "Write my LinkedIn"
+  },
+  "linkedin_skills": {
+    "message": "Skills to feature"
+  },
+  "linkedin_title": {
+    "message": "LinkedIn"
+  },
+  "linkedin_writing": {
+    "message": "Writing from your profile…"
   },
   "menuAnswerField": {
     "message": "Answer this field"
   },
-  "menuJobSelection": {
-    "message": "Use selection as job post"
+  "menuFillForm": {
+    "message": "Fill this form with AnswerSnap"
   },
   "menuImportPage": {
     "message": "Import this page into AnswerSnap"
+  },
+  "menuJobSelection": {
+    "message": "Use selection as job post"
+  },
+  "menuSnipQuestion": {
+    "message": "Snip question"
+  },
+  "panel_add_your_resume": {
+    "message": "Add your resume"
+  },
+  "panel_allow_all_sites": {
+    "message": "Allow snipping from the panel on all sites"
+  },
+  "panel_cancel": {
+    "message": "Cancel"
+  },
+  "panel_connect_ai": {
+    "message": "Connect your AI"
+  },
+  "panel_error_capture_failed": {
+    "message": "Couldn't take the screenshot. Try again."
+  },
+  "panel_error_inject_failed": {
+    "message": "Couldn't start snipping on this page. Reload the page and try again."
+  },
+  "panel_error_needs_gesture": {
+    "message": "Press $P1$ or click the $P2$ icon to snip on this page.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "panel_error_restricted": {
+    "message": "Chrome doesn't let extensions read this page. Open the application form and try again."
+  },
+  "panel_fill_whole_form": {
+    "message": "Or fill the whole form at once"
+  },
+  "panel_hidden_text": {
+    "message": "This page has hidden text in the area you selected. It was left out."
+  },
+  "panel_job_selecting": {
+    "message": "Drag around the job post. Esc cancels."
+  },
+  "panel_nav": {
+    "message": "Panel"
+  },
+  "panel_no_text": {
+    "message": "No text found in the selection."
+  },
+  "panel_on_the_page": {
+    "message": "on the page"
+  },
+  "panel_or_press": {
+    "message": "or press"
+  },
+  "panel_question": {
+    "message": "Question"
+  },
+  "panel_reading": {
+    "message": "Reading"
+  },
+  "panel_ready": {
+    "message": "Ready when you are"
+  },
+  "panel_retry": {
+    "message": "Retry"
+  },
+  "panel_settings": {
+    "message": "Settings"
+  },
+  "panel_shortcuts": {
+    "message": "Keyboard shortcuts"
+  },
+  "panel_shortcuts_title": {
+    "message": "Keyboard shortcuts (?)"
+  },
+  "panel_snipped_region": {
+    "message": "Snipped region"
+  },
+  "panel_tab_answer": {
+    "message": "Answer"
+  },
+  "panel_tab_form": {
+    "message": "Form"
+  },
+  "panel_tab_job": {
+    "message": "Job"
+  },
+  "panel_tab_library": {
+    "message": "Library"
+  },
+  "panel_tab_profile": {
+    "message": "Profile"
   },
   "panelIdle": {
     "message": "Snip a question to draft an answer."
@@ -42,16 +1205,320 @@
   "panelSelecting": {
     "message": "Select the question on the page. Esc cancels."
   },
-  "buttonSnipQuestion": {
-    "message": "Snip question"
+  "profile_conflicts": {
+    "message": "Your sources disagree in $P1$ places. Check the profile.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
   },
-  "buttonOpenSettings": {
-    "message": "Open settings"
+  "profile_counts": {
+    "message": "$P1$ jobs, $P2$ projects, $P3$ skills",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
   },
-  "buttonAddResume": {
-    "message": "Add resume"
+  "profile_edit": {
+    "message": "Edit profile"
   },
-  "menuFillForm": {
-    "message": "Fill this form with AnswerSnap"
+  "profile_no_sources": {
+    "message": "None yet."
+  },
+  "profile_none": {
+    "message": "No profile yet. Answers use your sources directly until you build one."
+  },
+  "profile_none_using": {
+    "message": "No profile yet, using $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_cover_letter": {
+    "message": "cover letter"
+  },
+  "profile_part_note": {
+    "message": "$P1$ note",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_notes": {
+    "message": "$P1$ notes",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_resume": {
+    "message": "resume"
+  },
+  "profile_part_resumes": {
+    "message": "$P1$ resumes",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_site": {
+    "message": "$P1$ site",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_sites": {
+    "message": "$P1$ sites",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_stories": {
+    "message": "$P1$ stories",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_story": {
+    "message": "$P1$ story",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_ready": {
+    "message": "Profile ready"
+  },
+  "profile_ready_from": {
+    "message": "Profile ready: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_sources": {
+    "message": "Sources"
+  },
+  "profile_standard_answers": {
+    "message": "Standard answers"
+  },
+  "profile_unnamed": {
+    "message": "Unnamed candidate"
+  },
+  "reminder_many": {
+    "message": "$P1$ applications have had no news for a while. Click to see them.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "reminder_one": {
+    "message": "$P1$: $P2$, no news in $P3$ days.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "reminder_role_at_company": {
+    "message": "$P1$ at $P2$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "reminder_title": {
+    "message": "Time to follow up"
+  },
+  "reminder_your_application": {
+    "message": "Your application"
+  },
+  "resume_assumed": {
+    "message": "Assumed"
+  },
+  "resume_assumed_title": {
+    "message": "Not in your data: check before using"
+  },
+  "resume_bullets": {
+    "message": "Bullets"
+  },
+  "resume_copied": {
+    "message": "Copied"
+  },
+  "resume_copy": {
+    "message": "Copy"
+  },
+  "resume_copy_all": {
+    "message": "Copy all"
+  },
+  "resume_error": {
+    "message": "Couldn't tailor the resume. Try again."
+  },
+  "resume_for": {
+    "message": "For $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "resume_intro": {
+    "message": "Your real bullets, reworded in the job post's language. Facts and numbers stay the same."
+  },
+  "resume_needs_job": {
+    "message": "above, then get your resume bullets reworded for this job."
+  },
+  "resume_new_bullet": {
+    "message": "New bullet for a gap in your profile."
+  },
+  "resume_run_again": {
+    "message": "Tailor again"
+  },
+  "resume_running": {
+    "message": "Tailoring your resume…"
+  },
+  "resume_skills": {
+    "message": "Skills, in this order"
+  },
+  "resume_summary": {
+    "message": "Summary"
+  },
+  "resume_title": {
+    "message": "Tailor my resume"
+  },
+  "resume_was": {
+    "message": "Was: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "shortcuts_close": {
+    "message": "Close"
+  },
+  "shortcuts_copy": {
+    "message": "Copy the answer"
+  },
+  "shortcuts_insert": {
+    "message": "Insert the answer"
+  },
+  "shortcuts_regenerate": {
+    "message": "Regenerate"
+  },
+  "shortcuts_snip": {
+    "message": "Snip a question (on the page)"
+  },
+  "shortcuts_stop": {
+    "message": "Stop drafting, or cancel a snip"
+  },
+  "shortcuts_tabs": {
+    "message": "Answer, Job, Form, Library, Profile"
+  },
+  "shortcuts_this_list": {
+    "message": "This list"
+  },
+  "shortcuts_title": {
+    "message": "Keyboard shortcuts"
+  },
+  "shortcuts_versions": {
+    "message": "Previous or next version"
+  },
+  "status_applied": {
+    "message": "Applied"
+  },
+  "status_interviewing": {
+    "message": "Interviewing"
+  },
+  "status_offer": {
+    "message": "Offer"
+  },
+  "status_rejected": {
+    "message": "Rejected"
+  },
+  "status_saved": {
+    "message": "Saved"
+  },
+  "status_withdrawn": {
+    "message": "Withdrawn"
+  },
+  "tracker_application": {
+    "message": "Application"
+  },
+  "tracker_no_news": {
+    "message": "No news in $P1$ days.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "tracker_see_all": {
+    "message": "See all"
+  },
+  "tracker_track": {
+    "message": "Track this application"
+  },
+  "tracker_write_follow_up": {
+    "message": "Write a follow-up"
+  },
+  "version_another_angle": {
+    "message": "Another angle"
+  },
+  "version_facts_fixed": {
+    "message": "Facts fixed"
+  },
+  "version_first_draft": {
+    "message": "First draft"
+  },
+  "version_fit_limit": {
+    "message": "Fit limit"
+  },
+  "version_longer": {
+    "message": "Longer"
+  },
+  "version_more_casual": {
+    "message": "More casual"
+  },
+  "version_more_formal": {
+    "message": "More formal"
+  },
+  "version_shorter": {
+    "message": "Shorter"
+  },
+  "version_your_change": {
+    "message": "Your change"
   }
 }

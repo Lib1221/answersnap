@@ -57,6 +57,17 @@ Then open `chrome://extensions`, turn on Developer mode, click **Load unpacked**
 `.output/chrome-mv3`. Open the extension's settings, add your API key and your resume, and you're
 ready.
 
+**Firefox (experimental):** `pnpm build:firefox`, then open `about:debugging#/runtime/this-firefox`,
+click **Load Temporary Add-on**, and pick `.output/firefox-mv3/manifest.json`. The panel opens as
+Firefox's sidebar. If answers fail, allow the add-on's site access in `about:addons` >
+AnswerSnap > Permissions.
+
+## Languages
+
+The side panel is available in English, Amharic (አማርኛ), Spanish, and French, following Chrome's
+language. The translations were made with AI help; corrections are welcome. Settings pages are
+English for now.
+
 ## Development
 
 ```sh

@@ -1,3 +1,4 @@
+import { t } from '@/ui/i18n';
 import { fixFactsInstruction, type SentenceCheck } from './factCheck';
 import type { Limits } from './limits';
 import { REFINE } from './prompts';
@@ -42,19 +43,21 @@ export function refineInstruction(
 export function refineLabel(action: RefineAction): string {
   switch (action.kind) {
     case 'shorter':
-      return 'Shorter';
+      return t('version_shorter', 'Shorter');
     case 'longer':
-      return 'Longer';
+      return t('version_longer', 'Longer');
     case 'tone':
-      return action.tone === 'formal' ? 'More formal' : 'More casual';
+      return action.tone === 'formal'
+        ? t('version_more_formal', 'More formal')
+        : t('version_more_casual', 'More casual');
     case 'fit':
-      return 'Fit limit';
+      return t('version_fit_limit', 'Fit limit');
     case 'fix-facts':
-      return 'Facts fixed';
+      return t('version_facts_fixed', 'Facts fixed');
     case 'custom':
-      return 'Your change';
+      return t('version_your_change', 'Your change');
     case 'angle':
-      return 'Another angle';
+      return t('version_another_angle', 'Another angle');
   }
 }
 

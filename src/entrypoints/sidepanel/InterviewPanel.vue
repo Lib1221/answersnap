@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { KIND_LABELS, type InterviewQuestion } from '@/llm/interviewPrep';
 import Icon from '@/ui/AppIcon.vue';
+import { t } from '@/ui/i18n';
 import type { useInterview } from './useInterview';
 import type { useJob } from './useJob';
 
@@ -12,6 +13,10 @@ const props = defineProps<{
 const iv = props.state;
 const open = ref(new Set<string>());
 const copied = ref('');
+const ASSUMED_TITLE = t(
+  'interview_assumed_title',
+  "This answer claims experience your profile doesn't show",
+);
 
 function toggle(q: string) {
   const next = new Set(open.value);
@@ -39,10 +44,18 @@ async function copy(q: InterviewQuestion) {
     <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-soft text-ink">
       <Icon name="user" :size="22" />
     </div>
-    <h2 class="text-[15px] font-[650]">Save the job post first</h2>
+    <h2 class="text-[15px] font-[650]">
+      {{ t('job_save_post_first', 'Save the job post first') }}
+    </h2>
     <p class="text-[13px] text-graphite-2">
-      Use <strong class="text-graphite">Set job</strong> above, then get the questions this
-      interviewer is likely to ask, with answers from your profile.
+      {{ t('job_use', 'Use') }}
+      <strong class="text-graphite">{{ t('job_set_job', 'Set job') }}</strong>
+      {{
+        t(
+          'interview_needs_job',
+          'above, then get the questions this interviewer is likely to ask, with answers from your profile.',
+        )
+      }}
     </p>
   </section>
 
@@ -53,9 +66,11 @@ async function copy(q: InterviewQuestion) {
           <Icon name="user" :size="18" />
         </span>
         <div class="min-w-0 flex-1">
-          <h2 class="text-[15px] leading-tight font-[650]">Interview prep</h2>
+          <h2 class="text-[15px] leading-tight font-[650]">
+            {{ t('interview_title', 'Interview prep') }}
+          </h2>
           <p class="truncate text-[12.5px] text-graphite-2">
-            For {{ props.job.label(props.job.job.value) }}
+            {{ t('interview_for', 'For $1', props.job.label(props.job.job.value)) }}
           </p>
         </div>
       </div>
@@ -65,7 +80,7 @@ async function copy(q: InterviewQuestion) {
         class="flex items-center gap-2 text-[13px] text-graphite-2"
       >
         <span class="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden="true" />
-        Writing likely questions and answers…
+        {{ t('interview_running', 'Writing likely questions and answers…') }}
       </p>
       <p v-if="iv.error.value" class="notice text-[13px]" role="alert">{{ iv.error.value }}</p>
       <button
@@ -77,7 +92,11 @@ async function copy(q: InterviewQuestion) {
         @click="iv.run"
       >
         <Icon :name="iv.questions.value.length ? 'refresh' : 'sparkle'" />
-        {{ iv.questions.value.length ? 'New questions' : 'Prepare questions' }}
+        {{
+          iv.questions.value.length
+            ? t('interview_run_again', 'New questions')
+            : t('interview_run', 'Prepare questions')
+        }}
       </button>
     </section>
 
@@ -92,9 +111,9 @@ async function copy(q: InterviewQuestion) {
           <span
             v-if="q.assumed"
             class="chip min-h-0 border-canary-edge bg-canary py-0.5 text-[11.5px]"
-            title="This answer claims experience your profile doesn't show"
+            :title="ASSUMED_TITLE"
           >
-            Assumed
+            {{ t('interview_assumed', 'Assumed') }}
           </span>
         </div>
         <p class="font-medium">{{ q.question }}</p>
@@ -105,7 +124,11 @@ async function copy(q: InterviewQuestion) {
           :aria-expanded="open.has(q.question)"
           @click="toggle(q.question)"
         >
-          {{ open.has(q.question) ? 'Hide answer' : 'Show suggested answer' }}
+          {{
+            open.has(q.question)
+              ? t('interview_hide_answer', 'Hide answer')
+              : t('interview_show_answer', 'Show suggested answer')
+          }}
         </button>
         <template v-if="open.has(q.question)">
           <p
@@ -119,7 +142,11 @@ async function copy(q: InterviewQuestion) {
           <div class="flex flex-wrap gap-2">
             <button class="btn min-h-0 py-1 text-[13px]" type="button" @click="copy(q)">
               <Icon :name="copied === q.question ? 'check' : 'copy'" :size="14" />
-              {{ copied === q.question ? 'Copied' : 'Copy' }}
+              {{
+                copied === q.question
+                  ? t('interview_copied', 'Copied')
+                  : t('interview_copy', 'Copy')
+              }}
             </button>
             <button
               class="btn min-h-0 py-1 text-[13px]"
@@ -128,7 +155,11 @@ async function copy(q: InterviewQuestion) {
               @click="iv.save(q)"
             >
               <Icon :name="iv.saved.value.has(q.question) ? 'check' : 'bookmark'" :size="14" />
-              {{ iv.saved.value.has(q.question) ? 'Saved' : 'Save to Library' }}
+              {{
+                iv.saved.value.has(q.question)
+                  ? t('interview_saved', 'Saved')
+                  : t('interview_save', 'Save to Library')
+              }}
             </button>
           </div>
         </template>

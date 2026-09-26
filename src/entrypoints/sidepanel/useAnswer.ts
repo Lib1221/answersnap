@@ -33,6 +33,7 @@ import {
 import { rankMatches, STRONG_MATCH } from '@/kb/similarity';
 import { getApiKey, getSettings, lastRequestItem } from '@/storage/items';
 import type { PendingCapture, Settings } from '@/storage/schema';
+import { t } from '@/ui/i18n';
 
 export type AnswerPhase =
   | 'idle'
@@ -71,32 +72,44 @@ async function shrinkImage(
 
 export function hoursFromNow(ms: number): string {
   const h = Math.max(1, Math.round(ms / 3_600_000));
-  return h === 1 ? 'about an hour' : `about ${h} hours`;
+  return h === 1
+    ? t('answer_about_an_hour', 'about an hour')
+    : t('answer_about_hours', 'about $1 hours', String(h));
 }
 
 export function errorMessage(err: LlmError, settings: Settings | null): string {
   if (err instanceof AllModelsExhausted) {
     return err.quota === 'day'
-      ? `All your Gemini models have reached their free limits for today. They come back in ${hoursFromNow(err.resetsInMs)} (midnight Pacific time). A paid key removes the limit.`
-      : 'All your Gemini models are at their per-minute limit. Try again in a minute.';
+      ? t(
+          'answer_err_gemini_all_day',
+          'All your Gemini models have reached their free limits for today. They come back in $1 (midnight Pacific time). A paid key removes the limit.',
+          hoursFromNow(err.resetsInMs),
+        )
+      : t(
+          'answer_err_gemini_all_minute',
+          'All your Gemini models are at their per-minute limit. Try again in a minute.',
+        );
   }
   switch (err.kind) {
     case 'auth':
-      return 'The API key was rejected. Check it in Settings.';
+      return t('answer_err_auth', 'The API key was rejected. Check it in Settings.');
     case 'rate_limit':
       // Free-tier quota: Google's QuotaFailure details, or its message naming the free tier.
       if (settings?.provider === 'gemini' && (err.quota || /free_tier/i.test(err.message))) {
         // Free-tier quotas are per model and per minute or per day (about 20 a day on 3.8 Flash).
-        return "You've reached Gemini's free-tier limit for this model. Wait a bit, switch to another Gemini model in Settings, or use a paid key.";
+        return t(
+          'answer_err_gemini_free_tier',
+          "You've reached Gemini's free-tier limit for this model. Wait a bit, switch to another Gemini model in Settings, or use a paid key.",
+        );
       }
-      return 'Rate limited by the API. Wait a minute and try again.';
+      return t('answer_err_rate_limit', 'Rate limited by the API. Wait a minute and try again.');
     case 'overloaded':
     case 'server':
-      return 'The AI service is busy. Try again in a moment.';
+      return t('answer_err_busy', 'The AI service is busy. Try again in a moment.');
     case 'network':
-      return "Can't reach the AI service. Check your connection.";
+      return t('answer_err_network', "Can't reach the AI service. Check your connection.");
     case 'no_key':
-      return 'Add your API key to start.';
+      return t('panelNeedsKey', 'Add your API key to start.');
     default:
       return err.message;
   }
@@ -248,15 +261,31 @@ export function useAnswer() {
               usage.value = e.usage;
             } else if (e.kind === 'fallback') {
               model.value = e.to;
-              const limit = e.reason === 'day' ? 'daily' : 'per-minute';
-              fallbackNote.value = `${shortModelName(e.from)} reached its ${limit} free limit, so this answer uses ${shortModelName(e.to)}.`;
+              fallbackNote.value =
+                e.reason === 'day'
+                  ? t(
+                      'answer_fallback_day',
+                      '$1 reached its daily free limit, so this answer uses $2.',
+                      shortModelName(e.from),
+                      shortModelName(e.to),
+                    )
+                  : t(
+                      'answer_fallback_minute',
+                      '$1 reached its per-minute free limit, so this answer uses $2.',
+                      shortModelName(e.from),
+                      shortModelName(e.to),
+                    );
             } else if (e.kind === 'retry') {
               retryNote.value =
                 e.reason === 'rate_limit'
-                  ? `Rate limited by the API. Retrying in ${Math.ceil(e.waitMs / 1000)} seconds.`
+                  ? t(
+                      'answer_retry_rate_limit',
+                      'Rate limited by the API. Retrying in $1 seconds.',
+                      String(Math.ceil(e.waitMs / 1000)),
+                    )
                   : e.reason === 'overloaded'
-                    ? 'The AI service is busy. Retrying.'
-                    : "Can't reach the AI service. Retrying.";
+                    ? t('answer_retry_busy', 'The AI service is busy. Retrying.')
+                    : t('answer_retry_network', "Can't reach the AI service. Retrying.");
             }
           },
         );
@@ -379,7 +408,14 @@ export function useAnswer() {
     const raw = await streamTurn([first], capture.image);
     if (raw !== null && convo) {
       convo.lastRaw = raw;
-      versions.value = [{ label: 'First draft', text: answer.value, raw, history: [first] }];
+      versions.value = [
+        {
+          label: t('version_first_draft', 'First draft'),
+          text: answer.value,
+          raw,
+          history: [first],
+        },
+      ];
       versionIndex.value = 0;
       canRefine.value = true;
       void checkFacts();

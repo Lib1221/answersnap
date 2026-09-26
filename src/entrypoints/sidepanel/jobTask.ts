@@ -5,6 +5,7 @@ import { createAppProvider, type LlmProvider } from '@/llm/provider';
 import type { StreamEvent } from '@/llm/types';
 import { getApiKey, getSettings } from '@/storage/items';
 import type { Settings } from '@/storage/schema';
+import { t } from '@/ui/i18n';
 import { errorMessage } from './useAnswer';
 
 export type JobTask =
@@ -17,10 +18,13 @@ export async function prepareJobTask(
 ): Promise<JobTask> {
   const settings = await getSettings();
   const key = await getApiKey(settings.provider);
-  if (!key) return { ok: false, error: 'Add your API key to start.' };
+  if (!key) return { ok: false, error: t('job_add_key', 'Add your API key to start.') };
   const data = await loadCandidateData();
   if (!hasCandidateData(data))
-    return { ok: false, error: 'Add your resume so there is something to compare.' };
+    return {
+      ok: false,
+      error: t('job_add_resume', 'Add your resume so there is something to compare.'),
+    };
   return {
     ok: true,
     settings,

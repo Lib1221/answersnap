@@ -2,6 +2,7 @@
 import { ref, shallowRef } from 'vue';
 import { runLinkedIn, type LinkedInDraft } from '@/llm/linkedin';
 import Icon from '@/ui/AppIcon.vue';
+import { t } from '@/ui/i18n';
 import { jobTaskError, prepareJobTask } from './jobTask';
 
 const targetRole = ref('');
@@ -24,7 +25,11 @@ async function write() {
       styleRules: task.settings.styleRules,
     });
   } catch (err) {
-    error.value = jobTaskError(err, task.settings, "Couldn't write the LinkedIn draft. Try again.");
+    error.value = jobTaskError(
+      err,
+      task.settings,
+      t('linkedin_failed', "Couldn't write the LinkedIn draft. Try again."),
+    );
   } finally {
     busy.value = false;
   }
@@ -48,22 +53,24 @@ async function copy(id: string, text: string) {
         <Icon name="user" :size="18" />
       </span>
       <div>
-        <h2 class="text-[15px] leading-tight font-[650]">LinkedIn</h2>
-        <p class="text-[12.5px] text-graphite-2">Headline options and an About section.</p>
+        <h2 class="text-[15px] leading-tight font-[650]">{{ t('linkedin_title', 'LinkedIn') }}</h2>
+        <p class="text-[12.5px] text-graphite-2">
+          {{ t('linkedin_intro', 'Headline options and an About section.') }}
+        </p>
       </div>
     </div>
     <label class="flex flex-col gap-1 text-[13px] font-medium">
-      Aim it at a role (optional)
+      {{ t('linkedin_role_label', 'Aim it at a role (optional)') }}
       <input
         v-model="targetRole"
         class="field-input px-2.5 py-1.5 font-normal"
-        placeholder="Senior Backend Engineer"
+        :placeholder="t('linkedin_role_placeholder', 'Senior Backend Engineer')"
         data-testid="linkedin-role"
       />
     </label>
     <p v-if="busy" role="status" class="flex items-center gap-2 text-[13px] text-graphite-2">
       <span class="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden="true" />
-      Writing from your profile…
+      {{ t('linkedin_writing', 'Writing from your profile…') }}
     </p>
     <p v-if="error" class="notice text-[13px]" role="alert">{{ error }}</p>
     <button
@@ -75,12 +82,12 @@ async function copy(id: string, text: string) {
       @click="write"
     >
       <Icon :name="draft ? 'refresh' : 'sparkle'" />
-      {{ draft ? 'Write again' : 'Write my LinkedIn' }}
+      {{ draft ? t('linkedin_again', 'Write again') : t('linkedin_run', 'Write my LinkedIn') }}
     </button>
 
     <template v-if="draft && !busy">
       <div class="flex flex-col gap-2">
-        <p class="eyebrow">Headlines</p>
+        <p class="eyebrow">{{ t('linkedin_headlines', 'Headlines') }}</p>
         <ul class="flex flex-col gap-2" data-testid="linkedin-headlines">
           <li
             v-for="(h, i) in draft.headlines"
@@ -91,7 +98,7 @@ async function copy(id: string, text: string) {
             <button
               class="btn btn-quiet min-h-0 shrink-0 p-1"
               type="button"
-              :aria-label="`Copy headline ${i + 1}`"
+              :aria-label="t('linkedin_copy_headline', 'Copy headline $1', String(i + 1))"
               @click="copy(`h${i}`, h)"
             >
               <Icon :name="copied === `h${i}` ? 'check' : 'copy'" :size="14" />
@@ -101,14 +108,14 @@ async function copy(id: string, text: string) {
       </div>
       <div class="flex flex-col gap-2">
         <div class="flex items-center justify-between">
-          <p class="eyebrow">About</p>
+          <p class="eyebrow">{{ t('linkedin_about', 'About') }}</p>
           <button
             class="btn btn-quiet min-h-0 text-[12.5px]"
             type="button"
             @click="copy('about', draft.about)"
           >
             <Icon :name="copied === 'about' ? 'check' : 'copy'" :size="14" />
-            {{ copied === 'about' ? 'Copied' : 'Copy' }}
+            {{ copied === 'about' ? t('linkedin_copied', 'Copied') : t('linkedin_copy', 'Copy') }}
           </button>
         </div>
         <p
@@ -119,7 +126,7 @@ async function copy(id: string, text: string) {
         </p>
       </div>
       <div v-if="draft.skills.length" class="flex flex-col gap-2">
-        <p class="eyebrow">Skills to feature</p>
+        <p class="eyebrow">{{ t('linkedin_skills', 'Skills to feature') }}</p>
         <ul class="flex flex-wrap gap-1.5">
           <li v-for="k in draft.skills" :key="k" class="chip">{{ k }}</li>
         </ul>

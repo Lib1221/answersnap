@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { LETTER_LENGTHS, type LetterLength } from '@/kb/coverLetter';
 import Icon from '@/ui/AppIcon.vue';
+import { t } from '@/ui/i18n';
 import AnswerPanel from './AnswerPanel.vue';
 import type { useJob } from './useJob';
 import type { useLetter } from './useLetter';
@@ -25,9 +26,15 @@ const started = computed(() => l.answer.phase.value !== 'idle');
         <Icon name="mail" :size="18" />
       </span>
       <div>
-        <h2 class="text-[15px] leading-tight font-[650]">Cover letter</h2>
+        <h2 class="text-[15px] leading-tight font-[650]">
+          {{ t('letter_title', 'Cover letter') }}
+        </h2>
         <p class="text-[12.5px] text-graphite-2">
-          Written from your profile{{ l.hasSample.value ? ' and your own cover letter' : '' }}.
+          {{
+            l.hasSample.value
+              ? t('letter_subtitle_sample', 'Written from your profile and your own cover letter.')
+              : t('letter_subtitle', 'Written from your profile.')
+          }}
         </p>
       </div>
     </div>
@@ -38,7 +45,13 @@ const started = computed(() => l.answer.phase.value !== 'idle');
       data-testid="letter-job"
     >
       <Icon name="briefcase" :size="15" class="mt-0.5 shrink-0" />
-      Tailored to the job post saved for {{ props.job.hostname.value }}.
+      {{
+        t(
+          'letter_job_saved',
+          'Tailored to the job post saved for $1.',
+          props.job.hostname.value ?? '',
+        )
+      }}
     </p>
     <p
       v-else
@@ -47,34 +60,40 @@ const started = computed(() => l.answer.phase.value !== 'idle');
     >
       <Icon name="briefcase" :size="15" class="mt-0.5 shrink-0" />
       <span>
-        Tip: use <strong class="text-graphite">Set job</strong> above to save the job post, and the
-        letter will match it. Or just fill in the company and role.
+        {{ t('letter_tip_use', 'Tip: use') }}
+        <strong class="text-graphite">{{ t('job_set_job', 'Set job') }}</strong>
+        {{
+          t(
+            'letter_tip_rest',
+            'above to save the job post, and the letter will match it. Or just fill in the company and role.',
+          )
+        }}
       </span>
     </p>
 
     <div class="grid grid-cols-2 gap-2">
       <label class="flex flex-col gap-1 text-[13px] font-medium">
-        Company
+        {{ t('letter_company', 'Company') }}
         <input
           v-model="l.company.value"
           class="field-input px-2.5 py-1.5 font-normal"
-          placeholder="Acme"
+          :placeholder="t('letter_company_ph', 'Acme')"
           data-testid="letter-company"
         />
       </label>
       <label class="flex flex-col gap-1 text-[13px] font-medium">
-        Role
+        {{ t('letter_role', 'Role') }}
         <input
           v-model="l.role.value"
           class="field-input px-2.5 py-1.5 font-normal"
-          placeholder="Backend Engineer"
+          :placeholder="t('letter_role_ph', 'Backend Engineer')"
           data-testid="letter-role"
         />
       </label>
     </div>
 
     <fieldset class="flex flex-col gap-1">
-      <legend class="mb-1 text-[13px] font-medium">Length</legend>
+      <legend class="mb-1 text-[13px] font-medium">{{ t('letter_length', 'Length') }}</legend>
       <div class="grid grid-cols-3 gap-1 rounded-[10px] bg-rule/60 p-1" role="radiogroup">
         <button
           v-for="[id, info] in LENGTHS"
@@ -96,12 +115,17 @@ const started = computed(() => l.answer.phase.value !== 'idle');
     </fieldset>
 
     <label class="flex flex-col gap-1 text-[13px] font-medium">
-      Anything to mention (optional)
+      {{ t('letter_notes', 'Anything to mention (optional)') }}
       <textarea
         v-model="l.notes.value"
         rows="2"
         class="field-input px-2.5 py-1.5 font-normal"
-        placeholder="For example: I can start in two weeks, or mention my open source work"
+        :placeholder="
+          t(
+            'letter_notes_ph',
+            'For example: I can start in two weeks, or mention my open source work',
+          )
+        "
         data-testid="letter-notes"
       />
     </label>
@@ -115,7 +139,9 @@ const started = computed(() => l.answer.phase.value !== 'idle');
         @click="l.write"
       >
         <Icon name="pen" />
-        {{ started ? 'Write again' : 'Write cover letter' }}
+        {{
+          started ? t('letter_write_again', 'Write again') : t('letter_write', 'Write cover letter')
+        }}
       </button>
       <button
         v-if="!l.hasSample.value"
@@ -124,7 +150,7 @@ const started = computed(() => l.answer.phase.value !== 'idle');
         data-testid="letter-add-own"
         @click="emit('openSettings', 'cover-letter')"
       >
-        Add your own cover letter
+        {{ t('letter_add_own', 'Add your own cover letter') }}
       </button>
     </div>
   </section>

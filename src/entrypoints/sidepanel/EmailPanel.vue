@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { EMAIL_KINDS, mailtoUrl, type EmailKind } from '@/kb/emails';
 import Icon from '@/ui/AppIcon.vue';
+import { t } from '@/ui/i18n';
 import AnswerPanel from './AnswerPanel.vue';
 import type { useEmail } from './useEmail';
 
@@ -26,13 +27,15 @@ function openMail() {
         <Icon name="pen" :size="18" />
       </span>
       <div>
-        <h2 class="text-[15px] leading-tight font-[650]">Emails</h2>
-        <p class="text-[12.5px] text-graphite-2">Thank-you notes, follow-ups, and offer replies.</p>
+        <h2 class="text-[15px] leading-tight font-[650]">{{ t('email_title', 'Emails') }}</h2>
+        <p class="text-[12.5px] text-graphite-2">
+          {{ t('email_subtitle', 'Thank-you notes, follow-ups, and offer replies.') }}
+        </p>
       </div>
     </div>
 
     <label class="flex flex-col gap-1 text-[13px] font-medium">
-      Email
+      {{ t('email_kind', 'Email') }}
       <select
         v-model="e.kind.value"
         class="field-input px-2.5 py-1.5 font-normal"
@@ -44,26 +47,26 @@ function openMail() {
 
     <div class="grid grid-cols-2 gap-2">
       <label class="flex flex-col gap-1 text-[13px] font-medium">
-        Company
+        {{ t('email_company', 'Company') }}
         <input v-model="e.company.value" class="field-input px-2.5 py-1.5 font-normal" />
       </label>
       <label class="flex flex-col gap-1 text-[13px] font-medium">
-        Role
+        {{ t('email_role', 'Role') }}
         <input v-model="e.role.value" class="field-input px-2.5 py-1.5 font-normal" />
       </label>
     </div>
 
     <label class="flex flex-col gap-1 text-[13px] font-medium">
-      To (optional)
+      {{ t('email_to', 'To (optional)') }}
       <input
         v-model="e.recipient.value"
         class="field-input px-2.5 py-1.5 font-normal"
-        placeholder="Dana Reyes"
+        :placeholder="t('email_to_ph', 'Dana Reyes')"
         data-testid="email-to"
       />
     </label>
     <label class="flex flex-col gap-1 text-[13px] font-medium">
-      What to mention (optional)
+      {{ t('email_notes', 'What to mention (optional)') }}
       <textarea
         v-model="e.notes.value"
         rows="2"
@@ -80,7 +83,8 @@ function openMail() {
       data-testid="email-write"
       @click="e.write"
     >
-      <Icon name="pen" /> {{ started ? 'Write again' : 'Write email' }}
+      <Icon name="pen" />
+      {{ started ? t('email_write_again', 'Write again') : t('email_write', 'Write email') }}
     </button>
   </section>
 
@@ -98,6 +102,6 @@ function openMail() {
     data-testid="email-open"
     @click="openMail"
   >
-    <Icon name="mail" /> Open in email app
+    <Icon name="mail" /> {{ t('email_open', 'Open in email app') }}
   </button>
 </template>

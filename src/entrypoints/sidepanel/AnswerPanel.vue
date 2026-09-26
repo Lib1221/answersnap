@@ -6,6 +6,7 @@ import { cutAtLastSentence } from '@/llm/conversation';
 import { costLine, usageLine } from '@/llm/cost';
 import FactCheck from './FactCheck.vue';
 import Icon from '@/ui/AppIcon.vue';
+import { t } from '@/ui/i18n';
 import type { FieldInfo } from '@/storage/schema';
 import type { useAnswer } from './useAnswer';
 import type { useInsert } from './useInsert';
@@ -23,19 +24,21 @@ const ins = props.insert;
 const appendOpen = ref(false);
 
 const KIND_NAMES: Record<FieldInfo['kind'], string> = {
-  input: 'input',
-  textarea: 'text box',
-  contenteditable: 'editor',
-  select: 'dropdown',
-  'radio-group': 'choice',
-  'checkbox-group': 'checkboxes',
+  input: t('answer_kind_input', 'input'),
+  textarea: t('answer_kind_textarea', 'text box'),
+  contenteditable: t('answer_kind_editor', 'editor'),
+  select: t('answer_kind_select', 'dropdown'),
+  'radio-group': t('answer_kind_radio', 'choice'),
+  'checkbox-group': t('answer_kind_checkbox', 'checkboxes'),
 };
 
 const targetText = computed(() => {
   const f = ins.target.value;
   if (!f) return null;
-  if (f.inIframe) return 'a field inside an embedded frame';
-  return f.label ? `"${f.label}" ${KIND_NAMES[f.kind]}` : KIND_NAMES[f.kind];
+  if (f.inIframe) return t('answer_target_iframe', 'a field inside an embedded frame');
+  return f.label
+    ? t('answer_target_labeled', '"$1" $2', f.label, KIND_NAMES[f.kind])
+    : KIND_NAMES[f.kind];
 });
 
 const streaming = computed(() => s.phase.value === 'streaming' || s.phase.value === 'drafting');
@@ -62,9 +65,17 @@ function cut() {
 const counter = computed(() => {
   const l = s.limits.value;
   const parts = [
-    `${s.chars.value.toLocaleString()} / ${(l?.maxChars ?? 0).toLocaleString()} characters`,
+    t(
+      'answer_counter_chars',
+      '$1 / $2 characters',
+      s.chars.value.toLocaleString(),
+      (l?.maxChars ?? 0).toLocaleString(),
+    ),
   ];
-  if (l?.maxWords) parts.push(`${s.words.value} / ${l.maxWords} words`);
+  if (l?.maxWords)
+    parts.push(
+      t('answer_counter_words', '$1 / $2 words', String(s.words.value), String(l.maxWords)),
+    );
   return parts.join(', ');
 });
 
@@ -100,10 +111,10 @@ const cacheOff = computed(() => {
       <Icon :name="variant ? 'mail' : 'sparkle'" :size="14" class="text-ink" />
       {{
         variant === 'letter'
-          ? 'Your cover letter'
+          ? t('answer_heading_letter', 'Your cover letter')
           : variant === 'email'
-            ? 'Your email'
-            : 'Your answer'
+            ? t('answer_heading_email', 'Your email')
+            : t('answer_heading', 'Your answer')
       }}
     </p>
     <p
@@ -120,7 +131,7 @@ const cacheOff = computed(() => {
       class="flex items-center gap-2 text-graphite-2"
     >
       <span class="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden="true" />
-      {{ s.retryNote.value || 'Drafting' }}
+      {{ s.retryNote.value || t('answer_drafting', 'Drafting') }}
     </p>
     <p v-else-if="s.retryNote.value" role="status" class="text-graphite-2">
       {{ s.retryNote.value }}
@@ -135,27 +146,34 @@ const cacheOff = computed(() => {
         <button
           class="btn btn-icon min-h-0 p-1"
           type="button"
-          aria-label="Previous version"
+          :aria-label="t('answer_prev_version', 'Previous version')"
           :disabled="streaming || s.versionIndex.value === 0"
           @click="s.showVersion(s.versionIndex.value - 1)"
         >
           ‹
         </button>
         <span class="tabular-nums" data-testid="version-label">
-          Version {{ s.versionIndex.value + 1 }} of {{ s.versions.value.length }}:
-          {{ s.versions.value[s.versionIndex.value]?.label }}
+          {{
+            t(
+              'answer_version_of',
+              'Version $1 of $2: $3',
+              String(s.versionIndex.value + 1),
+              String(s.versions.value.length),
+              s.versions.value[s.versionIndex.value]?.label ?? '',
+            )
+          }}
         </span>
         <button
           class="btn btn-icon min-h-0 p-1"
           type="button"
-          aria-label="Next version"
+          :aria-label="t('answer_next_version', 'Next version')"
           :disabled="streaming || s.versionIndex.value === s.versions.value.length - 1"
           @click="s.showVersion(s.versionIndex.value + 1)"
         >
           ›
         </button>
       </div>
-      <label class="sr-only" for="answer">Answer</label>
+      <label class="sr-only" for="answer">{{ t('answer_label', 'Answer') }}</label>
       <textarea
         id="answer"
         v-model="s.answer.value"
@@ -171,12 +189,14 @@ const cacheOff = computed(() => {
       >
         {{ counter }}
       </p>
-      <p class="sr-only" aria-live="polite">{{ s.phase.value === 'done' ? 'Answer ready' : '' }}</p>
+      <p class="sr-only" aria-live="polite">
+        {{ s.phase.value === 'done' ? t('answer_ready', 'Answer ready') : '' }}
+      </p>
 
       <ul
         v-if="s.parsed.value?.missing.length"
         class="flex flex-wrap gap-2"
-        aria-label="Missing information"
+        :aria-label="t('answer_missing', 'Missing information')"
       >
         <li v-for="item in s.parsed.value.missing" :key="item">
           <button
@@ -204,7 +224,7 @@ const cacheOff = computed(() => {
 
       <div class="flex flex-wrap items-center gap-2">
         <button v-if="streaming" class="btn" type="button" @click="s.stop">
-          <Icon name="stop" /> Stop
+          <Icon name="stop" /> {{ t('answer_stop', 'Stop') }}
         </button>
         <template v-else>
           <span v-if="ins.fillable.value" class="inline-flex">
@@ -217,13 +237,19 @@ const cacheOff = computed(() => {
               @click="ins.insert('replace')"
             >
               <Icon :name="ins.isChoice.value ? 'check' : 'insert'" />
-              {{ ins.isChoice.value ? 'Select' : ins.hasExisting.value ? 'Replace' : 'Insert' }}
+              {{
+                ins.isChoice.value
+                  ? t('answer_select', 'Select')
+                  : ins.hasExisting.value
+                    ? t('answer_replace', 'Replace')
+                    : t('answer_insert', 'Insert')
+              }}
             </button>
             <button
               v-if="ins.hasExisting.value"
               class="btn btn-primary rounded-l-none border-l-paper px-2"
               type="button"
-              aria-label="More insert options"
+              :aria-label="t('answer_more_insert', 'More insert options')"
               :aria-expanded="appendOpen"
               :disabled="!ins.canInsert.value || ins.busy.value"
               @click="appendOpen = !appendOpen"
@@ -238,7 +264,7 @@ const cacheOff = computed(() => {
             :disabled="!ins.canInsert.value"
             @click="((appendOpen = false), ins.insert('append'))"
           >
-            Append
+            {{ t('answer_append', 'Append') }}
           </button>
           <button
             class="btn"
@@ -247,13 +273,13 @@ const cacheOff = computed(() => {
             :disabled="!s.answer.value"
             @click="ins.copy"
           >
-            <Icon name="copy" /> Copy
+            <Icon name="copy" /> {{ t('answer_copy', 'Copy') }}
           </button>
           <button class="btn btn-quiet" type="button" @click="ins.saveToLibrary">
-            <Icon name="bookmark" :size="15" /> Save
+            <Icon name="bookmark" :size="15" /> {{ t('answer_save', 'Save') }}
           </button>
           <button class="btn btn-quiet" type="button" @click="s.retry">
-            <Icon name="refresh" :size="15" /> Regenerate
+            <Icon name="refresh" :size="15" /> {{ t('answer_regenerate', 'Regenerate') }}
           </button>
         </template>
         <span
@@ -272,7 +298,7 @@ const cacheOff = computed(() => {
         class="flex flex-col gap-2"
         data-testid="refine"
       >
-        <p class="eyebrow">Refine</p>
+        <p class="eyebrow">{{ t('answer_refine', 'Refine') }}</p>
         <div class="flex flex-wrap gap-1.5">
           <template v-if="s.overLimit.value">
             <button
@@ -280,41 +306,51 @@ const cacheOff = computed(() => {
               type="button"
               @click="s.refine({ kind: 'fit' })"
             >
-              Fit limit
+              {{ t('answer_fit_limit', 'Fit limit') }}
             </button>
             <button
               class="chip border-carbon-pink-text text-carbon-pink-text"
               type="button"
               @click="cut"
             >
-              Cut at last sentence
+              {{ t('answer_cut', 'Cut at last sentence') }}
             </button>
           </template>
-          <button class="chip" type="button" @click="s.refine({ kind: 'shorter' })">Shorter</button>
-          <button class="chip" type="button" @click="s.refine({ kind: 'longer' })">Longer</button>
+          <button class="chip" type="button" @click="s.refine({ kind: 'shorter' })">
+            {{ t('answer_shorter', 'Shorter') }}
+          </button>
+          <button class="chip" type="button" @click="s.refine({ kind: 'longer' })">
+            {{ t('answer_longer', 'Longer') }}
+          </button>
           <button class="chip" type="button" @click="s.refine({ kind: 'tone', tone: 'formal' })">
-            More formal
+            {{ t('answer_more_formal', 'More formal') }}
           </button>
           <button class="chip" type="button" @click="s.refine({ kind: 'tone', tone: 'casual' })">
-            More casual
+            {{ t('answer_more_casual', 'More casual') }}
           </button>
           <button class="chip" type="button" @click="s.refine({ kind: 'angle' })">
-            Another angle
+            {{ t('answer_another_angle', 'Another angle') }}
           </button>
         </div>
         <form class="flex gap-2" @submit.prevent="sendChange">
-          <label for="change-request" class="sr-only">Change it</label>
+          <label for="change-request" class="sr-only">{{
+            t('answer_change_it', 'Change it')
+          }}</label>
           <input
             id="change-request"
             v-model="changeRequest"
             class="field-input min-w-0 flex-1"
-            placeholder="Change it..."
+            :placeholder="t('answer_change_placeholder', 'Change it...')"
             data-testid="change-request"
           />
-          <button class="btn" type="submit" :disabled="!changeRequest.trim()">Send</button>
+          <button class="btn" type="submit" :disabled="!changeRequest.trim()">
+            {{ t('answer_send', 'Send') }}
+          </button>
         </form>
       </div>
-      <p v-if="s.phase.value === 'stopped'" class="text-[13px] text-graphite-2">Stopped.</p>
+      <p v-if="s.phase.value === 'stopped'" class="text-[13px] text-graphite-2">
+        {{ t('answer_stopped', 'Stopped.') }}
+      </p>
     </template>
 
     <div
@@ -323,21 +359,31 @@ const cacheOff = computed(() => {
       data-testid="reuse-card"
     >
       <p class="flex items-center gap-1.5 font-[650]">
-        <Icon name="bookmark" :size="15" class="text-ink" /> You answered this before
+        <Icon name="bookmark" :size="15" class="text-ink" />
+        {{ t('answer_reuse_title', 'You answered this before') }}
       </p>
       <p class="text-[13px] text-graphite-2">
         {{ s.match.value.entry.question }} ({{ s.match.value.entry.hostname }})
       </p>
       <p class="whitespace-pre-wrap">{{ s.match.value.entry.answer }}</p>
       <div class="flex flex-wrap gap-2">
-        <button class="btn btn-primary" type="button" @click="s.reuse()">Reuse</button>
-        <button class="btn" type="button" @click="s.adapt">Adapt</button>
-        <button class="btn btn-quiet" type="button" @click="s.writeNew">Write new</button>
+        <button class="btn btn-primary" type="button" @click="s.reuse()">
+          {{ t('answer_reuse', 'Reuse') }}
+        </button>
+        <button class="btn" type="button" @click="s.adapt">{{ t('answer_adapt', 'Adapt') }}</button>
+        <button class="btn btn-quiet" type="button" @click="s.writeNew">
+          {{ t('answer_write_new', 'Write new') }}
+        </button>
       </div>
     </div>
 
     <p v-else-if="s.phase.value === 'assessment'" data-testid="assessment">
-      This looks like a test question. AnswerSnap only drafts answers about your own background.
+      {{
+        t(
+          'answer_assessment',
+          'This looks like a test question. AnswerSnap only drafts answers about your own background.',
+        )
+      }}
     </p>
 
     <div
@@ -352,9 +398,11 @@ const cacheOff = computed(() => {
         type="button"
         @click="emit('openSettings', 'provider')"
       >
-        Open settings
+        {{ t('buttonOpenSettings', 'Open settings') }}
       </button>
-      <button v-else class="btn btn-primary" type="button" @click="s.retry">Retry</button>
+      <button v-else class="btn btn-primary" type="button" @click="s.retry">
+        {{ t('panel_retry', 'Retry') }}
+      </button>
     </div>
 
     <div
@@ -362,9 +410,9 @@ const cacheOff = computed(() => {
       class="flex flex-col items-start gap-2"
       data-testid="needs-key"
     >
-      <p>Add your API key to start.</p>
+      <p>{{ t('panelNeedsKey', 'Add your API key to start.') }}</p>
       <button class="btn btn-primary" type="button" @click="emit('openSettings', 'provider')">
-        Open settings
+        {{ t('buttonOpenSettings', 'Open settings') }}
       </button>
     </div>
 
@@ -373,9 +421,9 @@ const cacheOff = computed(() => {
       class="flex flex-col items-start gap-2"
       data-testid="needs-profile"
     >
-      <p>Add your resume so answers have something to draw from.</p>
+      <p>{{ t('panelNeedsProfile', 'Add your resume so answers have something to draw from.') }}</p>
       <button class="btn btn-primary" type="button" @click="emit('openSettings', 'sources')">
-        Add resume
+        {{ t('buttonAddResume', 'Add resume') }}
       </button>
     </div>
 
@@ -385,20 +433,29 @@ const cacheOff = computed(() => {
       @mouseenter="ins.highlight(true)"
       @mouseleave="ins.highlight(false)"
     >
-      <span v-if="ins.picking.value">Click the field on the page. Esc cancels.</span>
-      <span v-else-if="targetText">Target: {{ targetText }}</span>
-      <span v-else-if="variant === 'letter'"
-        >Copy the letter, or pick the cover letter field on the page.</span
-      >
-      <span v-else-if="variant === 'email'">Copy the email, or open it in your email app.</span>
-      <span v-else>No text field found near the question. Copy the answer or pick a field.</span>
+      <span v-if="ins.picking.value">{{
+        t('answer_picking', 'Click the field on the page. Esc cancels.')
+      }}</span>
+      <span v-else-if="targetText">{{ t('answer_target', 'Target: $1', targetText) }}</span>
+      <span v-else-if="variant === 'letter'">{{
+        t('answer_target_letter', 'Copy the letter, or pick the cover letter field on the page.')
+      }}</span>
+      <span v-else-if="variant === 'email'">{{
+        t('answer_target_email', 'Copy the email, or open it in your email app.')
+      }}</span>
+      <span v-else>{{
+        t(
+          'answer_target_none',
+          'No text field found near the question. Copy the answer or pick a field.',
+        )
+      }}</span>
       <button
         class="btn btn-quiet min-h-0"
         type="button"
         :disabled="ins.picking.value"
         @click="ins.pick"
       >
-        {{ ins.target.value ? 'Change' : 'Pick field' }}
+        {{ ins.target.value ? t('answer_change', 'Change') : t('answer_pick_field', 'Pick field') }}
       </button>
     </p>
 
@@ -409,7 +466,9 @@ const cacheOff = computed(() => {
     >
       <p>{{ footer.usage }}</p>
       <p v-if="footer.cost">{{ footer.cost }}</p>
-      <p v-if="cacheOff">Cache off (profile too short for this model)</p>
+      <p v-if="cacheOff">
+        {{ t('answer_cache_off', 'Cache off (profile too short for this model)') }}
+      </p>
     </footer>
   </section>
 </template>

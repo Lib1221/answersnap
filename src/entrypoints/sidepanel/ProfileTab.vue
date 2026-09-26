@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { loadCandidateData } from '@/kb/candidate';
 import type { CandidateData } from '@/kb/contextBuilder';
 import type { CandidateProfile } from '@/kb/profileSchema';
+import { t } from '@/ui/i18n';
 import LinkedInCard from './LinkedInCard.vue';
 
 const emit = defineEmits<{ openSettings: [section: string] }>();
@@ -19,25 +20,42 @@ const profile = () => data.value?.profile as CandidateProfile | null | undefined
   <section v-if="data" class="card flex flex-col gap-4 p-4" data-testid="profile-tab">
     <template v-if="profile()">
       <div>
-        <p class="text-base font-[650]">{{ profile()!.fullName ?? 'Unnamed candidate' }}</p>
+        <p class="text-base font-[650]">
+          {{ profile()!.fullName ?? t('profile_unnamed', 'Unnamed candidate') }}
+        </p>
         <p class="text-graphite-2">
           {{ [profile()!.headline, profile()!.location].filter(Boolean).join(', ') }}
         </p>
       </div>
       <p class="text-[13px] tabular-nums">
-        {{ profile()!.experience.length }} jobs, {{ profile()!.projects.length }} projects,
-        {{ profile()!.skills.length }} skills
+        {{
+          t(
+            'profile_counts',
+            '$1 jobs, $2 projects, $3 skills',
+            String(profile()!.experience.length),
+            String(profile()!.projects.length),
+            String(profile()!.skills.length),
+          )
+        }}
       </p>
       <p v-if="profile()!.conflicts.length" class="notice">
-        Your sources disagree in {{ profile()!.conflicts.length }} places. Check the profile.
+        {{
+          t(
+            'profile_conflicts',
+            'Your sources disagree in $1 places. Check the profile.',
+            String(profile()!.conflicts.length),
+          )
+        }}
       </p>
     </template>
     <p v-else class="text-graphite-2">
-      No profile yet. Answers use your sources directly until you build one.
+      {{
+        t('profile_none', 'No profile yet. Answers use your sources directly until you build one.')
+      }}
     </p>
 
     <div>
-      <p class="mb-1 font-medium">Sources</p>
+      <p class="mb-1 font-medium">{{ t('profile_sources', 'Sources') }}</p>
       <ul v-if="data.sources.length" class="text-[13px]">
         <li
           v-for="s in data.sources"
@@ -47,15 +65,17 @@ const profile = () => data.value?.profile as CandidateProfile | null | undefined
           {{ s.label }}
         </li>
       </ul>
-      <p v-else class="text-[13px] text-graphite-2">None yet.</p>
+      <p v-else class="text-[13px] text-graphite-2">{{ t('profile_no_sources', 'None yet.') }}</p>
     </div>
     <div class="flex flex-wrap gap-2">
       <button class="btn" type="button" @click="emit('openSettings', 'profile')">
-        Edit profile
+        {{ t('profile_edit', 'Edit profile') }}
       </button>
-      <button class="btn" type="button" @click="emit('openSettings', 'sources')">Sources</button>
+      <button class="btn" type="button" @click="emit('openSettings', 'sources')">
+        {{ t('profile_sources', 'Sources') }}
+      </button>
       <button class="btn" type="button" @click="emit('openSettings', 'standard-answers')">
-        Standard answers
+        {{ t('profile_standard_answers', 'Standard answers') }}
       </button>
     </div>
   </section>

@@ -1,4 +1,5 @@
 import type { KnowledgeSource } from '@/storage/schema';
+import { t } from '@/ui/i18n';
 
 // Cover letters. The candidate's own letter is kept as a source of kind 'cover-letter', so every
 // answer can draw on its facts and voice; the Letter tab drafts a new letter for the job in front.
@@ -7,12 +8,18 @@ export const COVER_LETTER_LABEL = 'My cover letter';
 
 export type LetterLength = 'short' | 'standard' | 'long';
 export const LETTER_LENGTHS: Record<LetterLength, { label: string; guide: string }> = {
-  short: { label: 'Short', guide: 'a cover letter of about 200 words in 3 short paragraphs' },
+  short: {
+    label: t('letter_length_short', 'Short'),
+    guide: 'a cover letter of about 200 words in 3 short paragraphs',
+  },
   standard: {
-    label: 'Standard',
+    label: t('letter_length_standard', 'Standard'),
     guide: 'a cover letter of about 300 words in 3 or 4 short paragraphs',
   },
-  long: { label: 'Long', guide: 'a cover letter of about 400 words in 4 or 5 paragraphs' },
+  long: {
+    label: t('letter_length_long', 'Long'),
+    guide: 'a cover letter of about 400 words in 4 or 5 paragraphs',
+  },
 };
 /** A 400-word letter runs about 2,500 characters; leave room so Insert isn't blocked. */
 export const LETTER_MAX_CHARS = 4000;

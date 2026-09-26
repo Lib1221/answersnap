@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Icon, { type IconName } from '@/ui/AppIcon.vue';
+import { t } from '@/ui/i18n';
 import EmailPanel from './EmailPanel.vue';
 import FitPanel from './FitPanel.vue';
 import InterviewPanel from './InterviewPanel.vue';
@@ -28,11 +29,11 @@ const emit = defineEmits<{ openSettings: [section?: string] }>();
 
 type Sub = 'letter' | 'fit' | 'resume' | 'interview' | 'email';
 const SUBS: { id: Sub; label: string; icon: IconName }[] = [
-  { id: 'letter', label: 'Letter', icon: 'mail' },
-  { id: 'fit', label: 'Fit', icon: 'target' },
-  { id: 'resume', label: 'Resume', icon: 'file' },
-  { id: 'interview', label: 'Interview', icon: 'user' },
-  { id: 'email', label: 'Email', icon: 'pen' },
+  { id: 'letter', label: t('job_sub_letter', 'Letter'), icon: 'mail' },
+  { id: 'fit', label: t('job_sub_fit', 'Fit'), icon: 'target' },
+  { id: 'resume', label: t('job_sub_resume', 'Resume'), icon: 'file' },
+  { id: 'interview', label: t('job_sub_interview', 'Interview'), icon: 'user' },
+  { id: 'email', label: t('job_sub_email', 'Email'), icon: 'pen' },
 ];
 const sub = ref<Sub>('letter');
 
@@ -55,7 +56,7 @@ function followUp() {
   <div
     class="grid grid-cols-5 gap-1 rounded-[10px] border border-rule bg-paper p-1"
     role="group"
-    aria-label="Job tools"
+    :aria-label="t('job_tools', 'Job tools')"
     data-testid="job-tools"
   >
     <button

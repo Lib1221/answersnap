@@ -1,0 +1,1522 @@
+{
+  "extName": {
+    "message": "AnswerSnap"
+  },
+  "extDescription": {
+    "message": "Capturez une question de candidature. Obtenez un brouillon de réponse rédigé à partir de votre CV et de votre site web."
+  },
+  "actionTitle": {
+    "message": "Capturer une question ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "commandSnip": {
+    "message": "Capturer une question et rédiger une réponse"
+  },
+  "answer_about_an_hour": {
+    "message": "environ une heure"
+  },
+  "answer_about_hours": {
+    "message": "environ $P1$ heures",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_adapt": {
+    "message": "Adapter"
+  },
+  "answer_another_angle": {
+    "message": "Autre angle"
+  },
+  "answer_append": {
+    "message": "Ajouter à la suite"
+  },
+  "answer_assessment": {
+    "message": "Cela ressemble à une question de test. AnswerSnap ne rédige que des réponses sur votre propre parcours."
+  },
+  "answer_cache_off": {
+    "message": "Cache désactivé (profil trop court pour ce modèle)"
+  },
+  "answer_change": {
+    "message": "Modifier"
+  },
+  "answer_change_it": {
+    "message": "Modifier"
+  },
+  "answer_change_placeholder": {
+    "message": "Modifier..."
+  },
+  "answer_copy": {
+    "message": "Copier"
+  },
+  "answer_counter_chars": {
+    "message": "$P1$ / $P2$ caractères",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_counter_words": {
+    "message": "$P1$ / $P2$ mots",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_cut": {
+    "message": "Couper à la dernière phrase"
+  },
+  "answer_drafting": {
+    "message": "Rédaction"
+  },
+  "answer_err_auth": {
+    "message": "La clé API a été refusée. Vérifiez-la dans les Paramètres."
+  },
+  "answer_err_busy": {
+    "message": "Le service d'IA est occupé. Réessayez dans un instant."
+  },
+  "answer_err_gemini_all_day": {
+    "message": "Tous vos modèles Gemini ont atteint leur limite gratuite pour aujourd'hui. Ils reviennent dans $P1$ (minuit, heure du Pacifique). Une clé payante supprime la limite.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_err_gemini_all_minute": {
+    "message": "Tous vos modèles Gemini ont atteint leur limite par minute. Réessayez dans une minute."
+  },
+  "answer_err_gemini_free_tier": {
+    "message": "Vous avez atteint la limite gratuite de Gemini pour ce modèle. Patientez un peu, choisissez un autre modèle Gemini dans les Paramètres, ou utilisez une clé payante."
+  },
+  "answer_err_network": {
+    "message": "Impossible de joindre le service d'IA. Vérifiez votre connexion."
+  },
+  "answer_err_rate_limit": {
+    "message": "Limite de requêtes de l'API atteinte. Attendez une minute et réessayez."
+  },
+  "answer_fallback_day": {
+    "message": "$P1$ a atteint sa limite gratuite du jour, cette réponse utilise donc $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_fallback_minute": {
+    "message": "$P1$ a atteint sa limite gratuite par minute, cette réponse utilise donc $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_fit_limit": {
+    "message": "Respecter la limite"
+  },
+  "answer_heading": {
+    "message": "Votre réponse"
+  },
+  "answer_heading_email": {
+    "message": "Votre e-mail"
+  },
+  "answer_heading_letter": {
+    "message": "Votre lettre de motivation"
+  },
+  "answer_insert": {
+    "message": "Insérer"
+  },
+  "answer_kind_checkbox": {
+    "message": "cases à cocher"
+  },
+  "answer_kind_editor": {
+    "message": "éditeur"
+  },
+  "answer_kind_input": {
+    "message": "champ"
+  },
+  "answer_kind_radio": {
+    "message": "choix"
+  },
+  "answer_kind_select": {
+    "message": "liste déroulante"
+  },
+  "answer_kind_textarea": {
+    "message": "zone de texte"
+  },
+  "answer_label": {
+    "message": "Réponse"
+  },
+  "answer_longer": {
+    "message": "Plus long"
+  },
+  "answer_missing": {
+    "message": "Informations manquantes"
+  },
+  "answer_more_casual": {
+    "message": "Plus décontracté"
+  },
+  "answer_more_formal": {
+    "message": "Plus formel"
+  },
+  "answer_more_insert": {
+    "message": "Autres options d'insertion"
+  },
+  "answer_next_version": {
+    "message": "Version suivante"
+  },
+  "answer_pick_field": {
+    "message": "Choisir un champ"
+  },
+  "answer_picking": {
+    "message": "Cliquez sur le champ dans la page. Échap pour annuler."
+  },
+  "answer_prev_version": {
+    "message": "Version précédente"
+  },
+  "answer_ready": {
+    "message": "Réponse prête"
+  },
+  "answer_refine": {
+    "message": "Affiner"
+  },
+  "answer_regenerate": {
+    "message": "Régénérer"
+  },
+  "answer_replace": {
+    "message": "Remplacer"
+  },
+  "answer_retry_busy": {
+    "message": "Le service d'IA est occupé. Nouvelle tentative."
+  },
+  "answer_retry_network": {
+    "message": "Impossible de joindre le service d'IA. Nouvelle tentative."
+  },
+  "answer_retry_rate_limit": {
+    "message": "Limite de requêtes de l'API atteinte. Nouvelle tentative dans $P1$ secondes.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_reuse": {
+    "message": "Réutiliser"
+  },
+  "answer_reuse_title": {
+    "message": "Vous avez déjà répondu à cette question"
+  },
+  "answer_save": {
+    "message": "Enregistrer"
+  },
+  "answer_select": {
+    "message": "Sélectionner"
+  },
+  "answer_send": {
+    "message": "Envoyer"
+  },
+  "answer_shorter": {
+    "message": "Plus court"
+  },
+  "answer_stop": {
+    "message": "Arrêter"
+  },
+  "answer_stopped": {
+    "message": "Arrêté."
+  },
+  "answer_target": {
+    "message": "Cible : $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_target_email": {
+    "message": "Copiez l'e-mail, ou ouvrez-le dans votre application de messagerie."
+  },
+  "answer_target_iframe": {
+    "message": "un champ dans un cadre intégré"
+  },
+  "answer_target_labeled": {
+    "message": "« $P1$ » $P2$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_target_letter": {
+    "message": "Copiez la lettre, ou choisissez le champ de la lettre de motivation dans la page."
+  },
+  "answer_target_none": {
+    "message": "Aucun champ de texte trouvé près de la question. Copiez la réponse ou choisissez un champ."
+  },
+  "answer_version_of": {
+    "message": "Version $P1$ sur $P2$ : $P3$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "answer_write_new": {
+    "message": "Rédiger une nouvelle"
+  },
+  "buttonAddResume": {
+    "message": "Ajouter un CV"
+  },
+  "buttonOpenSettings": {
+    "message": "Ouvrir les paramètres"
+  },
+  "buttonSnipQuestion": {
+    "message": "Capturer la question"
+  },
+  "credit_made_by": {
+    "message": "Créé par"
+  },
+  "credit_star_on_github": {
+    "message": "Mettre une étoile sur GitHub"
+  },
+  "email_company": {
+    "message": "Entreprise"
+  },
+  "email_kind": {
+    "message": "E-mail"
+  },
+  "email_kind_accept": {
+    "message": "Accepter une offre"
+  },
+  "email_kind_accept_hint": {
+    "message": "Date de début, et tout ce dont vous avez convenu"
+  },
+  "email_kind_check_in": {
+    "message": "Prendre des nouvelles après un entretien"
+  },
+  "email_kind_check_in_hint": {
+    "message": "Quand a eu lieu l'entretien, et ce qu'ils ont dit sur le calendrier"
+  },
+  "email_kind_decline": {
+    "message": "Refuser une offre"
+  },
+  "email_kind_follow_up": {
+    "message": "Relancer après une candidature"
+  },
+  "email_kind_follow_up_hint": {
+    "message": "Quand vous avez postulé, et ce qui a changé depuis"
+  },
+  "email_kind_reason_hint": {
+    "message": "Une raison courte, si vous souhaitez en donner une"
+  },
+  "email_kind_thank_you": {
+    "message": "Remercier après un entretien"
+  },
+  "email_kind_thank_you_hint": {
+    "message": "Qui vous avez rencontré, et un sujet précis dont vous avez parlé"
+  },
+  "email_kind_withdraw": {
+    "message": "Retirer ma candidature"
+  },
+  "email_notes": {
+    "message": "À mentionner (facultatif)"
+  },
+  "email_open": {
+    "message": "Ouvrir dans l'application de messagerie"
+  },
+  "email_role": {
+    "message": "Poste"
+  },
+  "email_subtitle": {
+    "message": "Remerciements, relances et réponses aux offres."
+  },
+  "email_title": {
+    "message": "E-mails"
+  },
+  "email_to": {
+    "message": "Destinataire (facultatif)"
+  },
+  "email_to_ph": {
+    "message": "Dana Reyes"
+  },
+  "email_write": {
+    "message": "Rédiger l'e-mail"
+  },
+  "email_write_again": {
+    "message": "Rédiger à nouveau"
+  },
+  "factcheck_check_again": {
+    "message": "Vérifier à nouveau"
+  },
+  "factcheck_checking": {
+    "message": "Vérification des faits par rapport à votre profil…"
+  },
+  "factcheck_error": {
+    "message": "Impossible de lancer la vérification des faits."
+  },
+  "factcheck_fix": {
+    "message": "Corriger"
+  },
+  "factcheck_flagged_many": {
+    "message": "Vérification des faits : $P1$ phrases sur $P2$ ne sont pas étayées par votre profil.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "factcheck_flagged_one": {
+    "message": "Vérification des faits : $P1$ phrase sur $P2$ n’est pas étayée par votre profil.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "factcheck_keep": {
+    "message": "Garder quand même"
+  },
+  "factcheck_kept_many": {
+    "message": "Vérification des faits : vous avez gardé $P1$ phrases absentes de votre profil.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "factcheck_kept_one": {
+    "message": "Vérification des faits : vous avez gardé 1 phrase absente de votre profil."
+  },
+  "factcheck_ok_many": {
+    "message": "✓ Vérification des faits : les $P1$ phrases sont étayées par votre profil.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "factcheck_ok_one": {
+    "message": "✓ Vérification des faits : la phrase est étayée par votre profil."
+  },
+  "factcheck_stale": {
+    "message": "Vous avez modifié la réponse depuis la vérification des faits."
+  },
+  "factcheck_try_again": {
+    "message": "Réessayer"
+  },
+  "fit_against": {
+    "message": "Votre profil face à $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "fit_copied": {
+    "message": "Copié"
+  },
+  "fit_copy_all": {
+    "message": "Tout copier"
+  },
+  "fit_error": {
+    "message": "Impossible d'évaluer l'adéquation. Réessayez."
+  },
+  "fit_keywords": {
+    "message": "Mots-clés à utiliser"
+  },
+  "fit_must_have": {
+    "message": "indispensable"
+  },
+  "fit_needs_job": {
+    "message": "ci-dessus, puis vérifiez dans quelle mesure votre profil y correspond."
+  },
+  "fit_requirements": {
+    "message": "Exigences"
+  },
+  "fit_run": {
+    "message": "Évaluer mon adéquation"
+  },
+  "fit_run_again": {
+    "message": "Évaluer à nouveau"
+  },
+  "fit_running": {
+    "message": "Comparaison de votre profil avec l'offre d'emploi…"
+  },
+  "fit_talking_points": {
+    "message": "Points à mettre en avant"
+  },
+  "fit_title": {
+    "message": "Adéquation au poste"
+  },
+  "fit_verdict_good": {
+    "message": "Bonne adéquation"
+  },
+  "fit_verdict_long_shot": {
+    "message": "Peu probable"
+  },
+  "fit_verdict_stretch": {
+    "message": "Ambitieux"
+  },
+  "fit_verdict_strong": {
+    "message": "Excellente adéquation"
+  },
+  "form_already_filled": {
+    "message": "déjà rempli"
+  },
+  "form_answer_for": {
+    "message": "Réponse pour $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_assessment": {
+    "message": "Une question de test, aucune réponse n'est donc rédigée"
+  },
+  "form_cant_read": {
+    "message": "Impossible de lire les champs de cette page."
+  },
+  "form_char_count": {
+    "message": "$P1$ / $P2$ caractères",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_check_page": {
+    "message": "Vérifiez la page, puis envoyez-la vous-même."
+  },
+  "form_draft_failed": {
+    "message": "Impossible de rédiger les réponses. Réessayez."
+  },
+  "form_draft_field": {
+    "message": "Rédiger $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_draft_many": {
+    "message": "Rédiger $P1$ réponses",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_draft_one": {
+    "message": "Rédiger $P1$ réponse",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_n": {
+    "message": "Rédaction de $P1$ réponses",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_one": {
+    "message": "Rédaction de $P1$ réponse",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_range": {
+    "message": "Rédaction des réponses $P1$ à $P2$ sur $P3$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "form_fill_failed": {
+    "message": "Impossible de remplir directement. Copiez la réponse et collez-la."
+  },
+  "form_found_many": {
+    "message": "$P1$ champs trouvés.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_found_many_on": {
+    "message": "$P1$ champs trouvés sur $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_found_one": {
+    "message": "$P1$ champ trouvé.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_found_one_on": {
+    "message": "$P1$ champ trouvé sur $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_from_library": {
+    "message": "Tiré de vos réponses enregistrées"
+  },
+  "form_gesture_hint": {
+    "message": "Faites un clic droit sur la page et choisissez « Remplir ce formulaire avec AnswerSnap », ou appuyez d'abord sur Alt+Shift+Q dans la page."
+  },
+  "form_insert_selected": {
+    "message": "Insérer $P1$ sélectionnés",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_inserted": {
+    "message": "Inséré"
+  },
+  "form_inserted_n": {
+    "message": "$P1$ insérés.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_inserting": {
+    "message": "Insertion"
+  },
+  "form_intro": {
+    "message": "Rédigez en une fois les réponses à tous les champs de ce formulaire. Vous vérifiez tout avant que quoi que ce soit ne soit rempli."
+  },
+  "form_kind_checkbox": {
+    "message": "cases à cocher"
+  },
+  "form_kind_editor": {
+    "message": "éditeur"
+  },
+  "form_kind_input": {
+    "message": "champ"
+  },
+  "form_kind_radio": {
+    "message": "choix"
+  },
+  "form_kind_select": {
+    "message": "liste déroulante"
+  },
+  "form_kind_textarea": {
+    "message": "zone de texte"
+  },
+  "form_menu_hint": {
+    "message": "Ou faites un clic droit sur la page et choisissez « Remplir ce formulaire avec AnswerSnap »."
+  },
+  "form_need_look": {
+    "message": "$P1$ à vérifier.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_needs_key": {
+    "message": "Ajoutez votre clé API pour commencer."
+  },
+  "form_needs_profile": {
+    "message": "Ajoutez votre CV pour que les réponses aient une base."
+  },
+  "form_no_answer": {
+    "message": "Aucune réponse"
+  },
+  "form_no_fields": {
+    "message": "Aucun champ à remplir trouvé sur cette page."
+  },
+  "form_no_match": {
+    "message": "Aucune des options ne correspond."
+  },
+  "form_reading": {
+    "message": "Lecture du formulaire"
+  },
+  "form_required": {
+    "message": "obligatoire"
+  },
+  "form_review_intro": {
+    "message": "Vérifiez chaque réponse, décochez ce que vous ne voulez pas, puis insérez. AnswerSnap n'envoie jamais le formulaire."
+  },
+  "form_scan": {
+    "message": "Analyser ce formulaire"
+  },
+  "form_scan_again": {
+    "message": "Analyser à nouveau"
+  },
+  "form_stop": {
+    "message": "Arrêter"
+  },
+  "form_target_gone": {
+    "message": "Le champ a disparu. Analysez à nouveau le formulaire."
+  },
+  "form_tick_one": {
+    "message": "Cochez au moins un champ à rédiger."
+  },
+  "form_title": {
+    "message": "Remplir tout le formulaire"
+  },
+  "form_unlabeled": {
+    "message": "Champ sans libellé"
+  },
+  "form_unreachable": {
+    "message": "Impossible d'accéder à la page."
+  },
+  "form_untick": {
+    "message": "Décochez ceux auxquels vous répondrez vous-même."
+  },
+  "insert_copied": {
+    "message": "Copié"
+  },
+  "insert_copy_blocked": {
+    "message": "Impossible de remplir ce champ directement. Sélectionnez le texte de la réponse, copiez-le et collez-le dans le champ."
+  },
+  "insert_copy_failed": {
+    "message": "Impossible de copier. Sélectionnez le texte de la réponse et copiez-le avec Ctrl+C."
+  },
+  "insert_copy_fallback": {
+    "message": "Impossible de remplir ce champ directement. La réponse est copiée. Cliquez sur le champ et appuyez sur $P1$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "insert_inserted": {
+    "message": "Inséré"
+  },
+  "insert_needs_gesture": {
+    "message": "Appuyez sur Alt+Shift+Q ou cliquez sur l'icône AnswerSnap dans la page, puis réessayez."
+  },
+  "insert_no_match": {
+    "message": "Aucune des options ne correspond à la réponse. Choisissez-la dans la page."
+  },
+  "insert_saved": {
+    "message": "Enregistré"
+  },
+  "insert_selected": {
+    "message": "Sélectionné"
+  },
+  "insert_target_gone": {
+    "message": "La page a changé depuis la capture. Choisissez à nouveau le champ, ou copiez la réponse."
+  },
+  "interview_assumed": {
+    "message": "Supposé"
+  },
+  "interview_assumed_title": {
+    "message": "Cette réponse revendique une expérience absente de votre profil"
+  },
+  "interview_copied": {
+    "message": "Copié"
+  },
+  "interview_copy": {
+    "message": "Copier"
+  },
+  "interview_error": {
+    "message": "Impossible de préparer les questions. Réessayez."
+  },
+  "interview_for": {
+    "message": "Pour $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "interview_hide_answer": {
+    "message": "Masquer la réponse"
+  },
+  "interview_kind_behavioral": {
+    "message": "Comportementale"
+  },
+  "interview_kind_motivation": {
+    "message": "Motivation"
+  },
+  "interview_kind_role": {
+    "message": "Poste"
+  },
+  "interview_kind_technical": {
+    "message": "Technique"
+  },
+  "interview_needs_job": {
+    "message": "ci-dessus, puis obtenez les questions que ce recruteur posera probablement, avec des réponses tirées de votre profil."
+  },
+  "interview_run": {
+    "message": "Préparer les questions"
+  },
+  "interview_run_again": {
+    "message": "Nouvelles questions"
+  },
+  "interview_running": {
+    "message": "Rédaction des questions probables et des réponses…"
+  },
+  "interview_save": {
+    "message": "Enregistrer dans la bibliothèque"
+  },
+  "interview_saved": {
+    "message": "Enregistré"
+  },
+  "interview_show_answer": {
+    "message": "Afficher la réponse suggérée"
+  },
+  "interview_title": {
+    "message": "Préparation à l'entretien"
+  },
+  "job_add_key": {
+    "message": "Ajoutez votre clé API pour commencer."
+  },
+  "job_add_resume": {
+    "message": "Ajoutez votre CV pour avoir une base de comparaison."
+  },
+  "job_busy_job": {
+    "message": "Lecture de l'offre d'emploi"
+  },
+  "job_busy_page": {
+    "message": "Lecture de la page"
+  },
+  "job_busy_saving": {
+    "message": "Enregistrement de l'offre d'emploi"
+  },
+  "job_busy_selection": {
+    "message": "Lecture de la sélection"
+  },
+  "job_capture_not_ready": {
+    "message": "Appuyez d'abord sur Alt+Shift+Q ou cliquez sur l'icône AnswerSnap dans la page, puis réessayez."
+  },
+  "job_no_text": {
+    "message": "Aucun texte lisible sur cette page."
+  },
+  "job_read_failed": {
+    "message": "Impossible de lire la page. Essayez plutôt de capturer l'offre d'emploi."
+  },
+  "job_restricted": {
+    "message": "Chrome ne permet pas aux extensions de lire cette page."
+  },
+  "job_save_post_first": {
+    "message": "Enregistrez d'abord l'offre d'emploi"
+  },
+  "job_select_first": {
+    "message": "Sélectionnez d'abord le texte de l'offre d'emploi dans la page."
+  },
+  "job_set_job": {
+    "message": "Définir l'offre"
+  },
+  "job_sub_email": {
+    "message": "E-mail"
+  },
+  "job_sub_fit": {
+    "message": "Adéquation"
+  },
+  "job_sub_interview": {
+    "message": "Entretien"
+  },
+  "job_sub_letter": {
+    "message": "Lettre"
+  },
+  "job_sub_resume": {
+    "message": "CV"
+  },
+  "job_tools": {
+    "message": "Outils pour l'offre"
+  },
+  "job_use": {
+    "message": "Utiliser"
+  },
+  "jobbar_add_more": {
+    "message": "Ajouter du texte"
+  },
+  "jobbar_clear": {
+    "message": "Effacer"
+  },
+  "jobbar_clear_job": {
+    "message": "Effacer l'offre"
+  },
+  "jobbar_job": {
+    "message": "Offre : $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "jobbar_no_job": {
+    "message": "Aucune offre d'emploi définie pour ce site."
+  },
+  "jobbar_read_page": {
+    "message": "Lire toute la page"
+  },
+  "jobbar_set_job": {
+    "message": "Définir l'offre"
+  },
+  "jobbar_snip_job": {
+    "message": "Capturer l'offre d'emploi"
+  },
+  "jobbar_use_selection": {
+    "message": "Utiliser le texte sélectionné"
+  },
+  "letter_add_own": {
+    "message": "Ajouter votre propre lettre de motivation"
+  },
+  "letter_company": {
+    "message": "Entreprise"
+  },
+  "letter_company_ph": {
+    "message": "Acme"
+  },
+  "letter_job_saved": {
+    "message": "Adaptée à l'offre d'emploi enregistrée pour $P1$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "letter_length": {
+    "message": "Longueur"
+  },
+  "letter_length_long": {
+    "message": "Longue"
+  },
+  "letter_length_short": {
+    "message": "Courte"
+  },
+  "letter_length_standard": {
+    "message": "Standard"
+  },
+  "letter_notes": {
+    "message": "À mentionner (facultatif)"
+  },
+  "letter_notes_ph": {
+    "message": "Par exemple : je peux commencer dans deux semaines, ou parler de mes contributions open source"
+  },
+  "letter_role": {
+    "message": "Poste"
+  },
+  "letter_role_ph": {
+    "message": "Ingénieur backend"
+  },
+  "letter_subtitle": {
+    "message": "Rédigée à partir de votre profil."
+  },
+  "letter_subtitle_sample": {
+    "message": "Rédigée à partir de votre profil et de votre propre lettre de motivation."
+  },
+  "letter_tip_rest": {
+    "message": "ci-dessus pour enregistrer l'offre d'emploi, et la lettre y correspondra. Ou remplissez simplement l'entreprise et le poste."
+  },
+  "letter_tip_use": {
+    "message": "Astuce : utilisez"
+  },
+  "letter_title": {
+    "message": "Lettre de motivation"
+  },
+  "letter_write": {
+    "message": "Rédiger la lettre de motivation"
+  },
+  "letter_write_again": {
+    "message": "Rédiger à nouveau"
+  },
+  "library_cancel": {
+    "message": "Annuler"
+  },
+  "library_copied": {
+    "message": "Copié"
+  },
+  "library_copy": {
+    "message": "Copier"
+  },
+  "library_copy_failed": {
+    "message": "Impossible de copier. Sélectionnez le texte et copiez-le."
+  },
+  "library_delete": {
+    "message": "Supprimer"
+  },
+  "library_edit": {
+    "message": "Modifier"
+  },
+  "library_edit_label": {
+    "message": "Modifier la réponse enregistrée"
+  },
+  "library_empty": {
+    "message": "Les réponses que vous insérez, copiez ou enregistrez apparaissent ici pour que vous puissiez les réutiliser."
+  },
+  "library_no_match": {
+    "message": "Aucune réponse enregistrée ne correspond."
+  },
+  "library_pin": {
+    "message": "Épingler"
+  },
+  "library_pinned": {
+    "message": "épinglée"
+  },
+  "library_save": {
+    "message": "Enregistrer"
+  },
+  "library_search": {
+    "message": "Rechercher dans les réponses enregistrées"
+  },
+  "library_unpin": {
+    "message": "Désépingler"
+  },
+  "library_use": {
+    "message": "Utiliser pour cette question"
+  },
+  "library_used_n": {
+    "message": "utilisée $P1$ fois",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "linkedin_about": {
+    "message": "Infos"
+  },
+  "linkedin_again": {
+    "message": "Rédiger à nouveau"
+  },
+  "linkedin_copied": {
+    "message": "Copié"
+  },
+  "linkedin_copy": {
+    "message": "Copier"
+  },
+  "linkedin_copy_headline": {
+    "message": "Copier le titre $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "linkedin_failed": {
+    "message": "Impossible de rédiger le brouillon LinkedIn. Réessayez."
+  },
+  "linkedin_headlines": {
+    "message": "Titres"
+  },
+  "linkedin_intro": {
+    "message": "Des propositions de titre et une section Infos."
+  },
+  "linkedin_role_label": {
+    "message": "Cibler un poste (facultatif)"
+  },
+  "linkedin_role_placeholder": {
+    "message": "Ingénieur backend senior"
+  },
+  "linkedin_run": {
+    "message": "Rédiger mon LinkedIn"
+  },
+  "linkedin_skills": {
+    "message": "Compétences à mettre en avant"
+  },
+  "linkedin_title": {
+    "message": "LinkedIn"
+  },
+  "linkedin_writing": {
+    "message": "Rédaction à partir de votre profil…"
+  },
+  "menuAnswerField": {
+    "message": "Répondre à ce champ"
+  },
+  "menuFillForm": {
+    "message": "Remplir ce formulaire avec AnswerSnap"
+  },
+  "menuImportPage": {
+    "message": "Importer cette page dans AnswerSnap"
+  },
+  "menuJobSelection": {
+    "message": "Utiliser la sélection comme offre d'emploi"
+  },
+  "menuSnipQuestion": {
+    "message": "Capturer la question"
+  },
+  "panel_add_your_resume": {
+    "message": "Ajouter votre CV"
+  },
+  "panel_allow_all_sites": {
+    "message": "Autoriser la capture depuis le panneau sur tous les sites"
+  },
+  "panel_cancel": {
+    "message": "Annuler"
+  },
+  "panel_connect_ai": {
+    "message": "Connecter votre IA"
+  },
+  "panel_error_capture_failed": {
+    "message": "Impossible de faire la capture d'écran. Réessayez."
+  },
+  "panel_error_inject_failed": {
+    "message": "Impossible de lancer la capture sur cette page. Rechargez la page et réessayez."
+  },
+  "panel_error_needs_gesture": {
+    "message": "Appuyez sur $P1$ ou cliquez sur l'icône $P2$ pour capturer sur cette page.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "panel_error_restricted": {
+    "message": "Chrome ne permet pas aux extensions de lire cette page. Ouvrez le formulaire de candidature et réessayez."
+  },
+  "panel_fill_whole_form": {
+    "message": "Ou remplissez tout le formulaire en une fois"
+  },
+  "panel_hidden_text": {
+    "message": "Cette page contient du texte masqué dans la zone sélectionnée. Il a été ignoré."
+  },
+  "panel_job_selecting": {
+    "message": "Encadrez l'offre d'emploi. Échap pour annuler."
+  },
+  "panel_nav": {
+    "message": "Panneau"
+  },
+  "panel_no_text": {
+    "message": "Aucun texte trouvé dans la sélection."
+  },
+  "panel_on_the_page": {
+    "message": "dans la page"
+  },
+  "panel_or_press": {
+    "message": "ou appuyez sur"
+  },
+  "panel_question": {
+    "message": "Question"
+  },
+  "panel_reading": {
+    "message": "Lecture"
+  },
+  "panel_ready": {
+    "message": "Prêt quand vous l'êtes"
+  },
+  "panel_retry": {
+    "message": "Réessayer"
+  },
+  "panel_settings": {
+    "message": "Paramètres"
+  },
+  "panel_shortcuts": {
+    "message": "Raccourcis clavier"
+  },
+  "panel_shortcuts_title": {
+    "message": "Raccourcis clavier (?)"
+  },
+  "panel_snipped_region": {
+    "message": "Zone capturée"
+  },
+  "panel_tab_answer": {
+    "message": "Réponse"
+  },
+  "panel_tab_form": {
+    "message": "Formulaire"
+  },
+  "panel_tab_job": {
+    "message": "Offre"
+  },
+  "panel_tab_library": {
+    "message": "Bibliothèque"
+  },
+  "panel_tab_profile": {
+    "message": "Profil"
+  },
+  "panelIdle": {
+    "message": "Capturez une question pour rédiger une réponse."
+  },
+  "panelNeedsKey": {
+    "message": "Ajoutez votre clé API pour commencer."
+  },
+  "panelNeedsProfile": {
+    "message": "Ajoutez votre CV pour que les réponses aient une base."
+  },
+  "panelSelecting": {
+    "message": "Sélectionnez la question dans la page. Échap pour annuler."
+  },
+  "profile_conflicts": {
+    "message": "Vos sources se contredisent à $P1$ endroits. Vérifiez le profil.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_counts": {
+    "message": "$P1$ postes, $P2$ projets, $P3$ compétences",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "profile_edit": {
+    "message": "Modifier le profil"
+  },
+  "profile_no_sources": {
+    "message": "Aucune pour l'instant."
+  },
+  "profile_none": {
+    "message": "Pas encore de profil. Les réponses utilisent directement vos sources jusqu'à ce que vous en créiez un."
+  },
+  "profile_none_using": {
+    "message": "Pas encore de profil, utilisation de $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_cover_letter": {
+    "message": "lettre de motivation"
+  },
+  "profile_part_note": {
+    "message": "$P1$ note",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_notes": {
+    "message": "$P1$ notes",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_resume": {
+    "message": "CV"
+  },
+  "profile_part_resumes": {
+    "message": "$P1$ CV",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_site": {
+    "message": "$P1$ site",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_sites": {
+    "message": "$P1$ sites",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_stories": {
+    "message": "$P1$ histoires",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_story": {
+    "message": "$P1$ histoire",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_ready": {
+    "message": "Profil prêt"
+  },
+  "profile_ready_from": {
+    "message": "Profil prêt : $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_sources": {
+    "message": "Sources"
+  },
+  "profile_standard_answers": {
+    "message": "Réponses types"
+  },
+  "profile_unnamed": {
+    "message": "Candidat sans nom"
+  },
+  "reminder_many": {
+    "message": "$P1$ candidatures sont sans nouvelles depuis un moment. Cliquez pour les voir.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "reminder_one": {
+    "message": "$P1$ : $P2$, aucune nouvelle depuis $P3$ jours.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "reminder_role_at_company": {
+    "message": "$P1$ chez $P2$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "reminder_title": {
+    "message": "C'est le moment de relancer"
+  },
+  "reminder_your_application": {
+    "message": "Votre candidature"
+  },
+  "resume_assumed": {
+    "message": "Supposé"
+  },
+  "resume_assumed_title": {
+    "message": "Absent de vos données : vérifiez avant de l'utiliser"
+  },
+  "resume_bullets": {
+    "message": "Puces"
+  },
+  "resume_copied": {
+    "message": "Copié"
+  },
+  "resume_copy": {
+    "message": "Copier"
+  },
+  "resume_copy_all": {
+    "message": "Tout copier"
+  },
+  "resume_error": {
+    "message": "Impossible d'adapter le CV. Réessayez."
+  },
+  "resume_for": {
+    "message": "Pour $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "resume_intro": {
+    "message": "Vos vraies puces, reformulées dans le vocabulaire de l'offre d'emploi. Les faits et les chiffres restent identiques."
+  },
+  "resume_needs_job": {
+    "message": "ci-dessus, puis obtenez les puces de votre CV reformulées pour cette offre."
+  },
+  "resume_new_bullet": {
+    "message": "Nouvelle puce pour combler un manque dans votre profil."
+  },
+  "resume_run_again": {
+    "message": "Adapter à nouveau"
+  },
+  "resume_running": {
+    "message": "Adaptation de votre CV…"
+  },
+  "resume_skills": {
+    "message": "Compétences, dans cet ordre"
+  },
+  "resume_summary": {
+    "message": "Résumé"
+  },
+  "resume_title": {
+    "message": "Adapter mon CV"
+  },
+  "resume_was": {
+    "message": "Avant : $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "shortcuts_close": {
+    "message": "Fermer"
+  },
+  "shortcuts_copy": {
+    "message": "Copier la réponse"
+  },
+  "shortcuts_insert": {
+    "message": "Insérer la réponse"
+  },
+  "shortcuts_regenerate": {
+    "message": "Régénérer"
+  },
+  "shortcuts_snip": {
+    "message": "Capturer une question (dans la page)"
+  },
+  "shortcuts_stop": {
+    "message": "Arrêter la rédaction, ou annuler une capture"
+  },
+  "shortcuts_tabs": {
+    "message": "Réponse, Offre, Formulaire, Bibliothèque, Profil"
+  },
+  "shortcuts_this_list": {
+    "message": "Cette liste"
+  },
+  "shortcuts_title": {
+    "message": "Raccourcis clavier"
+  },
+  "shortcuts_versions": {
+    "message": "Version précédente ou suivante"
+  },
+  "status_applied": {
+    "message": "Candidature envoyée"
+  },
+  "status_interviewing": {
+    "message": "Entretiens en cours"
+  },
+  "status_offer": {
+    "message": "Offre reçue"
+  },
+  "status_rejected": {
+    "message": "Refusée"
+  },
+  "status_saved": {
+    "message": "Enregistrée"
+  },
+  "status_withdrawn": {
+    "message": "Retirée"
+  },
+  "tracker_application": {
+    "message": "Candidature"
+  },
+  "tracker_no_news": {
+    "message": "Aucune nouvelle depuis $P1$ jours.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "tracker_see_all": {
+    "message": "Tout voir"
+  },
+  "tracker_track": {
+    "message": "Suivre cette candidature"
+  },
+  "tracker_write_follow_up": {
+    "message": "Rédiger une relance"
+  },
+  "version_another_angle": {
+    "message": "Autre angle"
+  },
+  "version_facts_fixed": {
+    "message": "Faits corrigés"
+  },
+  "version_first_draft": {
+    "message": "Premier brouillon"
+  },
+  "version_fit_limit": {
+    "message": "Limite respectée"
+  },
+  "version_longer": {
+    "message": "Plus longue"
+  },
+  "version_more_casual": {
+    "message": "Plus décontractée"
+  },
+  "version_more_formal": {
+    "message": "Plus formelle"
+  },
+  "version_shorter": {
+    "message": "Plus courte"
+  },
+  "version_your_change": {
+    "message": "Votre modification"
+  }
+}

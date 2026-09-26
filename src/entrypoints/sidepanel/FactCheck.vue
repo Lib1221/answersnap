@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { t } from '@/ui/i18n';
 import type { useAnswer } from './useAnswer';
 
 const props = defineProps<{ state: ReturnType<typeof useAnswer> }>();
@@ -33,17 +34,21 @@ function fix() {
       class="flex items-center gap-2 text-graphite-2"
     >
       <span class="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden="true" />
-      Checking facts against your profile…
+      {{ t('factcheck_checking', 'Checking facts against your profile…') }}
     </p>
 
     <p v-else-if="stale" class="flex flex-wrap items-center gap-2 text-graphite-2">
-      You edited the answer since the fact check.
-      <button class="btn btn-quiet min-h-0" type="button" @click="s.checkFacts">Check again</button>
+      {{ t('factcheck_stale', 'You edited the answer since the fact check.') }}
+      <button class="btn btn-quiet min-h-0" type="button" @click="s.checkFacts">
+        {{ t('factcheck_check_again', 'Check again') }}
+      </button>
     </p>
 
     <p v-else-if="fc.status === 'error'" class="flex flex-wrap items-center gap-2 text-graphite-2">
-      Couldn't run the fact check.
-      <button class="btn btn-quiet min-h-0" type="button" @click="s.checkFacts">Try again</button>
+      {{ t('factcheck_error', "Couldn't run the fact check.") }}
+      <button class="btn btn-quiet min-h-0" type="button" @click="s.checkFacts">
+        {{ t('factcheck_try_again', 'Try again') }}
+      </button>
     </p>
 
     <p
@@ -51,14 +56,30 @@ function fix() {
       class="success"
       data-testid="fact-check-ok"
     >
-      ✓ Fact check:
-      {{ checkable.length === 1 ? 'the sentence is' : `all ${checkable.length} sentences are` }}
-      backed by your profile.
+      {{
+        checkable.length === 1
+          ? t('factcheck_ok_one', '✓ Fact check: the sentence is backed by your profile.')
+          : t(
+              'factcheck_ok_many',
+              '✓ Fact check: all $1 sentences are backed by your profile.',
+              String(checkable.length),
+            )
+      }}
     </p>
 
     <p v-else-if="fc.status === 'done' && fc.dismissed" class="text-graphite-2">
-      Fact check: you kept {{ flagged.length }}
-      {{ flagged.length === 1 ? 'sentence' : 'sentences' }} it couldn't match to your profile.
+      {{
+        flagged.length === 1
+          ? t(
+              'factcheck_kept_one',
+              "Fact check: you kept 1 sentence it couldn't match to your profile.",
+            )
+          : t(
+              'factcheck_kept_many',
+              "Fact check: you kept $1 sentences it couldn't match to your profile.",
+              String(flagged.length),
+            )
+      }}
     </p>
 
     <div
@@ -68,8 +89,21 @@ function fix() {
       data-testid="fact-check-flags"
     >
       <p class="font-medium">
-        Fact check: {{ flagged.length }} of {{ checkable.length }}
-        {{ checkable.length === 1 ? 'sentence isn’t' : 'sentences aren’t' }} backed by your profile.
+        {{
+          checkable.length === 1
+            ? t(
+                'factcheck_flagged_one',
+                'Fact check: $1 of $2 sentence isn’t backed by your profile.',
+                String(flagged.length),
+                String(checkable.length),
+              )
+            : t(
+                'factcheck_flagged_many',
+                'Fact check: $1 of $2 sentences aren’t backed by your profile.',
+                String(flagged.length),
+                String(checkable.length),
+              )
+        }}
       </p>
       <ul class="flex flex-col gap-1.5">
         <li v-for="c in flagged" :key="c.sentence">
@@ -78,8 +112,12 @@ function fix() {
         </li>
       </ul>
       <div class="flex flex-wrap gap-2">
-        <button class="btn btn-primary" type="button" @click="fix">Fix it</button>
-        <button class="btn" type="button" @click="s.dismissFactCheck">Keep anyway</button>
+        <button class="btn btn-primary" type="button" @click="fix">
+          {{ t('factcheck_fix', 'Fix it') }}
+        </button>
+        <button class="btn" type="button" @click="s.dismissFactCheck">
+          {{ t('factcheck_keep', 'Keep anyway') }}
+        </button>
       </div>
     </div>
   </div>

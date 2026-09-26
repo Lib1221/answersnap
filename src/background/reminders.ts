@@ -7,6 +7,7 @@ import {
   type Application,
 } from '@/kb/applications';
 import { getSettings } from '@/storage/items';
+import { t } from '@/ui/i18n';
 
 // Follow-up reminders: a Chrome notification when an application has gone quiet (the same rule as
 // the radar on the Applications page). Local only: nothing leaves the browser.
@@ -33,18 +34,29 @@ export function dueReminders(
 }
 
 export function reminderText(due: Due[]): { title: string; message: string } {
-  const title = 'Time to follow up';
+  const title = t('reminder_title', 'Time to follow up');
   if (due.length === 1) {
     const { application: a, days } = due[0]!;
-    const what = `${a.role || 'Your application'}${a.company ? ` at ${a.company}` : ''}`;
+    const role = a.role || t('reminder_your_application', 'Your application');
+    const what = a.company ? t('reminder_role_at_company', '$1 at $2', role, a.company) : role;
     return {
       title,
-      message: `${what}: ${STATUS_LABELS[a.status].toLowerCase()}, no news in ${days} days.`,
+      message: t(
+        'reminder_one',
+        '$1: $2, no news in $3 days.',
+        what,
+        STATUS_LABELS[a.status].toLowerCase(),
+        String(days),
+      ),
     };
   }
   return {
     title,
-    message: `${due.length} applications have had no news for a while. Click to see them.`,
+    message: t(
+      'reminder_many',
+      '$1 applications have had no news for a while. Click to see them.',
+      String(due.length),
+    ),
   };
 }
 

@@ -4,19 +4,33 @@ import type { Message, MessageType, Reply } from '@/messaging/protocol';
 import { sendToBackground, sendToTab } from '@/messaging/send';
 import type { FieldInfo, PendingCapture } from '@/storage/schema';
 import type { useAnswer } from './useAnswer';
+import { t } from '@/ui/i18n';
 
 const TEXT_KINDS: FieldInfo['kind'][] = ['input', 'textarea', 'contenteditable'];
 const CHOICE_KINDS: FieldInfo['kind'][] = ['select', 'radio-group', 'checkbox-group'];
-export const NO_MATCH = 'None of the options matched the answer. Pick it on the page.';
+export const NO_MATCH = t(
+  'insert_no_match',
+  'None of the options matched the answer. Pick it on the page.',
+);
 const PASTE_KEY = /mac/i.test(navigator.platform) ? 'Cmd+V' : 'Ctrl+V';
 
-export const COPY_FALLBACK = `Couldn't fill this field directly. The answer is copied. Click the field and press ${PASTE_KEY}.`;
-export const COPY_BLOCKED =
-  "Couldn't fill this field directly. Select the answer text, copy it, and paste it into the field.";
-export const TARGET_GONE =
-  'The page changed since the snip. Pick the field again, or copy the answer.';
-export const NEEDS_GESTURE =
-  'Press Alt+Shift+Q or click the AnswerSnap icon on the page, then try again.';
+export const COPY_FALLBACK = t(
+  'insert_copy_fallback',
+  "Couldn't fill this field directly. The answer is copied. Click the field and press $1.",
+  PASTE_KEY,
+);
+export const COPY_BLOCKED = t(
+  'insert_copy_blocked',
+  "Couldn't fill this field directly. Select the answer text, copy it, and paste it into the field.",
+);
+export const TARGET_GONE = t(
+  'insert_target_gone',
+  'The page changed since the snip. Pick the field again, or copy the answer.',
+);
+export const NEEDS_GESTURE = t(
+  'insert_needs_gesture',
+  'Press Alt+Shift+Q or click the AnswerSnap icon on the page, then try again.',
+);
 
 class ScriptUnavailable extends Error {}
 
@@ -85,25 +99,25 @@ export function useInsert(
   }
 
   async function insert(mode: InsertMode = 'replace') {
-    const t = target.value;
-    if (!t || !canInsert.value) return;
+    const field = target.value;
+    if (!field || !canInsert.value) return;
     message.value = '';
-    if (t.inIframe) return copyFallback(COPY_FALLBACK);
+    if (field.inIframe) return copyFallback(COPY_FALLBACK);
     busy.value = true;
     if (isChoice.value) {
       try {
         // One option for single choice, a comma separated list for checkboxes (spec 11.4 rule 7).
         const labels =
-          t.kind === 'checkbox-group'
+          field.kind === 'checkbox-group'
             ? answer.answer.value.split(/\s*[,\n]\s*/)
             : [answer.answer.value];
         const result = await toPage<'APPLY_CHOICE'>({
           type: 'APPLY_CHOICE',
-          targetId: t.targetId,
+          targetId: field.targetId,
           labels,
         });
         if (result.ok) {
-          flash('Selected');
+          flash(t('insert_selected', 'Selected'));
           await answer.save('insert');
         } else
           message.value =
@@ -122,18 +136,18 @@ export function useInsert(
     try {
       const result = await toPage<'INSERT_ANSWER'>({
         type: 'INSERT_ANSWER',
-        targetId: t.targetId,
+        targetId: field.targetId,
         text: answer.answer.value,
         mode,
       });
       if (result.ok) {
-        flash('Inserted');
+        flash(t('insert_inserted', 'Inserted'));
         await answer.save('insert');
         target.value = {
-          ...t,
+          ...field,
           currentValue:
             mode === 'append'
-              ? `${t.currentValue ?? ''} ${answer.answer.value}`
+              ? `${field.currentValue ?? ''} ${answer.answer.value}`
               : answer.answer.value,
         };
       } else if (result.reason === 'TARGET_GONE') {
@@ -150,9 +164,13 @@ export function useInsert(
 
   async function copy() {
     if (await writeClipboard()) {
-      flash('Copied');
+      flash(t('insert_copied', 'Copied'));
       await answer.save('copy');
-    } else message.value = "Couldn't copy. Select the answer text and copy it with Ctrl+C.";
+    } else
+      message.value = t(
+        'insert_copy_failed',
+        "Couldn't copy. Select the answer text and copy it with Ctrl+C.",
+      );
   }
 
   async function pick() {
@@ -169,15 +187,15 @@ export function useInsert(
   }
 
   function highlight(on: boolean) {
-    const t = target.value;
-    if (!t || t.inIframe) return;
-    void toPage<'HIGHLIGHT_FIELD'>({ type: 'HIGHLIGHT_FIELD', targetId: t.targetId, on }).catch(
+    const field = target.value;
+    if (!field || field.inIframe) return;
+    void toPage<'HIGHLIGHT_FIELD'>({ type: 'HIGHLIGHT_FIELD', targetId: field.targetId, on }).catch(
       () => undefined,
     );
   }
 
   async function saveToLibrary() {
-    if (await answer.save('explicit')) flash('Saved');
+    if (await answer.save('explicit')) flash(t('insert_saved', 'Saved'));
   }
 
   return {

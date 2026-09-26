@@ -1,38 +1,46 @@
 // Follow-up emails for the job in front: thank-you notes, follow-ups, offer replies. Drafted by the
 // answer engine like cover letters; the first line of the draft is the subject.
 
+import { t } from '@/ui/i18n';
+
 export type EmailKind = 'thank-you' | 'follow-up' | 'check-in' | 'accept' | 'decline' | 'withdraw';
 
 export const EMAIL_KINDS: Record<EmailKind, { label: string; ask: string; notesHint: string }> = {
   'thank-you': {
-    label: 'Thank you after an interview',
+    label: t('email_kind_thank_you', 'Thank you after an interview'),
     ask: 'a thank-you email to send the day after an interview',
-    notesHint: 'Who you met, and something specific you talked about',
+    notesHint: t(
+      'email_kind_thank_you_hint',
+      'Who you met, and something specific you talked about',
+    ),
   },
   'follow-up': {
-    label: 'Follow up after applying',
+    label: t('email_kind_follow_up', 'Follow up after applying'),
     ask: 'a polite follow-up email about an application that has had no reply yet',
-    notesHint: 'When you applied, and anything new since then',
+    notesHint: t('email_kind_follow_up_hint', 'When you applied, and anything new since then'),
   },
   'check-in': {
-    label: 'Check in after an interview',
+    label: t('email_kind_check_in', 'Check in after an interview'),
     ask: 'a short email checking in on next steps after an interview',
-    notesHint: 'When you interviewed, and what they said about timing',
+    notesHint: t(
+      'email_kind_check_in_hint',
+      'When you interviewed, and what they said about timing',
+    ),
   },
   accept: {
-    label: 'Accept an offer',
+    label: t('email_kind_accept', 'Accept an offer'),
     ask: 'an email accepting a job offer',
-    notesHint: 'Start date, and anything you agreed on',
+    notesHint: t('email_kind_accept_hint', 'Start date, and anything you agreed on'),
   },
   decline: {
-    label: 'Decline an offer',
+    label: t('email_kind_decline', 'Decline an offer'),
     ask: 'an email politely declining a job offer and keeping the door open',
-    notesHint: 'A short reason, if you want to give one',
+    notesHint: t('email_kind_reason_hint', 'A short reason, if you want to give one'),
   },
   withdraw: {
-    label: 'Withdraw my application',
+    label: t('email_kind_withdraw', 'Withdraw my application'),
     ask: 'an email politely withdrawing from the hiring process',
-    notesHint: 'A short reason, if you want to give one',
+    notesHint: t('email_kind_reason_hint', 'A short reason, if you want to give one'),
   },
 };
 

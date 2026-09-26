@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { neutralize } from '@/kb/contextBuilder';
+import { t } from '@/ui/i18n';
 import type { LlmProvider, SystemBlock } from './types';
 
 // Interview prep: likely questions for the saved job post, each with a suggested answer written
@@ -8,10 +9,10 @@ import type { LlmProvider, SystemBlock } from './types';
 export const INTERVIEW_KINDS = ['behavioral', 'technical', 'role', 'motivation'] as const;
 export type InterviewKind = (typeof INTERVIEW_KINDS)[number];
 export const KIND_LABELS: Record<InterviewKind, string> = {
-  behavioral: 'Behavioral',
-  technical: 'Technical',
-  role: 'Role',
-  motivation: 'Motivation',
+  behavioral: t('interview_kind_behavioral', 'Behavioral'),
+  technical: t('interview_kind_technical', 'Technical'),
+  role: t('interview_kind_role', 'Role'),
+  motivation: t('interview_kind_motivation', 'Motivation'),
 };
 
 export const QUESTION_COUNT = 8;

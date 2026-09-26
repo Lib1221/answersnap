@@ -3,6 +3,7 @@ import { jobLabel, jobPromptText } from '@/kb/jobContext';
 import { upsertEntry } from '@/kb/library';
 import { runInterviewPrep, type InterviewQuestion } from '@/llm/interviewPrep';
 import { jobTaskError, prepareJobTask } from './jobTask';
+import { t } from '@/ui/i18n';
 import type { useJob } from './useJob';
 
 /** Interview prep for the saved job post; kept per job for the session. */
@@ -68,7 +69,11 @@ export function useInterview(job: ReturnType<typeof useJob>) {
     } catch (err) {
       if (signal.aborted) return;
       status.value = 'error';
-      error.value = jobTaskError(err, task.settings, "Couldn't prepare the questions. Try again.");
+      error.value = jobTaskError(
+        err,
+        task.settings,
+        t('interview_error', "Couldn't prepare the questions. Try again."),
+      );
     }
   }
 

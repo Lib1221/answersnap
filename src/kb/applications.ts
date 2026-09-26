@@ -1,5 +1,6 @@
 import { storage } from 'wxt/utils/storage';
 import { z } from 'zod';
+import { t } from '@/ui/i18n';
 
 // Application tracker: every saved job post becomes an application with a status the candidate
 // moves along (saved, applied, interviewing, offer, or closed). Kept in local storage only.
@@ -15,12 +16,12 @@ export const APPLICATION_STATUSES = [
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
 export const STATUS_LABELS: Record<ApplicationStatus, string> = {
-  saved: 'Saved',
-  applied: 'Applied',
-  interviewing: 'Interviewing',
-  offer: 'Offer',
-  rejected: 'Rejected',
-  withdrawn: 'Withdrawn',
+  saved: t('status_saved', 'Saved'),
+  applied: t('status_applied', 'Applied'),
+  interviewing: t('status_interviewing', 'Interviewing'),
+  offer: t('status_offer', 'Offer'),
+  rejected: t('status_rejected', 'Rejected'),
+  withdrawn: t('status_withdrawn', 'Withdrawn'),
 };
 
 export const ApplicationSchema = z.object({

@@ -1,0 +1,1522 @@
+{
+  "extName": {
+    "message": "AnswerSnap"
+  },
+  "extDescription": {
+    "message": "የማመልከቻ ጥያቄ ይቁረጡ። ከራስዎ ሲቪ እና ድረ ገጽ የተጻፈ ረቂቅ መልስ ያግኙ።"
+  },
+  "actionTitle": {
+    "message": "ጥያቄ ቁረጥ ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "commandSnip": {
+    "message": "ጥያቄ ቁረጥ እና መልስ አርቅቅ"
+  },
+  "answer_about_an_hour": {
+    "message": "አንድ ሰዓት ገደማ"
+  },
+  "answer_about_hours": {
+    "message": "$P1$ ሰዓት ገደማ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_adapt": {
+    "message": "አስማማ"
+  },
+  "answer_another_angle": {
+    "message": "ሌላ አቀራረብ"
+  },
+  "answer_append": {
+    "message": "ከመጨረሻ አክል"
+  },
+  "answer_assessment": {
+    "message": "ይህ የፈተና ጥያቄ ይመስላል። AnswerSnap የሚያረቅቀው ስለ ራስዎ ዳራ የሚናገሩ መልሶችን ብቻ ነው።"
+  },
+  "answer_cache_off": {
+    "message": "መሸጎጫ ጠፍቷል (መገለጫው ለዚህ ሞዴል በጣም አጭር ነው)"
+  },
+  "answer_change": {
+    "message": "ቀይር"
+  },
+  "answer_change_it": {
+    "message": "ቀይረው"
+  },
+  "answer_change_placeholder": {
+    "message": "ቀይረው..."
+  },
+  "answer_copy": {
+    "message": "ቅዳ"
+  },
+  "answer_counter_chars": {
+    "message": "$P1$ / $P2$ ቁምፊዎች",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_counter_words": {
+    "message": "$P1$ / $P2$ ቃላት",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_cut": {
+    "message": "በመጨረሻው ዓረፍተ ነገር ላይ ቁረጥ"
+  },
+  "answer_drafting": {
+    "message": "በማርቀቅ ላይ"
+  },
+  "answer_err_auth": {
+    "message": "የ API ቁልፉ ተቀባይነት አላገኘም። በቅንብሮች ውስጥ ያረጋግጡት።"
+  },
+  "answer_err_busy": {
+    "message": "የ AI አገልግሎቱ ተጨናንቋል። ትንሽ ቆይተው እንደገና ይሞክሩ።"
+  },
+  "answer_err_gemini_all_day": {
+    "message": "ሁሉም የ Gemini ሞዴሎችዎ ለዛሬ የነጻ ገደባቸው ላይ ደርሰዋል። ከ$P1$ በኋላ ይመለሳሉ (በፓሲፊክ ሰዓት እኩለ ሌሊት)። የሚከፈልበት ቁልፍ ገደቡን ያስወግዳል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_err_gemini_all_minute": {
+    "message": "ሁሉም የ Gemini ሞዴሎችዎ የደቂቃ ገደባቸው ላይ ናቸው። ከአንድ ደቂቃ በኋላ እንደገና ይሞክሩ።"
+  },
+  "answer_err_gemini_free_tier": {
+    "message": "ለዚህ ሞዴል የ Gemini ነጻ ደረጃ ገደብ ላይ ደርሰዋል። ትንሽ ይጠብቁ፣ በቅንብሮች ውስጥ ወደ ሌላ የ Gemini ሞዴል ይቀይሩ፣ ወይም የሚከፈልበት ቁልፍ ይጠቀሙ።"
+  },
+  "answer_err_network": {
+    "message": "የ AI አገልግሎቱን ማግኘት አልተቻለም። ግንኙነትዎን ያረጋግጡ።"
+  },
+  "answer_err_rate_limit": {
+    "message": "የ API የጥያቄ ገደብ ላይ ተደርሷል። አንድ ደቂቃ ቆይተው እንደገና ይሞክሩ።"
+  },
+  "answer_fallback_day": {
+    "message": "$P1$ የዕለቱ የነጻ ገደቡ ላይ ስለደረሰ ይህ መልስ $P2$ ይጠቀማል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_fallback_minute": {
+    "message": "$P1$ የደቂቃ የነጻ ገደቡ ላይ ስለደረሰ ይህ መልስ $P2$ ይጠቀማል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_fit_limit": {
+    "message": "ከገደቡ ጋር አስማማ"
+  },
+  "answer_heading": {
+    "message": "የእርስዎ መልስ"
+  },
+  "answer_heading_email": {
+    "message": "የእርስዎ ኢሜይል"
+  },
+  "answer_heading_letter": {
+    "message": "የእርስዎ የማመልከቻ ደብዳቤ"
+  },
+  "answer_insert": {
+    "message": "አስገባ"
+  },
+  "answer_kind_checkbox": {
+    "message": "አመልካች ሳጥኖች"
+  },
+  "answer_kind_editor": {
+    "message": "አርታዒ"
+  },
+  "answer_kind_input": {
+    "message": "የግቤት መስክ"
+  },
+  "answer_kind_radio": {
+    "message": "ምርጫ"
+  },
+  "answer_kind_select": {
+    "message": "ተቆልቋይ ዝርዝር"
+  },
+  "answer_kind_textarea": {
+    "message": "የጽሑፍ ሳጥን"
+  },
+  "answer_label": {
+    "message": "መልስ"
+  },
+  "answer_longer": {
+    "message": "ረዘም ያለ"
+  },
+  "answer_missing": {
+    "message": "የጎደለ መረጃ"
+  },
+  "answer_more_casual": {
+    "message": "ይበልጥ ቀለል ያለ"
+  },
+  "answer_more_formal": {
+    "message": "ይበልጥ መደበኛ"
+  },
+  "answer_more_insert": {
+    "message": "ተጨማሪ የማስገቢያ አማራጮች"
+  },
+  "answer_next_version": {
+    "message": "ቀጣይ ስሪት"
+  },
+  "answer_pick_field": {
+    "message": "መስክ ምረጥ"
+  },
+  "answer_picking": {
+    "message": "በገጹ ላይ ያለውን መስክ ጠቅ ያድርጉ። Esc ይሰርዛል።"
+  },
+  "answer_prev_version": {
+    "message": "ቀዳሚ ስሪት"
+  },
+  "answer_ready": {
+    "message": "መልሱ ዝግጁ ነው"
+  },
+  "answer_refine": {
+    "message": "አሻሽል"
+  },
+  "answer_regenerate": {
+    "message": "እንደገና ፍጠር"
+  },
+  "answer_replace": {
+    "message": "ተካ"
+  },
+  "answer_retry_busy": {
+    "message": "የ AI አገልግሎቱ ተጨናንቋል። እንደገና በመሞከር ላይ።"
+  },
+  "answer_retry_network": {
+    "message": "የ AI አገልግሎቱን ማግኘት አልተቻለም። እንደገና በመሞከር ላይ።"
+  },
+  "answer_retry_rate_limit": {
+    "message": "የ API የጥያቄ ገደብ ላይ ተደርሷል። ከ$P1$ ሰከንድ በኋላ እንደገና ይሞከራል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_reuse": {
+    "message": "እንደገና ተጠቀም"
+  },
+  "answer_reuse_title": {
+    "message": "ይህን ከዚህ በፊት መልሰውታል"
+  },
+  "answer_save": {
+    "message": "አስቀምጥ"
+  },
+  "answer_select": {
+    "message": "ምረጥ"
+  },
+  "answer_send": {
+    "message": "ላክ"
+  },
+  "answer_shorter": {
+    "message": "አጠር ያለ"
+  },
+  "answer_stop": {
+    "message": "አቁም"
+  },
+  "answer_stopped": {
+    "message": "ቆሟል።"
+  },
+  "answer_target": {
+    "message": "መድረሻ: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "answer_target_email": {
+    "message": "ኢሜይሉን ይቅዱ፣ ወይም በኢሜይል መተግበሪያዎ ውስጥ ይክፈቱት።"
+  },
+  "answer_target_iframe": {
+    "message": "በተካተተ ፍሬም ውስጥ ያለ መስክ"
+  },
+  "answer_target_labeled": {
+    "message": "\"$P1$\" $P2$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "answer_target_letter": {
+    "message": "ደብዳቤውን ይቅዱ፣ ወይም በገጹ ላይ የማመልከቻ ደብዳቤ መስኩን ይምረጡ።"
+  },
+  "answer_target_none": {
+    "message": "ከጥያቄው አጠገብ የጽሑፍ መስክ አልተገኘም። መልሱን ይቅዱ ወይም መስክ ይምረጡ።"
+  },
+  "answer_version_of": {
+    "message": "ስሪት $P1$ ከ$P2$: $P3$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "answer_write_new": {
+    "message": "አዲስ ጻፍ"
+  },
+  "buttonAddResume": {
+    "message": "ሲቪ አክል"
+  },
+  "buttonOpenSettings": {
+    "message": "ቅንብሮችን ክፈት"
+  },
+  "buttonSnipQuestion": {
+    "message": "ጥያቄ ቁረጥ"
+  },
+  "credit_made_by": {
+    "message": "ያዘጋጀው"
+  },
+  "credit_star_on_github": {
+    "message": "በ GitHub ላይ ኮከብ ስጥ"
+  },
+  "email_company": {
+    "message": "ኩባንያ"
+  },
+  "email_kind": {
+    "message": "ኢሜይል"
+  },
+  "email_kind_accept": {
+    "message": "የሥራ ቅናሽ መቀበል"
+  },
+  "email_kind_accept_hint": {
+    "message": "የሚጀምሩበት ቀን፣ እና የተስማማችሁበት ማንኛውም ነገር"
+  },
+  "email_kind_check_in": {
+    "message": "ከቃለ መጠይቅ በኋላ ሁኔታውን መጠየቅ"
+  },
+  "email_kind_check_in_hint": {
+    "message": "ቃለ መጠይቅ ያደረጉበት ጊዜ፣ እና ስለ ጊዜ ሰሌዳው የተናገሩት"
+  },
+  "email_kind_decline": {
+    "message": "የሥራ ቅናሽን ውድቅ ማድረግ"
+  },
+  "email_kind_follow_up": {
+    "message": "ካመለከቱ በኋላ መከታተል"
+  },
+  "email_kind_follow_up_hint": {
+    "message": "ያመለከቱበት ጊዜ፣ እና ከዚያ ወዲህ ያለ ማንኛውም አዲስ ነገር"
+  },
+  "email_kind_reason_hint": {
+    "message": "ምክንያት መስጠት ከፈለጉ፣ አጭር ምክንያት"
+  },
+  "email_kind_thank_you": {
+    "message": "ከቃለ መጠይቅ በኋላ ምስጋና"
+  },
+  "email_kind_thank_you_hint": {
+    "message": "ያገኟቸው ሰዎች፣ እና የተነጋገራችሁበት አንድ የተለየ ነገር"
+  },
+  "email_kind_withdraw": {
+    "message": "ማመልከቻዬን ማንሳት"
+  },
+  "email_notes": {
+    "message": "ምን እንደሚጠቀስ (አማራጭ)"
+  },
+  "email_open": {
+    "message": "በኢሜይል መተግበሪያ ክፈት"
+  },
+  "email_role": {
+    "message": "የሥራ መደብ"
+  },
+  "email_subtitle": {
+    "message": "የምስጋና መልዕክቶች፣ ክትትሎች፣ እና ለሥራ ቅናሽ ምላሾች።"
+  },
+  "email_title": {
+    "message": "ኢሜይሎች"
+  },
+  "email_to": {
+    "message": "ተቀባይ (አማራጭ)"
+  },
+  "email_to_ph": {
+    "message": "Dana Reyes"
+  },
+  "email_write": {
+    "message": "ኢሜይል ጻፍ"
+  },
+  "email_write_again": {
+    "message": "እንደገና ጻፍ"
+  },
+  "factcheck_check_again": {
+    "message": "እንደገና አረጋግጥ"
+  },
+  "factcheck_checking": {
+    "message": "እውነታዎችን ከመገለጫዎ ጋር በማጣራት ላይ…"
+  },
+  "factcheck_error": {
+    "message": "የእውነታ ማጣራቱን ማካሄድ አልተቻለም።"
+  },
+  "factcheck_fix": {
+    "message": "አስተካክለው"
+  },
+  "factcheck_flagged_many": {
+    "message": "የእውነታ ማጣራት: ከ$P2$ ዓረፍተ ነገሮች $P1$ በመገለጫዎ አልተደገፉም።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "factcheck_flagged_one": {
+    "message": "የእውነታ ማጣራት: ከ$P2$ ዓረፍተ ነገር $P1$ በመገለጫዎ አልተደገፈም።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "factcheck_keep": {
+    "message": "ቢሆንም አቆይ"
+  },
+  "factcheck_kept_many": {
+    "message": "የእውነታ ማጣራት: ከመገለጫዎ ጋር ማዛመድ ያልቻለውን $P1$ ዓረፍተ ነገሮች አቆይተዋል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "factcheck_kept_one": {
+    "message": "የእውነታ ማጣራት: ከመገለጫዎ ጋር ማዛመድ ያልቻለውን 1 ዓረፍተ ነገር አቆይተዋል።"
+  },
+  "factcheck_ok_many": {
+    "message": "✓ የእውነታ ማጣራት: ሁሉም $P1$ ዓረፍተ ነገሮች በመገለጫዎ የተደገፉ ናቸው።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "factcheck_ok_one": {
+    "message": "✓ የእውነታ ማጣራት: ዓረፍተ ነገሩ በመገለጫዎ የተደገፈ ነው።"
+  },
+  "factcheck_stale": {
+    "message": "ከእውነታ ማጣራቱ በኋላ መልሱን አርትዕ አድርገዋል።"
+  },
+  "factcheck_try_again": {
+    "message": "እንደገና ሞክር"
+  },
+  "fit_against": {
+    "message": "መገለጫዎ ከ$P1$ ጋር ሲነጻጸር",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "fit_copied": {
+    "message": "ተቀድቷል"
+  },
+  "fit_copy_all": {
+    "message": "ሁሉንም ቅዳ"
+  },
+  "fit_error": {
+    "message": "ተስማሚነቱን ማረጋገጥ አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "fit_keywords": {
+    "message": "የሚጠቀሙባቸው ቁልፍ ቃላት"
+  },
+  "fit_must_have": {
+    "message": "ግዴታ"
+  },
+  "fit_needs_job": {
+    "message": "ይጠቀሙ፣ ከዚያ መገለጫዎ ከሥራው ጋር ምን ያህል እንደሚስማማ ያረጋግጡ።"
+  },
+  "fit_requirements": {
+    "message": "መስፈርቶች"
+  },
+  "fit_run": {
+    "message": "ተስማሚነቴን አረጋግጥ"
+  },
+  "fit_run_again": {
+    "message": "እንደገና አረጋግጥ"
+  },
+  "fit_running": {
+    "message": "መገለጫዎን ከሥራ ማስታወቂያው ጋር በማነጻጸር ላይ…"
+  },
+  "fit_talking_points": {
+    "message": "የመነጋገሪያ ነጥቦች"
+  },
+  "fit_title": {
+    "message": "የሥራ ተስማሚነት"
+  },
+  "fit_verdict_good": {
+    "message": "ጥሩ ተስማሚነት"
+  },
+  "fit_verdict_long_shot": {
+    "message": "ዕድሉ ጠባብ ነው"
+  },
+  "fit_verdict_stretch": {
+    "message": "ጥረት ይጠይቃል"
+  },
+  "fit_verdict_strong": {
+    "message": "ጠንካራ ተስማሚነት"
+  },
+  "form_already_filled": {
+    "message": "አስቀድሞ ተሞልቷል"
+  },
+  "form_answer_for": {
+    "message": "ለ$P1$ መልስ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_assessment": {
+    "message": "የፈተና ጥያቄ ስለሆነ መልስ አልተረቀቀም"
+  },
+  "form_cant_read": {
+    "message": "በዚህ ገጽ ላይ ያሉትን መስኮች ማንበብ አልተቻለም።"
+  },
+  "form_char_count": {
+    "message": "$P1$ / $P2$ ቁምፊዎች",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_check_page": {
+    "message": "ገጹን ያረጋግጡ፣ ከዚያ እራስዎ ይላኩት።"
+  },
+  "form_draft_failed": {
+    "message": "መልሶቹን ማርቀቅ አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "form_draft_field": {
+    "message": "$P1$ አርቅቅ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_draft_many": {
+    "message": "$P1$ መልሶችን አርቅቅ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_draft_one": {
+    "message": "$P1$ መልስ አርቅቅ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_n": {
+    "message": "$P1$ መልሶችን በማርቀቅ ላይ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_one": {
+    "message": "$P1$ መልስ በማርቀቅ ላይ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_drafting_range": {
+    "message": "ከ$P3$ መልሶች ከ$P1$ እስከ $P2$ በማርቀቅ ላይ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "form_fill_failed": {
+    "message": "በቀጥታ መሙላት አልተቻለም። መልሱን ቀድተው ይለጥፉት።"
+  },
+  "form_found_many": {
+    "message": "$P1$ መስኮች ተገኝተዋል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_found_many_on": {
+    "message": "በ$P2$ ላይ $P1$ መስኮች ተገኝተዋል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_found_one": {
+    "message": "$P1$ መስክ ተገኝቷል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_found_one_on": {
+    "message": "በ$P2$ ላይ $P1$ መስክ ተገኝቷል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "form_from_library": {
+    "message": "ከተቀመጡ መልሶችዎ"
+  },
+  "form_gesture_hint": {
+    "message": "በገጹ ላይ በቀኝ ጠቅ አድርገው \"ይህን ቅጽ በ AnswerSnap ሙላ\" የሚለውን ይምረጡ፣ ወይም መጀመሪያ እዚያ Alt+Shift+Q ይጫኑ።"
+  },
+  "form_insert_selected": {
+    "message": "የተመረጡትን $P1$ አስገባ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_inserted": {
+    "message": "ገብቷል"
+  },
+  "form_inserted_n": {
+    "message": "$P1$ ገብተዋል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_inserting": {
+    "message": "በማስገባት ላይ"
+  },
+  "form_intro": {
+    "message": "በዚህ ቅጽ ላይ ላሉት ሁሉም መስኮች መልሶችን በአንድ ጊዜ ያርቅቁ። ምንም ነገር ከመሞላቱ በፊት ሁሉንም ይገመግማሉ።"
+  },
+  "form_kind_checkbox": {
+    "message": "አመልካች ሳጥኖች"
+  },
+  "form_kind_editor": {
+    "message": "አርታዒ"
+  },
+  "form_kind_input": {
+    "message": "የግቤት መስክ"
+  },
+  "form_kind_radio": {
+    "message": "ምርጫ"
+  },
+  "form_kind_select": {
+    "message": "ተቆልቋይ ዝርዝር"
+  },
+  "form_kind_textarea": {
+    "message": "የጽሑፍ ሳጥን"
+  },
+  "form_menu_hint": {
+    "message": "ወይም በገጹ ላይ በቀኝ ጠቅ አድርገው \"ይህን ቅጽ በ AnswerSnap ሙላ\" የሚለውን ይምረጡ።"
+  },
+  "form_need_look": {
+    "message": "$P1$ መታየት አለባቸው።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_needs_key": {
+    "message": "ለመጀመር የ API ቁልፍዎን ያክሉ።"
+  },
+  "form_needs_profile": {
+    "message": "መልሶች የሚመሰረቱበት ነገር እንዲኖራቸው ሲቪዎን ያክሉ።"
+  },
+  "form_no_answer": {
+    "message": "መልስ የለም"
+  },
+  "form_no_fields": {
+    "message": "በዚህ ገጽ ላይ ሊሞሉ የሚችሉ መስኮች አልተገኙም።"
+  },
+  "form_no_match": {
+    "message": "ከአማራጮቹ አንዱም አልተዛመደም።"
+  },
+  "form_reading": {
+    "message": "ቅጹን በማንበብ ላይ"
+  },
+  "form_required": {
+    "message": "ግዴታ"
+  },
+  "form_review_intro": {
+    "message": "እያንዳንዱን መልስ ያረጋግጡ፣ የማይፈልጉትን ምልክት ያንሱ፣ ከዚያ ያስገቡ። AnswerSnap ቅጹን በጭራሽ አይልክም።"
+  },
+  "form_scan": {
+    "message": "ይህን ቅጽ ቃኝ"
+  },
+  "form_scan_again": {
+    "message": "እንደገና ቃኝ"
+  },
+  "form_stop": {
+    "message": "አቁም"
+  },
+  "form_target_gone": {
+    "message": "መስኩ ጠፍቷል። ቅጹን እንደገና ይቃኙ።"
+  },
+  "form_tick_one": {
+    "message": "ለማርቀቅ ቢያንስ አንድ መስክ ምልክት ያድርጉ።"
+  },
+  "form_title": {
+    "message": "ሙሉውን ቅጽ ሙላ"
+  },
+  "form_unlabeled": {
+    "message": "ስም የሌለው መስክ"
+  },
+  "form_unreachable": {
+    "message": "ገጹን ማግኘት አልተቻለም።"
+  },
+  "form_untick": {
+    "message": "እራስዎ የሚመልሷቸውን ምልክት ያንሱ።"
+  },
+  "insert_copied": {
+    "message": "ተቀድቷል"
+  },
+  "insert_copy_blocked": {
+    "message": "ይህን መስክ በቀጥታ መሙላት አልተቻለም። የመልሱን ጽሑፍ ይምረጡ፣ ይቅዱት፣ እና በመስኩ ውስጥ ይለጥፉት።"
+  },
+  "insert_copy_failed": {
+    "message": "መቅዳት አልተቻለም። የመልሱን ጽሑፍ ይምረጡ እና በ Ctrl+C ይቅዱት።"
+  },
+  "insert_copy_fallback": {
+    "message": "ይህን መስክ በቀጥታ መሙላት አልተቻለም። መልሱ ተቀድቷል። መስኩን ጠቅ አድርገው $P1$ ይጫኑ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "insert_inserted": {
+    "message": "ገብቷል"
+  },
+  "insert_needs_gesture": {
+    "message": "Alt+Shift+Q ይጫኑ ወይም በገጹ ላይ የ AnswerSnap አዶውን ጠቅ ያድርጉ፣ ከዚያ እንደገና ይሞክሩ።"
+  },
+  "insert_no_match": {
+    "message": "ከአማራጮቹ አንዱም ከመልሱ ጋር አልተዛመደም። በገጹ ላይ ይምረጡት።"
+  },
+  "insert_saved": {
+    "message": "ተቀምጧል"
+  },
+  "insert_selected": {
+    "message": "ተመርጧል"
+  },
+  "insert_target_gone": {
+    "message": "ከመቁረጡ በኋላ ገጹ ተቀይሯል። መስኩን እንደገና ይምረጡ፣ ወይም መልሱን ይቅዱ።"
+  },
+  "interview_assumed": {
+    "message": "የተገመተ"
+  },
+  "interview_assumed_title": {
+    "message": "ይህ መልስ መገለጫዎ የማያሳየውን ልምድ ይጠቅሳል"
+  },
+  "interview_copied": {
+    "message": "ተቀድቷል"
+  },
+  "interview_copy": {
+    "message": "ቅዳ"
+  },
+  "interview_error": {
+    "message": "ጥያቄዎቹን ማዘጋጀት አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "interview_for": {
+    "message": "ለ$P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "interview_hide_answer": {
+    "message": "መልሱን ደብቅ"
+  },
+  "interview_kind_behavioral": {
+    "message": "ባህሪያዊ"
+  },
+  "interview_kind_motivation": {
+    "message": "ተነሳሽነት"
+  },
+  "interview_kind_role": {
+    "message": "የሥራ መደብ"
+  },
+  "interview_kind_technical": {
+    "message": "ቴክኒካዊ"
+  },
+  "interview_needs_job": {
+    "message": "ይጠቀሙ፣ ከዚያ ይህ ጠያቂ ሊጠይቅ የሚችላቸውን ጥያቄዎች ከመገለጫዎ በተወሰዱ መልሶች ያግኙ።"
+  },
+  "interview_run": {
+    "message": "ጥያቄዎችን አዘጋጅ"
+  },
+  "interview_run_again": {
+    "message": "አዲስ ጥያቄዎች"
+  },
+  "interview_running": {
+    "message": "ሊጠየቁ የሚችሉ ጥያቄዎችን እና መልሶችን በመጻፍ ላይ…"
+  },
+  "interview_save": {
+    "message": "ወደ ቤተ መጻሕፍት አስቀምጥ"
+  },
+  "interview_saved": {
+    "message": "ተቀምጧል"
+  },
+  "interview_show_answer": {
+    "message": "የተጠቆመውን መልስ አሳይ"
+  },
+  "interview_title": {
+    "message": "የቃለ መጠይቅ ዝግጅት"
+  },
+  "job_add_key": {
+    "message": "ለመጀመር የ API ቁልፍዎን ያክሉ።"
+  },
+  "job_add_resume": {
+    "message": "የሚነጻጸር ነገር እንዲኖር ሲቪዎን ያክሉ።"
+  },
+  "job_busy_job": {
+    "message": "የሥራ ማስታወቂያውን በማንበብ ላይ"
+  },
+  "job_busy_page": {
+    "message": "ገጹን በማንበብ ላይ"
+  },
+  "job_busy_saving": {
+    "message": "የሥራ ማስታወቂያውን በማስቀመጥ ላይ"
+  },
+  "job_busy_selection": {
+    "message": "የተመረጠውን በማንበብ ላይ"
+  },
+  "job_capture_not_ready": {
+    "message": "መጀመሪያ Alt+Shift+Q ይጫኑ ወይም በገጹ ላይ የ AnswerSnap አዶውን ጠቅ ያድርጉ፣ ከዚያ እንደገና ይሞክሩ።"
+  },
+  "job_no_text": {
+    "message": "በዚህ ገጽ ላይ የሚነበብ ጽሑፍ የለም።"
+  },
+  "job_read_failed": {
+    "message": "ገጹን ማንበብ አልተቻለም። በምትኩ የሥራ ማስታወቂያውን ለመቁረጥ ይሞክሩ።"
+  },
+  "job_restricted": {
+    "message": "Chrome ቅጥያዎች ይህን ገጽ እንዲያነቡ አይፈቅድም።"
+  },
+  "job_save_post_first": {
+    "message": "መጀመሪያ የሥራ ማስታወቂያውን አስቀምጥ"
+  },
+  "job_select_first": {
+    "message": "መጀመሪያ በገጹ ላይ የሥራ ማስታወቂያውን ጽሑፍ ይምረጡ።"
+  },
+  "job_set_job": {
+    "message": "ሥራ አዘጋጅ"
+  },
+  "job_sub_email": {
+    "message": "ኢሜይል"
+  },
+  "job_sub_fit": {
+    "message": "ተስማሚነት"
+  },
+  "job_sub_interview": {
+    "message": "ቃለ መጠይቅ"
+  },
+  "job_sub_letter": {
+    "message": "ደብዳቤ"
+  },
+  "job_sub_resume": {
+    "message": "ሲቪ"
+  },
+  "job_tools": {
+    "message": "የሥራ መሣሪያዎች"
+  },
+  "job_use": {
+    "message": "ከላይ ያለውን"
+  },
+  "jobbar_add_more": {
+    "message": "ተጨማሪ አክል"
+  },
+  "jobbar_clear": {
+    "message": "አጽዳ"
+  },
+  "jobbar_clear_job": {
+    "message": "ሥራውን አጽዳ"
+  },
+  "jobbar_job": {
+    "message": "ሥራ: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "jobbar_no_job": {
+    "message": "ለዚህ ጣቢያ የሥራ ማስታወቂያ አልተዘጋጀም።"
+  },
+  "jobbar_read_page": {
+    "message": "ሙሉውን ገጽ አንብብ"
+  },
+  "jobbar_set_job": {
+    "message": "ሥራ አዘጋጅ"
+  },
+  "jobbar_snip_job": {
+    "message": "የሥራ ማስታወቂያ ቁረጥ"
+  },
+  "jobbar_use_selection": {
+    "message": "የተመረጠውን ጽሑፍ ተጠቀም"
+  },
+  "letter_add_own": {
+    "message": "የራስዎን የማመልከቻ ደብዳቤ ያክሉ"
+  },
+  "letter_company": {
+    "message": "ኩባንያ"
+  },
+  "letter_company_ph": {
+    "message": "Acme"
+  },
+  "letter_job_saved": {
+    "message": "ለ$P1$ ከተቀመጠው የሥራ ማስታወቂያ ጋር የተጣጣመ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "letter_length": {
+    "message": "ርዝመት"
+  },
+  "letter_length_long": {
+    "message": "ረጅም"
+  },
+  "letter_length_short": {
+    "message": "አጭር"
+  },
+  "letter_length_standard": {
+    "message": "መደበኛ"
+  },
+  "letter_notes": {
+    "message": "የሚጠቀስ ነገር ካለ (አማራጭ)"
+  },
+  "letter_notes_ph": {
+    "message": "ለምሳሌ: በሁለት ሳምንት ውስጥ መጀመር እችላለሁ፣ ወይም የክፍት ምንጭ ሥራዬን ጥቀስ"
+  },
+  "letter_role": {
+    "message": "የሥራ መደብ"
+  },
+  "letter_role_ph": {
+    "message": "የባክኤንድ መሐንዲስ"
+  },
+  "letter_subtitle": {
+    "message": "ከመገለጫዎ የተጻፈ።"
+  },
+  "letter_subtitle_sample": {
+    "message": "ከመገለጫዎ እና ከራስዎ የማመልከቻ ደብዳቤ የተጻፈ።"
+  },
+  "letter_tip_rest": {
+    "message": "ተጠቅመው የሥራ ማስታወቂያውን ያስቀምጡ፣ ደብዳቤውም ከእሱ ጋር ይጣጣማል። ወይም ኩባንያውን እና የሥራ መደቡን ብቻ ይሙሉ።"
+  },
+  "letter_tip_use": {
+    "message": "ጠቃሚ ምክር: ከላይ ያለውን"
+  },
+  "letter_title": {
+    "message": "የማመልከቻ ደብዳቤ"
+  },
+  "letter_write": {
+    "message": "የማመልከቻ ደብዳቤ ጻፍ"
+  },
+  "letter_write_again": {
+    "message": "እንደገና ጻፍ"
+  },
+  "library_cancel": {
+    "message": "ይቅር"
+  },
+  "library_copied": {
+    "message": "ተቀድቷል"
+  },
+  "library_copy": {
+    "message": "ቅዳ"
+  },
+  "library_copy_failed": {
+    "message": "መቅዳት አልተቻለም። ጽሑፉን መርጠው ይቅዱት።"
+  },
+  "library_delete": {
+    "message": "ሰርዝ"
+  },
+  "library_edit": {
+    "message": "አርትዕ"
+  },
+  "library_edit_label": {
+    "message": "የተቀመጠ መልስ አርትዕ"
+  },
+  "library_empty": {
+    "message": "የሚያስገቧቸው፣ የሚቀዷቸው፣ ወይም የሚያስቀምጧቸው መልሶች እዚህ ይታያሉ፣ ስለዚህ እንደገና ሊጠቀሙባቸው ይችላሉ።"
+  },
+  "library_no_match": {
+    "message": "የሚዛመዱ የተቀመጡ መልሶች የሉም።"
+  },
+  "library_pin": {
+    "message": "ሰካ"
+  },
+  "library_pinned": {
+    "message": "የተሰካ"
+  },
+  "library_save": {
+    "message": "አስቀምጥ"
+  },
+  "library_search": {
+    "message": "የተቀመጡ መልሶችን ፈልግ"
+  },
+  "library_unpin": {
+    "message": "ንቀል"
+  },
+  "library_use": {
+    "message": "ለዚህ ጥያቄ ተጠቀም"
+  },
+  "library_used_n": {
+    "message": "$P1$ ጊዜ ጥቅም ላይ የዋለ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "linkedin_about": {
+    "message": "ስለ እኔ"
+  },
+  "linkedin_again": {
+    "message": "እንደገና ጻፍ"
+  },
+  "linkedin_copied": {
+    "message": "ተቀድቷል"
+  },
+  "linkedin_copy": {
+    "message": "ቅዳ"
+  },
+  "linkedin_copy_headline": {
+    "message": "ርዕስ $P1$ ቅዳ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "linkedin_failed": {
+    "message": "የ LinkedIn ረቂቁን መጻፍ አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "linkedin_headlines": {
+    "message": "ርዕሶች"
+  },
+  "linkedin_intro": {
+    "message": "የርዕስ አማራጮች እና \"ስለ እኔ\" ክፍል።"
+  },
+  "linkedin_role_label": {
+    "message": "ለአንድ የሥራ መደብ አነጣጥር (አማራጭ)"
+  },
+  "linkedin_role_placeholder": {
+    "message": "ከፍተኛ የባክኤንድ መሐንዲስ"
+  },
+  "linkedin_run": {
+    "message": "የ LinkedIn መገለጫዬን ጻፍ"
+  },
+  "linkedin_skills": {
+    "message": "ጎልተው የሚታዩ ክህሎቶች"
+  },
+  "linkedin_title": {
+    "message": "LinkedIn"
+  },
+  "linkedin_writing": {
+    "message": "ከመገለጫዎ በመጻፍ ላይ…"
+  },
+  "menuAnswerField": {
+    "message": "ይህን መስክ መልስ"
+  },
+  "menuFillForm": {
+    "message": "ይህን ቅጽ በ AnswerSnap ሙላ"
+  },
+  "menuImportPage": {
+    "message": "ይህን ገጽ ወደ AnswerSnap አስገባ"
+  },
+  "menuJobSelection": {
+    "message": "የተመረጠውን እንደ የሥራ ማስታወቂያ ተጠቀም"
+  },
+  "menuSnipQuestion": {
+    "message": "ጥያቄ ቁረጥ"
+  },
+  "panel_add_your_resume": {
+    "message": "ሲቪዎን ያክሉ"
+  },
+  "panel_allow_all_sites": {
+    "message": "በሁሉም ጣቢያዎች ላይ ከፓነሉ መቁረጥን ፍቀድ"
+  },
+  "panel_cancel": {
+    "message": "ይቅር"
+  },
+  "panel_connect_ai": {
+    "message": "AI ያገናኙ"
+  },
+  "panel_error_capture_failed": {
+    "message": "ቅጽበታዊ ገጽ እይታውን ማንሳት አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "panel_error_inject_failed": {
+    "message": "በዚህ ገጽ ላይ መቁረጥ መጀመር አልተቻለም። ገጹን እንደገና ይጫኑ እና እንደገና ይሞክሩ።"
+  },
+  "panel_error_needs_gesture": {
+    "message": "በዚህ ገጽ ላይ ለመቁረጥ $P1$ ይጫኑ ወይም የ$P2$ አዶውን ጠቅ ያድርጉ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "panel_error_restricted": {
+    "message": "Chrome ቅጥያዎች ይህን ገጽ እንዲያነቡ አይፈቅድም። የማመልከቻ ቅጹን ይክፈቱ እና እንደገና ይሞክሩ።"
+  },
+  "panel_fill_whole_form": {
+    "message": "ወይም ሙሉውን ቅጽ በአንድ ጊዜ ሙላ"
+  },
+  "panel_hidden_text": {
+    "message": "ይህ ገጽ በመረጡት አካባቢ የተደበቀ ጽሑፍ አለው። ተትቷል።"
+  },
+  "panel_job_selecting": {
+    "message": "በሥራ ማስታወቂያው ዙሪያ ይጎትቱ። Esc ይሰርዛል።"
+  },
+  "panel_nav": {
+    "message": "ፓነል"
+  },
+  "panel_no_text": {
+    "message": "በምርጫው ውስጥ ምንም ጽሑፍ አልተገኘም።"
+  },
+  "panel_on_the_page": {
+    "message": "ይጫኑ"
+  },
+  "panel_or_press": {
+    "message": "ወይም በገጹ ላይ"
+  },
+  "panel_question": {
+    "message": "ጥያቄ"
+  },
+  "panel_reading": {
+    "message": "በማንበብ ላይ"
+  },
+  "panel_ready": {
+    "message": "ለመጀመር ዝግጁ"
+  },
+  "panel_retry": {
+    "message": "እንደገና ሞክር"
+  },
+  "panel_settings": {
+    "message": "ቅንብሮች"
+  },
+  "panel_shortcuts": {
+    "message": "የቁልፍ ሰሌዳ አቋራጮች"
+  },
+  "panel_shortcuts_title": {
+    "message": "የቁልፍ ሰሌዳ አቋራጮች (?)"
+  },
+  "panel_snipped_region": {
+    "message": "የተቆረጠው ክፍል"
+  },
+  "panel_tab_answer": {
+    "message": "መልስ"
+  },
+  "panel_tab_form": {
+    "message": "ቅጽ"
+  },
+  "panel_tab_job": {
+    "message": "ሥራ"
+  },
+  "panel_tab_library": {
+    "message": "ቤተ መጻሕፍት"
+  },
+  "panel_tab_profile": {
+    "message": "መገለጫ"
+  },
+  "panelIdle": {
+    "message": "መልስ ለማርቀቅ ጥያቄ ይቁረጡ።"
+  },
+  "panelNeedsKey": {
+    "message": "ለመጀመር የ API ቁልፍዎን ያክሉ።"
+  },
+  "panelNeedsProfile": {
+    "message": "መልሶች የሚመሰረቱበት ነገር እንዲኖራቸው ሲቪዎን ያክሉ።"
+  },
+  "panelSelecting": {
+    "message": "በገጹ ላይ ጥያቄውን ይምረጡ። Esc ይሰርዛል።"
+  },
+  "profile_conflicts": {
+    "message": "ምንጮችዎ በ$P1$ ቦታዎች ይለያያሉ። መገለጫውን ያረጋግጡ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_counts": {
+    "message": "$P1$ ሥራዎች፣ $P2$ ፕሮጀክቶች፣ $P3$ ክህሎቶች",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "profile_edit": {
+    "message": "መገለጫ አርትዕ"
+  },
+  "profile_no_sources": {
+    "message": "እስካሁን የለም።"
+  },
+  "profile_none": {
+    "message": "እስካሁን መገለጫ የለም። መገለጫ እስኪገነቡ ድረስ መልሶች ምንጮችዎን በቀጥታ ይጠቀማሉ።"
+  },
+  "profile_none_using": {
+    "message": "እስካሁን መገለጫ የለም፣ $P1$ ጥቅም ላይ እየዋለ ነው",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_cover_letter": {
+    "message": "የማመልከቻ ደብዳቤ"
+  },
+  "profile_part_note": {
+    "message": "$P1$ ማስታወሻ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_notes": {
+    "message": "$P1$ ማስታወሻዎች",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_resume": {
+    "message": "ሲቪ"
+  },
+  "profile_part_resumes": {
+    "message": "$P1$ ሲቪዎች",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_site": {
+    "message": "$P1$ ጣቢያ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_sites": {
+    "message": "$P1$ ጣቢያዎች",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_stories": {
+    "message": "$P1$ ታሪኮች",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_part_story": {
+    "message": "$P1$ ታሪክ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_ready": {
+    "message": "መገለጫው ዝግጁ ነው"
+  },
+  "profile_ready_from": {
+    "message": "መገለጫው ዝግጁ ነው: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "profile_sources": {
+    "message": "ምንጮች"
+  },
+  "profile_standard_answers": {
+    "message": "መደበኛ መልሶች"
+  },
+  "profile_unnamed": {
+    "message": "ስም ያልተሰጠው አመልካች"
+  },
+  "reminder_many": {
+    "message": "$P1$ ማመልከቻዎች ለተወሰነ ጊዜ ምንም ዜና የላቸውም። ለማየት ጠቅ ያድርጉ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "reminder_one": {
+    "message": "$P1$: $P2$፣ በ$P3$ ቀናት ውስጥ ምንም ዜና የለም።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "reminder_role_at_company": {
+    "message": "$P1$ በ$P2$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "reminder_title": {
+    "message": "የመከታተያ ጊዜ ደርሷል"
+  },
+  "reminder_your_application": {
+    "message": "የእርስዎ ማመልከቻ"
+  },
+  "resume_assumed": {
+    "message": "የተገመተ"
+  },
+  "resume_assumed_title": {
+    "message": "በውሂብዎ ውስጥ የለም: ከመጠቀምዎ በፊት ያረጋግጡ"
+  },
+  "resume_bullets": {
+    "message": "ነጥቦች"
+  },
+  "resume_copied": {
+    "message": "ተቀድቷል"
+  },
+  "resume_copy": {
+    "message": "ቅዳ"
+  },
+  "resume_copy_all": {
+    "message": "ሁሉንም ቅዳ"
+  },
+  "resume_error": {
+    "message": "ሲቪውን ማስማማት አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "resume_for": {
+    "message": "ለ$P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "resume_intro": {
+    "message": "እውነተኛ ነጥቦችዎ፣ በሥራ ማስታወቂያው ቋንቋ እንደገና የተጻፉ። እውነታዎች እና ቁጥሮች አይቀየሩም።"
+  },
+  "resume_needs_job": {
+    "message": "ይጠቀሙ፣ ከዚያ የሲቪ ነጥቦችዎን ለዚህ ሥራ በሚስማማ መልኩ እንደገና ተጽፈው ያግኙ።"
+  },
+  "resume_new_bullet": {
+    "message": "በመገለጫዎ ውስጥ ላለ ክፍተት አዲስ ነጥብ።"
+  },
+  "resume_run_again": {
+    "message": "እንደገና አስማማ"
+  },
+  "resume_running": {
+    "message": "ሲቪዎን በማስማማት ላይ…"
+  },
+  "resume_skills": {
+    "message": "ክህሎቶች፣ በዚህ ቅደም ተከተል"
+  },
+  "resume_summary": {
+    "message": "ማጠቃለያ"
+  },
+  "resume_title": {
+    "message": "ሲቪዬን አስማማ"
+  },
+  "resume_was": {
+    "message": "የነበረው: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "shortcuts_close": {
+    "message": "ዝጋ"
+  },
+  "shortcuts_copy": {
+    "message": "መልሱን ቅዳ"
+  },
+  "shortcuts_insert": {
+    "message": "መልሱን አስገባ"
+  },
+  "shortcuts_regenerate": {
+    "message": "እንደገና ፍጠር"
+  },
+  "shortcuts_snip": {
+    "message": "ጥያቄ ቁረጥ (በገጹ ላይ)"
+  },
+  "shortcuts_stop": {
+    "message": "ማርቀቁን አቁም፣ ወይም መቁረጡን ሰርዝ"
+  },
+  "shortcuts_tabs": {
+    "message": "መልስ፣ ሥራ፣ ቅጽ፣ ቤተ መጻሕፍት፣ መገለጫ"
+  },
+  "shortcuts_this_list": {
+    "message": "ይህ ዝርዝር"
+  },
+  "shortcuts_title": {
+    "message": "የቁልፍ ሰሌዳ አቋራጮች"
+  },
+  "shortcuts_versions": {
+    "message": "ቀዳሚ ወይም ቀጣይ ስሪት"
+  },
+  "status_applied": {
+    "message": "ማመልከቻ ገብቷል"
+  },
+  "status_interviewing": {
+    "message": "በቃለ መጠይቅ ላይ"
+  },
+  "status_offer": {
+    "message": "የሥራ ቅናሽ"
+  },
+  "status_rejected": {
+    "message": "ውድቅ ተደርጓል"
+  },
+  "status_saved": {
+    "message": "ተቀምጧል"
+  },
+  "status_withdrawn": {
+    "message": "ተሰርዟል"
+  },
+  "tracker_application": {
+    "message": "ማመልከቻ"
+  },
+  "tracker_no_news": {
+    "message": "በ$P1$ ቀናት ውስጥ ምንም ዜና የለም።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "tracker_see_all": {
+    "message": "ሁሉንም እይ"
+  },
+  "tracker_track": {
+    "message": "ይህን ማመልከቻ ተከታተል"
+  },
+  "tracker_write_follow_up": {
+    "message": "የመከታተያ መልዕክት ጻፍ"
+  },
+  "version_another_angle": {
+    "message": "ሌላ አቀራረብ"
+  },
+  "version_facts_fixed": {
+    "message": "እውነታዎች ተስተካክለዋል"
+  },
+  "version_first_draft": {
+    "message": "የመጀመሪያ ረቂቅ"
+  },
+  "version_fit_limit": {
+    "message": "ከገደቡ ጋር የተስማማ"
+  },
+  "version_longer": {
+    "message": "ረዘም ያለ"
+  },
+  "version_more_casual": {
+    "message": "ይበልጥ ቀለል ያለ"
+  },
+  "version_more_formal": {
+    "message": "ይበልጥ መደበኛ"
+  },
+  "version_shorter": {
+    "message": "አጠር ያለ"
+  },
+  "version_your_change": {
+    "message": "የእርስዎ ለውጥ"
+  }
+}

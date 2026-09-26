@@ -54,11 +54,11 @@ watch(
 type TabId = 'answer' | 'job' | 'form' | 'library' | 'profile';
 const tab = ref<TabId>('answer');
 const TABS: { id: TabId; label: string; icon: IconName }[] = [
-  { id: 'answer', label: 'Answer', icon: 'sparkle' },
-  { id: 'job', label: 'Job', icon: 'briefcase' },
-  { id: 'form', label: 'Form', icon: 'form' },
-  { id: 'library', label: 'Library', icon: 'bookmark' },
-  { id: 'profile', label: 'Profile', icon: 'user' },
+  { id: 'answer', label: t('panel_tab_answer', 'Answer'), icon: 'sparkle' },
+  { id: 'job', label: t('panel_tab_job', 'Job'), icon: 'briefcase' },
+  { id: 'form', label: t('panel_tab_form', 'Form'), icon: 'form' },
+  { id: 'library', label: t('panel_tab_library', 'Library'), icon: 'bookmark' },
+  { id: 'profile', label: t('panel_tab_profile', 'Profile'), icon: 'user' },
 ];
 const profileLine = ref<string | null>(null);
 
@@ -87,7 +87,8 @@ watch(
 // Job snip progress shows in the job bar.
 watch(status, (s) => {
   if (s?.mode !== 'job') return;
-  if (s.state === 'selecting') job.busy.value = 'Drag around the job post. Esc cancels.';
+  if (s.state === 'selecting')
+    job.busy.value = t('panel_job_selecting', 'Drag around the job post. Esc cancels.');
   else if (s.state === 'cancelled' || s.state === 'error') job.busy.value = '';
 });
 
@@ -112,11 +113,21 @@ const HIDDEN_TEXT_MIN = 20;
 const shortcut = ref<string>(BRAND.shortcut);
 
 const ERRORS: Record<CaptureErrorCode, string> = {
-  RESTRICTED_PAGE:
+  RESTRICTED_PAGE: t(
+    'panel_error_restricted',
     "Chrome doesn't let extensions read this page. Open the application form and try again.",
-  NEEDS_GESTURE: `Press ${BRAND.shortcut} or click the ${BRAND.name} icon to snip on this page.`,
-  CAPTURE_FAILED: "Couldn't take the screenshot. Try again.",
-  INJECT_FAILED: "Couldn't start snipping on this page. Reload the page and try again.",
+  ),
+  NEEDS_GESTURE: t(
+    'panel_error_needs_gesture',
+    'Press $1 or click the $2 icon to snip on this page.',
+    BRAND.shortcut,
+    BRAND.name,
+  ),
+  CAPTURE_FAILED: t('panel_error_capture_failed', "Couldn't take the screenshot. Try again."),
+  INJECT_FAILED: t(
+    'panel_error_inject_failed',
+    "Couldn't start snipping on this page. Reload the page and try again.",
+  ),
 };
 
 const showShortcuts = ref(false);
@@ -220,8 +231,8 @@ function openSettings(section?: string) {
       <button
         class="btn btn-icon"
         type="button"
-        aria-label="Settings"
-        title="Settings"
+        :aria-label="t('panel_settings', 'Settings')"
+        :title="t('panel_settings', 'Settings')"
         @click="openSettings()"
       >
         <Icon name="settings" :size="18" />
@@ -230,7 +241,7 @@ function openSettings(section?: string) {
 
     <JobBar :state="job" />
 
-    <nav class="px-3 pt-3" aria-label="Panel">
+    <nav class="px-3 pt-3" :aria-label="t('panel_nav', 'Panel')">
       <div class="grid grid-cols-5 gap-1 rounded-[10px] bg-rule/60 p-1" role="tablist">
         <button
           v-for="tb in TABS"
@@ -288,32 +299,36 @@ function openSettings(section?: string) {
           />
         </div>
         <template v-if="readiness === 'needs-key'">
-          <h2 class="text-[15px] font-[650]">Connect your AI</h2>
+          <h2 class="text-[15px] font-[650]">{{ t('panel_connect_ai', 'Connect your AI') }}</h2>
           <p class="text-graphite-2">{{ t('panelNeedsKey', 'Add your API key to start.') }}</p>
           <button class="btn btn-primary" type="button" @click="openSettings('provider')">
-            <Icon name="key" /> Open settings
+            <Icon name="key" /> {{ t('buttonOpenSettings', 'Open settings') }}
           </button>
         </template>
         <template v-else-if="readiness === 'needs-profile'">
-          <h2 class="text-[15px] font-[650]">Add your resume</h2>
+          <h2 class="text-[15px] font-[650]">
+            {{ t('panel_add_your_resume', 'Add your resume') }}
+          </h2>
           <p class="text-graphite-2">
             {{ t('panelNeedsProfile', 'Add your resume so answers have something to draw from.') }}
           </p>
           <button class="btn btn-primary" type="button" @click="openSettings('sources')">
-            <Icon name="file" /> Add resume
+            <Icon name="file" /> {{ t('buttonAddResume', 'Add resume') }}
           </button>
         </template>
         <template v-else>
-          <h2 class="text-[15px] font-[650]">Ready when you are</h2>
+          <h2 class="text-[15px] font-[650]">{{ t('panel_ready', 'Ready when you are') }}</h2>
           <p class="text-graphite-2">{{ t('panelIdle', 'Snip a question to draft an answer.') }}</p>
           <button class="btn btn-primary px-4" type="button" :disabled="busy" @click="snip">
-            <Icon name="snip" /> Snip question
+            <Icon name="snip" /> {{ t('buttonSnipQuestion', 'Snip question') }}
           </button>
           <p class="text-[12.5px] text-graphite-2">
-            or press <kbd class="kbd">{{ shortcut }}</kbd> on the page
+            {{ t('panel_or_press', 'or press') }} <kbd class="kbd">{{ shortcut }}</kbd>
+            {{ t('panel_on_the_page', 'on the page') }}
           </p>
           <button class="btn btn-quiet text-[12.5px]" type="button" @click="tab = 'form'">
-            <Icon name="form" :size="14" /> Or fill the whole form at once
+            <Icon name="form" :size="14" />
+            {{ t('panel_fill_whole_form', 'Or fill the whole form at once') }}
           </button>
         </template>
       </section>
@@ -329,7 +344,9 @@ function openSettings(section?: string) {
         <p role="status" class="font-medium">
           {{ t('panelSelecting', 'Select the question on the page. Esc cancels.') }}
         </p>
-        <button class="btn" type="button" @click="cancelSelection">Cancel</button>
+        <button class="btn" type="button" @click="cancelSelection">
+          {{ t('panel_cancel', 'Cancel') }}
+        </button>
       </section>
 
       <section
@@ -337,7 +354,7 @@ function openSettings(section?: string) {
         class="card flex flex-col gap-2.5 p-4"
         data-state="reading"
       >
-        <p role="status" class="eyebrow">Reading</p>
+        <p role="status" class="eyebrow">{{ t('panel_reading', 'Reading') }}</p>
         <div class="h-3 w-4/5 animate-pulse rounded bg-rule" />
         <div class="h-3 w-3/5 animate-pulse rounded bg-rule" />
       </section>
@@ -357,7 +374,7 @@ function openSettings(section?: string) {
           type="button"
           @click="allowAllSites"
         >
-          Allow snipping from the panel on all sites
+          {{ t('panel_allow_all_sites', 'Allow snipping from the panel on all sites') }}
         </button>
         <button
           v-else-if="view.code !== 'RESTRICTED_PAGE'"
@@ -366,7 +383,7 @@ function openSettings(section?: string) {
           :disabled="busy"
           @click="snip"
         >
-          <Icon name="refresh" /> Retry
+          <Icon name="refresh" /> {{ t('panel_retry', 'Retry') }}
         </button>
       </section>
 
@@ -379,15 +396,15 @@ function openSettings(section?: string) {
           <div v-if="view.capture.image" class="bg-surface px-3 pt-3 pb-2">
             <CropThumb
               :src="view.capture.image.dataUrl"
-              alt="Snipped region"
+              :alt="t('panel_snipped_region', 'Snipped region')"
               :width="view.capture.image.width"
               :height="view.capture.image.height"
             />
           </div>
           <div class="border-t border-canary-edge bg-canary px-3.5 py-2.5">
-            <p class="eyebrow mb-0.5">Question</p>
+            <p class="eyebrow mb-0.5">{{ t('panel_question', 'Question') }}</p>
             <p class="whitespace-pre-wrap" data-testid="page-text">
-              {{ view.capture.pageText || 'No text found in the selection.' }}
+              {{ view.capture.pageText || t('panel_no_text', 'No text found in the selection.') }}
             </p>
           </div>
         </div>
@@ -397,11 +414,16 @@ function openSettings(section?: string) {
           data-testid="hidden-text"
         >
           <Icon name="shield" :size="16" class="mt-0.5" />
-          This page has hidden text in the area you selected. It was left out.
+          {{
+            t(
+              'panel_hidden_text',
+              'This page has hidden text in the area you selected. It was left out.',
+            )
+          }}
         </p>
         <AnswerPanel :state="answer" :insert="insert" @open-settings="openSettings" />
         <button class="btn self-start" type="button" :disabled="busy" @click="snip">
-          <Icon name="snip" /> Snip question
+          <Icon name="snip" /> {{ t('buttonSnipQuestion', 'Snip question') }}
         </button>
       </section>
     </main>
@@ -411,8 +433,8 @@ function openSettings(section?: string) {
       <button
         class="btn btn-quiet ml-auto min-h-0 text-[12px]"
         type="button"
-        aria-label="Keyboard shortcuts"
-        title="Keyboard shortcuts (?)"
+        :aria-label="t('panel_shortcuts', 'Keyboard shortcuts')"
+        :title="t('panel_shortcuts_title', 'Keyboard shortcuts (?)')"
         @click="showShortcuts = true"
       >
         <kbd class="kbd">?</kbd>

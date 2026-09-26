@@ -15,6 +15,7 @@ import { createAppProvider } from '@/llm/provider';
 import { sendToBackground, sendToTab } from '@/messaging/send';
 import { getApiKey, getSettings, pendingJobItem } from '@/storage/items';
 import type { PendingCapture } from '@/storage/schema';
+import { t } from '@/ui/i18n';
 
 const MIN_SNIP_TEXT = 200;
 
@@ -42,7 +43,7 @@ export function useJob() {
     const pending = await pendingJobItem.getValue();
     if (!pending) return;
     await pendingJobItem.removeValue();
-    busy.value = 'Saving the job post';
+    busy.value = t('job_busy_saving', 'Saving the job post');
     try {
       await save(pending.hostname, pending.title, pending.text, false);
     } catch (err) {
@@ -103,22 +104,28 @@ export function useJob() {
     error.value = '';
     const tabId = await activeTabId();
     if (tabId === undefined) return;
-    busy.value = scope === 'selection' ? 'Reading the selection' : 'Reading the page';
+    busy.value =
+      scope === 'selection'
+        ? t('job_busy_selection', 'Reading the selection')
+        : t('job_busy_page', 'Reading the page');
     try {
       const ready = await sendToBackground<'ENSURE_CAPTURE'>({ type: 'ENSURE_CAPTURE', tabId });
       if (!ready.ok) {
         error.value =
           ready.error === 'RESTRICTED_PAGE'
-            ? "Chrome doesn't let extensions read this page."
-            : 'Press Alt+Shift+Q or click the AnswerSnap icon on the page first, then try again.';
+            ? t('job_restricted', "Chrome doesn't let extensions read this page.")
+            : t(
+                'job_capture_not_ready',
+                'Press Alt+Shift+Q or click the AnswerSnap icon on the page first, then try again.',
+              );
         return;
       }
       const read = await sendToTab<'READ_PAGE_TEXT'>(tabId, { type: 'READ_PAGE_TEXT', scope });
       if (!read.text.trim()) {
         error.value =
           scope === 'selection'
-            ? 'Select the job post text on the page first.'
-            : 'No readable text on this page.';
+            ? t('job_select_first', 'Select the job post text on the page first.')
+            : t('job_no_text', 'No readable text on this page.');
         return;
       }
       await save(new URL(read.url).hostname, read.title, read.text, false, read.url);
@@ -126,7 +133,7 @@ export function useJob() {
       error.value =
         err instanceof LlmError
           ? describeError(err)
-          : "Couldn't read the page. Try snipping the job post instead.";
+          : t('job_read_failed', "Couldn't read the page. Try snipping the job post instead.");
     } finally {
       busy.value = '';
     }
@@ -142,8 +149,11 @@ export function useJob() {
     if (!reply.ok) {
       error.value =
         reply.error === 'RESTRICTED_PAGE'
-          ? "Chrome doesn't let extensions read this page."
-          : 'Press Alt+Shift+Q or click the AnswerSnap icon on the page first, then try again.';
+          ? t('job_restricted', "Chrome doesn't let extensions read this page.")
+          : t(
+              'job_capture_not_ready',
+              'Press Alt+Shift+Q or click the AnswerSnap icon on the page first, then try again.',
+            );
     }
   }
 
@@ -151,7 +161,7 @@ export function useJob() {
 
   /** A job-mode capture arrived: use its visible text, or read the image if the text is thin. */
   async function fromCapture(capture: PendingCapture) {
-    busy.value = 'Reading the job post';
+    busy.value = t('job_busy_job', 'Reading the job post');
     try {
       let text = capture.pageText;
       if (text.length < MIN_SNIP_TEXT && capture.image) {

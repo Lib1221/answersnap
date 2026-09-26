@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { neutralize } from '@/kb/contextBuilder';
+import { t } from '@/ui/i18n';
 import type { LlmProvider, SystemBlock } from './types';
 
 // Job fit check: how well the candidate's own data matches the saved job post. Analysis for the
@@ -34,10 +35,10 @@ export type FitVerdict = 'strong' | 'good' | 'stretch' | 'long-shot';
 export type JobFit = z.infer<typeof JobFitSchema> & { verdict: FitVerdict; model: string };
 
 export const VERDICT_LABELS: Record<FitVerdict, string> = {
-  strong: 'Strong fit',
-  good: 'Good fit',
-  stretch: 'Stretch',
-  'long-shot': 'Long shot',
+  strong: t('fit_verdict_strong', 'Strong fit'),
+  good: t('fit_verdict_good', 'Good fit'),
+  stretch: t('fit_verdict_stretch', 'Stretch'),
+  'long-shot': t('fit_verdict_long_shot', 'Long shot'),
 };
 
 /** The label follows the score, so the two can't disagree. */

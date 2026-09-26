@@ -1,4 +1,5 @@
 import { runResumeTailor, type TailoredResume } from '@/llm/resumeTailor';
+import { t } from '@/ui/i18n';
 import type { useJob } from './useJob';
 import { useJobTool } from './useJobTool';
 
@@ -16,6 +17,6 @@ export function useResume(job: ReturnType<typeof useJob>) {
         fillGaps: task.settings.fillGaps,
         signal,
       }),
-    "Couldn't tailor the resume. Try again.",
+    t('resume_error', "Couldn't tailor the resume. Try again."),
   );
 }

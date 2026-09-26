@@ -10,6 +10,7 @@ import type { Message, MessageType, Reply } from '@/messaging/protocol';
 import { sendToBackground, sendToTab } from '@/messaging/send';
 import { getApiKey, getSettings, pendingFormItem } from '@/storage/items';
 import type { FieldInfo, PageInfo } from '@/storage/schema';
+import { t } from '@/ui/i18n';
 import { errorMessage } from './useAnswer';
 
 export interface ReviewItem extends FormFieldDraft {
@@ -19,8 +20,10 @@ export interface ReviewItem extends FormFieldDraft {
 }
 
 const CHOICE_KINDS: FieldInfo['kind'][] = ['select', 'radio-group', 'checkbox-group'];
-const GESTURE_HINT =
-  'Right-click the page and choose "Fill this form with AnswerSnap", or press Alt+Shift+Q there first.';
+const GESTURE_HINT = t(
+  'form_gesture_hint',
+  'Right-click the page and choose "Fill this form with AnswerSnap", or press Alt+Shift+Q there first.',
+);
 
 /** "Fill form": scan every field, draft all answers in one request, review, insert (never submit). */
 export function useFormFill() {
@@ -51,7 +54,7 @@ export function useFormFill() {
     fields.value = found;
     toDraft.value = new Set(found.filter((f) => !f.currentValue?.trim()).map((f) => f.targetId));
     items.value = [];
-    error.value = found.length ? '' : 'No fillable fields found on this page.';
+    error.value = found.length ? '' : t('form_no_fields', 'No fillable fields found on this page.');
     phase.value = found.length ? 'scanned' : 'idle';
   }
 
@@ -83,7 +86,7 @@ export function useFormFill() {
       error.value =
         err instanceof Error && err.message === GESTURE_HINT
           ? GESTURE_HINT
-          : "Couldn't read the fields on this page.";
+          : t('form_cant_read', "Couldn't read the fields on this page.");
     }
   }
 
@@ -107,15 +110,22 @@ export function useFormFill() {
     error.value = '';
     const settings = await getSettings();
     const key = await getApiKey(settings.provider);
-    if (!key) return void (error.value = 'Add your API key to start.');
+    if (!key) return void (error.value = t('form_needs_key', 'Add your API key to start.'));
     const data = await loadCandidateData();
     if (!hasCandidateData(data))
-      return void (error.value = 'Add your resume so answers have something to draw from.');
+      return void (error.value = t(
+        'form_needs_profile',
+        'Add your resume so answers have something to draw from.',
+      ));
     const chosen = fields.value.filter((f) => toDraft.value.has(f.targetId));
-    if (!chosen.length) return void (error.value = 'Tick at least one field to draft.');
+    if (!chosen.length)
+      return void (error.value = t('form_tick_one', 'Tick at least one field to draft.'));
 
     phase.value = 'drafting';
-    progress.value = `Drafting ${chosen.length} ${chosen.length === 1 ? 'answer' : 'answers'}`;
+    progress.value =
+      chosen.length === 1
+        ? t('form_drafting_one', 'Drafting $1 answer', String(chosen.length))
+        : t('form_drafting_n', 'Drafting $1 answers', String(chosen.length));
     controller = new AbortController();
     model.value = settings.model;
     const provider = createAppProvider(settings, key, (e) => (model.value = e.to));
@@ -133,7 +143,13 @@ export function useFormFill() {
         signal: controller.signal,
         onProgress: (done, total) => {
           if (total > 0 && done < total)
-            progress.value = `Drafting answers ${done + 1} to ${Math.min(total, done + 20)} of ${total}`;
+            progress.value = t(
+              'form_drafting_range',
+              'Drafting answers $1 to $2 of $3',
+              String(done + 1),
+              String(Math.min(total, done + 20)),
+              String(total),
+            );
         },
       });
       items.value = drafts.map((d) => ({ ...d, insert: shouldInsertByDefault(d) }));
@@ -144,7 +160,7 @@ export function useFormFill() {
       error.value =
         err instanceof LlmError
           ? errorMessage(err, settings)
-          : "Couldn't draft the answers. Try again.";
+          : t('form_draft_failed', "Couldn't draft the answers. Try again.");
     } finally {
       progress.value = '';
     }
@@ -192,17 +208,17 @@ export function useFormFill() {
           item.result = 'failed';
           item.resultNote =
             result.reason === 'NO_MATCH'
-              ? 'None of the options matched.'
+              ? t('form_no_match', 'None of the options matched.')
               : result.reason === 'TARGET_GONE'
-                ? 'The field is gone. Scan the form again.'
-                : "Couldn't fill it directly. Copy the answer and paste it.";
+                ? t('form_target_gone', 'The field is gone. Scan the form again.')
+                : t('form_fill_failed', "Couldn't fill it directly. Copy the answer and paste it.");
         }
       } catch (err) {
         item.result = 'failed';
         item.resultNote =
           err instanceof Error && err.message === GESTURE_HINT
             ? GESTURE_HINT
-            : "Couldn't reach the page.";
+            : t('form_unreachable', "Couldn't reach the page.");
       }
     }
     phase.value = 'done';
