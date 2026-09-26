@@ -50,32 +50,16 @@ export function useLetter(job: ReturnType<typeof useJob>) {
   onUnmounted(() => unwatch?.());
 
   async function write() {
-    const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-    const url = tab?.url?.startsWith('http') ? new URL(tab.url) : null;
-    const jobCtx = url ? await getJobContext(url.hostname) : null;
     await loadSample();
-    const c: PendingCapture = {
-      id: `letter-${Date.now()}`,
-      createdAt: Date.now(),
-      mode: 'question',
-      tabId: tab?.id ?? -1,
-      windowId: tab?.windowId ?? -1,
-      pageText: letterQuestion({
+    const { capture: c } = await activeTabRequest((jobCtx) =>
+      letterQuestion({
         company: company.value,
         role: role.value,
         notes: notes.value,
-        hasJob: !!jobCtx,
+        hasJob: jobCtx,
         hasSample: hasSample.value,
       }),
-      hiddenTextChars: 0,
-      page: {
-        title: tab?.title ?? '',
-        hostname: url?.hostname ?? '',
-        path: url?.pathname ?? '',
-        lang: '',
-      },
-      candidates: [],
-    };
+    );
     capture.value = c;
     await answer.run(c, {
       force: 'new',
@@ -86,4 +70,35 @@ export function useLetter(job: ReturnType<typeof useJob>) {
   }
 
   return { answer, insert, company, role, notes, length, hasSample, write };
+}
+
+/**
+ * A request drafted by the answer engine without a snip (letters, emails): the question is our own
+ * text, the page is the active tab, so its saved job post and Insert's field picker still apply.
+ */
+export async function activeTabRequest(
+  question: (hasJob: boolean) => string,
+): Promise<{ capture: PendingCapture; hasJob: boolean }> {
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+  const url = tab?.url?.startsWith('http') ? new URL(tab.url) : null;
+  const hasJob = !!(url && (await getJobContext(url.hostname)));
+  return {
+    hasJob,
+    capture: {
+      id: `request-${Date.now()}`,
+      createdAt: Date.now(),
+      mode: 'question',
+      tabId: tab?.id ?? -1,
+      windowId: tab?.windowId ?? -1,
+      pageText: question(hasJob),
+      hiddenTextChars: 0,
+      page: {
+        title: tab?.title ?? '',
+        hostname: url?.hostname ?? '',
+        path: url?.pathname ?? '',
+        lang: '',
+      },
+      candidates: [],
+    },
+  };
 }

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Icon, { type IconName } from '@/ui/AppIcon.vue';
+import EmailPanel from './EmailPanel.vue';
 import FitPanel from './FitPanel.vue';
 import InterviewPanel from './InterviewPanel.vue';
 import LetterTab from './LetterTab.vue';
+import type { useEmail } from './useEmail';
 import type { useInterview } from './useInterview';
 import type { useJob } from './useJob';
 import type { useJobFit } from './useJobFit';
@@ -14,14 +16,16 @@ const props = defineProps<{
   letter: ReturnType<typeof useLetter>;
   fit: ReturnType<typeof useJobFit>;
   interview: ReturnType<typeof useInterview>;
+  email: ReturnType<typeof useEmail>;
 }>();
 const emit = defineEmits<{ openSettings: [section?: string] }>();
 
-type Sub = 'letter' | 'fit' | 'interview';
+type Sub = 'letter' | 'fit' | 'interview' | 'email';
 const SUBS: { id: Sub; label: string; icon: IconName }[] = [
   { id: 'letter', label: 'Letter', icon: 'mail' },
   { id: 'fit', label: 'Fit', icon: 'target' },
   { id: 'interview', label: 'Interview', icon: 'user' },
+  { id: 'email', label: 'Email', icon: 'pen' },
 ];
 const sub = ref<Sub>('letter');
 </script>
@@ -49,4 +53,9 @@ const sub = ref<Sub>('letter');
   />
   <FitPanel v-else-if="sub === 'fit'" :state="props.fit" :job="props.job" />
   <InterviewPanel v-else-if="sub === 'interview'" :state="props.interview" :job="props.job" />
+  <EmailPanel
+    v-else-if="sub === 'email'"
+    :state="props.email"
+    @open-settings="(s) => emit('openSettings', s)"
+  />
 </template>

@@ -23,7 +23,7 @@ extension can do is in one place. Items marked "needs Liben's OK" touch a hard r
       profile), gaps with what to do about them, keywords to use, and talking points.
 - [x] **Interview prep**: likely questions for this job (behavioral, technical, role,
       company) with suggested answers from your profile; copy or save to the Library.
-- [ ] **Follow-up emails**: thank-you after an interview, follow-up after applying,
+- [x] **Follow-up emails**: thank-you after an interview, follow-up after applying,
       check-in while waiting, accept or decline an offer, withdraw. Subject line included.
 - [ ] **Application tracker**: saving a job post starts tracking it. Status (saved, applied,
       interviewing, offer, rejected, withdrawn) from the Job tab; a Settings page lists every

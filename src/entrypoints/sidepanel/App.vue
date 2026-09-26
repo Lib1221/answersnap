@@ -24,6 +24,7 @@ import Icon, { type IconName } from '@/ui/AppIcon.vue';
 import LogoMark from '@/ui/LogoMark.vue';
 import { useInsert } from './useInsert';
 import { useJob } from './useJob';
+import { useEmail } from './useEmail';
 import { useInterview } from './useInterview';
 import { useJobFit } from './useJobFit';
 import { useLetter } from './useLetter';
@@ -37,6 +38,7 @@ const form = useFormFill();
 const letter = useLetter(job);
 const fit = useJobFit(job);
 const interview = useInterview(job);
+const email = useEmail(job);
 // A scan from the "Fill this form" menu opens the Form tab.
 watch(
   () => form.fields.value,
@@ -123,6 +125,7 @@ function onKey(e: KeyboardEvent) {
   if (status.value?.state === 'selecting') void cancelSelection();
   else if (['drafting', 'streaming'].includes(answer.phase.value)) answer.stop();
   else if (['drafting', 'streaming'].includes(letter.answer.phase.value)) letter.answer.stop();
+  else if (['drafting', 'streaming'].includes(email.answer.phase.value)) email.answer.stop();
 }
 
 onMounted(async () => {
@@ -208,6 +211,7 @@ function openSettings(section?: string) {
         :letter="letter"
         :fit="fit"
         :interview="interview"
+        :email="email"
         @open-settings="openSettings"
       />
     </main>

@@ -13,8 +13,8 @@ import type { useInsert } from './useInsert';
 const props = defineProps<{
   state: ReturnType<typeof useAnswer>;
   insert: ReturnType<typeof useInsert>;
-  /** The Letter tab: letter wording and a taller box. */
-  letter?: boolean;
+  /** Job tab drafts: their own wording and a taller box. */
+  variant?: 'letter' | 'email';
 }>();
 const emit = defineEmits<{ openSettings: [section?: string] }>();
 
@@ -95,8 +95,14 @@ const cacheOff = computed(() => {
 <template>
   <section class="card flex flex-col gap-3 p-3.5" data-testid="answer-section">
     <p class="eyebrow flex items-center gap-1.5">
-      <Icon :name="letter ? 'mail' : 'sparkle'" :size="14" class="text-ink" />
-      {{ letter ? 'Your cover letter' : 'Your answer' }}
+      <Icon :name="variant ? 'mail' : 'sparkle'" :size="14" class="text-ink" />
+      {{
+        variant === 'letter'
+          ? 'Your cover letter'
+          : variant === 'email'
+            ? 'Your email'
+            : 'Your answer'
+      }}
     </p>
     <p
       v-if="s.fallbackNote.value"
@@ -126,7 +132,7 @@ const cacheOff = computed(() => {
         data-testid="answer"
         class="field-input min-h-36 resize-y p-3 text-[15px] leading-[1.6]"
         :readonly="streaming"
-        :rows="letter ? 16 : 6"
+        :rows="variant === 'letter' ? 16 : variant === 'email' ? 12 : 6"
       />
       <p
         class="text-[13px] tabular-nums"
@@ -348,7 +354,10 @@ const cacheOff = computed(() => {
     >
       <span v-if="ins.picking.value">Click the field on the page. Esc cancels.</span>
       <span v-else-if="targetText">Target: {{ targetText }}</span>
-      <span v-else-if="letter">Copy the letter, or pick the cover letter field on the page.</span>
+      <span v-else-if="variant === 'letter'"
+        >Copy the letter, or pick the cover letter field on the page.</span
+      >
+      <span v-else-if="variant === 'email'">Copy the email, or open it in your email app.</span>
       <span v-else>No text field found near the question. Copy the answer or pick a field.</span>
       <button
         class="btn btn-quiet min-h-0"

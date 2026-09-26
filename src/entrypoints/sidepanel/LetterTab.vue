@@ -131,7 +131,7 @@ const started = computed(() => l.answer.phase.value !== 'idle');
 
   <AnswerPanel
     v-if="started"
-    letter
+    variant="letter"
     :state="l.answer"
     :insert="l.insert"
     @open-settings="(s) => emit('openSettings', s)"

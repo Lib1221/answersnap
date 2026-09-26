@@ -164,6 +164,11 @@ const log: unknown[] = [];
 const counters = new Map<string, number>();
 
 const CANNED: [RegExp, string][] = [
+  // Job > Email.
+  [
+    /Write a thank-you email/i,
+    '<question>Thank-you email.</question>\n<type>long_text</type>\n<answer>Subject: Thank you for today\n\nHello Dana,\n\nThank you for talking with me about the Backend Engineer role. I enjoyed hearing how your team runs payouts.\n\nBest regards,\nJamie Park</answer>\n<missing></missing>\n<notes></notes>',
+  ],
   // Letter tab.
   [
     /Write a cover letter for/i,
