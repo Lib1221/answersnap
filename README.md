@@ -26,6 +26,12 @@ Made by Liben.
   machine-readable lines to fill your details, validate your codice fiscale, check a call's
   deadlines, age limits, and language minimums against your details, and keep a document
   checklist. Personal details are never sent to the AI.
+- **Resume builder:** build your CV in a FlowCV-style editor, starting from your profile. Add,
+  hide, rename, and reorder sections, write with bold, italics, and bullets, and style everything
+  (layout, columns, fonts, colors, headings, dates, skill levels) or pick one of 8 templates.
+  Write it in English, Italian, French, Spanish, or German, with the GDPR consent line Italian
+  applications ask for. Download PDF saves real, selectable text that matches the preview page
+  for page. Open it from Settings or the Profile tab.
 - **Application tracker:** every job post you save is tracked, from saved to offer, with notes
   and a CSV export.
 - **Story bank:** your STAR stories, used first for "tell me about a time" questions.

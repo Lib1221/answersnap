@@ -26,6 +26,7 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [x] LinkedIn headline options and About section (Profile tab)
 - [x] Keyboard shortcuts: Alt+1 to 6, Alt+C, Alt+R, Alt+arrows, and ? for the list
 - [x] Scholarship and university forms (Study tab): exact personal details from a verified profile (passport MRZ, codice fiscale check), fitted to each field's format, verified after filling; requirements reader with eligibility checks; Italy guide
+- [x] Resume builder (FlowCV style): sections you add, hide, rename, reorder, and duplicate; rich text; full design controls; 8 templates; one or two columns; resume language with the GDPR consent line; PDF export that matches the preview page for page
 
 ## Next
 
@@ -35,8 +36,10 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [x] Firefox build, experimental (`pnpm build:firefox`; the panel is a sidebar)
 - [ ] Test the Firefox build in a real Firefox and submit it to addons.mozilla.org
 - [x] Sync across devices (opt-in, Chrome Sync): settings, profile, standard answers, stories, cover letter, applications
+- [x] Resume builder: per-section settings (new page, heading, list layout, level style), photo crop, portrait shape, black and white, save my own design as a template
 
 ## Needs Liben's OK
 
 - [x] Follow-up reminders as Chrome notifications (approved: `alarms`, `notifications`)
 - [x] OpenRouter and Ollama providers (approved; no new manifest permissions needed)
+- [ ] More resume fonts (FlowCV's list): needs `@fontsource` packages, a new dependency

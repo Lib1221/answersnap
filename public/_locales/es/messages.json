@@ -2028,5 +2028,8 @@
   },
   "sch_part_year": {
     "message": "año"
+  },
+  "profile_resume_builder": {
+    "message": "Crear mi currículum (PDF)"
   }
 }

@@ -14,6 +14,10 @@ onMounted(async () => {
 });
 
 const profile = () => data.value?.profile as CandidateProfile | null | undefined;
+
+function openResumeBuilder() {
+  void browser.tabs.create({ url: browser.runtime.getURL('/resume.html') });
+}
 </script>
 
 <template>
@@ -67,6 +71,14 @@ const profile = () => data.value?.profile as CandidateProfile | null | undefined
       </ul>
       <p v-else class="text-[13px] text-graphite-2">{{ t('profile_no_sources', 'None yet.') }}</p>
     </div>
+    <button
+      class="btn btn-primary self-start"
+      type="button"
+      data-testid="open-resume-builder"
+      @click="openResumeBuilder"
+    >
+      {{ t('profile_resume_builder', 'Build my resume (PDF)') }}
+    </button>
     <div class="flex flex-wrap gap-2">
       <button class="btn" type="button" @click="emit('openSettings', 'profile')">
         {{ t('profile_edit', 'Edit profile') }}

@@ -24,6 +24,10 @@ where that data lives, and who receives it.
 - **Your application tracker:** for each job post you save, the site, role, company, the status
   you set, and your notes. It is never sent to the AI provider. Follow-up reminders are checked
   on this computer and shown as Chrome notifications; you can turn them off.
+- **Resumes you build** in the resume builder, including a photo if you add one. They are stored
+  only on this computer, are never sent to the AI provider, and are never synced. They are
+  included in your backup file. Download PDF uses Chrome's print dialog; the PDF is saved where
+  you choose.
 - **Your AI provider API key**, which you paste in yourself.
 
 ## Where it is stored

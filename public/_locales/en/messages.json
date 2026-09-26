@@ -1386,6 +1386,9 @@
       }
     }
   },
+  "profile_resume_builder": {
+    "message": "Build my resume (PDF)"
+  },
   "profile_sources": {
     "message": "Sources"
   },

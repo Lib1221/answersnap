@@ -83,6 +83,17 @@ async function dismissCorrupt() {
               {{ s.title }}
             </a>
           </li>
+          <li class="mt-2 border-t border-rule pt-2">
+            <a
+              href="/resume.html"
+              target="_blank"
+              class="flex items-center gap-2.5 rounded-[8px] px-2.5 py-2 text-[13.5px] text-graphite-2 transition-colors hover:bg-surface hover:text-graphite"
+              data-testid="open-resume-builder"
+            >
+              <Icon name="file" :size="16" />
+              Resume builder
+            </a>
+          </li>
         </ul>
       </nav>
       <div class="mt-auto flex flex-col gap-2 border-t border-rule px-2 pt-4">

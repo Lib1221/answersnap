@@ -1,0 +1,471 @@
+/* Resume document: the preview and the PDF use exactly these rules. Sizes are in pt and mm so
+   the printed page matches the preview. Everything reads CSS variables set from the design. */
+
+/* Installed Ethiopic fonts, used for Ethiopic characters only (Amharic names and places). Named
+   in every font stack before the generic family; Latin text keeps the chosen font. */
+@font-face {
+  font-family: 'RD Ethiopic';
+  src:
+    local('Noto Sans Ethiopic'), local('Noto Sans Ethiopic Regular'),
+    local('NotoSansEthiopic-Regular'), local('Nyala'), local('Abyssinica SIL');
+  unicode-range: U+1200-139F, U+2D80-2DDF, U+AB00-AB2F;
+}
+@font-face {
+  font-family: 'RD Ethiopic';
+  font-weight: 600 900;
+  src:
+    local('Noto Sans Ethiopic Bold'), local('NotoSansEthiopic-Bold'), local('Nyala'),
+    local('Abyssinica SIL');
+  unicode-range: U+1200-139F, U+2D80-2DDF, U+AB00-AB2F;
+}
+
+.rd-page {
+  position: relative;
+  box-sizing: border-box;
+  width: var(--rd-page-w);
+  height: var(--rd-page-h);
+  /* The bottom margin grows when a footer is on, so the footer never covers text. */
+  padding: var(--rd-my) var(--rd-mx) var(--rd-mb);
+  overflow: hidden;
+  background: #fff;
+  color: var(--rd-text);
+  font-family: var(--rd-font);
+  font-size: var(--rd-size);
+  line-height: var(--rd-lh);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  text-align: left;
+}
+.rd-page * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.rd-page a {
+  color: inherit;
+  text-decoration: none;
+}
+.rd-links-underline .rd-desc a,
+.rd-links-underline .rd-contacts a,
+.rd-links-underline .rd-entry-link {
+  text-decoration: underline;
+}
+.rd-links-icon .rd-desc a::after {
+  content: ' ↗';
+  font-size: 0.85em;
+}
+.rd-accent {
+  color: var(--rd-accent);
+}
+.rd-strong {
+  font-weight: 650;
+}
+.rd-muted {
+  color: color-mix(in srgb, var(--rd-text) 72%, #fff);
+}
+.rd-icon {
+  width: 0.95em;
+  height: 0.95em;
+  flex: none;
+  vertical-align: -0.12em;
+}
+
+/* Columns */
+.rd-columns {
+  display: flex;
+  gap: 7mm;
+  align-items: flex-start;
+}
+.rd-col-main {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.rd-col-side {
+  flex: 0 0 var(--rd-side-w);
+  min-width: 0;
+}
+/* The DOM keeps the main column first (better reading order for ATS); a left sidebar is drawn
+   by reversing the row. */
+.rd-sidebar-left .rd-columns {
+  flex-direction: row-reverse;
+}
+/* Tinted side column reaching the page edges. */
+.rd-fill-sidebar.rd-sidebar-left {
+  background: linear-gradient(
+    to right,
+    var(--rd-tint) 0,
+    var(--rd-tint) calc(var(--rd-mx) + var(--rd-side-w) + 3.5mm),
+    #fff 0
+  );
+}
+.rd-fill-sidebar.rd-sidebar-right {
+  background: linear-gradient(
+    to left,
+    var(--rd-tint) 0,
+    var(--rd-tint) calc(var(--rd-mx) + var(--rd-side-w) + 3.5mm),
+    #fff 0
+  );
+}
+
+/* A colored frame around every page (drawn on top, so no page shadow can hide it). */
+.rd-fill-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3mm solid var(--rd-accent);
+  pointer-events: none;
+}
+
+/* Header */
+.rd-header {
+  display: flex;
+  gap: 5mm;
+  align-items: center;
+  margin-bottom: var(--rd-section-gap);
+}
+.rd-align-center {
+  flex-direction: column;
+  text-align: center;
+}
+.rd-align-right {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+.rd-header-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rd-header-fill {
+  margin: calc(-1 * var(--rd-my)) calc(-1 * var(--rd-mx)) var(--rd-section-gap);
+  padding: var(--rd-my) var(--rd-mx) calc(var(--rd-my) * 0.8);
+  background: var(--rd-accent);
+  color: #fff;
+}
+.rd-name {
+  font-family: var(--rd-heading-font);
+  font-size: var(--rd-name-size);
+  font-weight: var(--rd-name-weight);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.rd-jobtitle {
+  margin-top: 1.5pt;
+  font-size: 1.15em;
+}
+.rd-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2pt 10pt;
+  margin-top: 4pt;
+  list-style: none;
+  font-size: 0.95em;
+}
+.rd-align-center .rd-contacts {
+  justify-content: center;
+}
+.rd-align-right .rd-contacts {
+  justify-content: flex-end;
+}
+.rd-contacts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 3pt;
+}
+.rd-contacts-bullets {
+  gap: 2pt 0;
+}
+.rd-contacts-bullets li + li::before {
+  content: '•';
+  margin: 0 6pt;
+}
+.rd-contacts-bars {
+  gap: 2pt 0;
+}
+.rd-contacts-bars li + li::before {
+  content: '|';
+  margin: 0 7pt;
+  opacity: 0.6;
+}
+.rd-contacts-lines {
+  flex-direction: column;
+  gap: 1pt;
+}
+.rd-col-side .rd-header {
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+.rd-col-side .rd-contacts {
+  flex-direction: column;
+  gap: 2pt;
+}
+.rd-col-side .rd-contacts li + li::before {
+  content: none;
+}
+.rd-photo {
+  display: block;
+  width: var(--rd-photo-size);
+  height: var(--rd-photo-size);
+  overflow: hidden;
+  flex: none;
+}
+.rd-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rd-photo-circle {
+  border-radius: 50%;
+}
+.rd-photo-rounded {
+  border-radius: 12%;
+}
+.rd-photo-portrait {
+  height: calc(var(--rd-photo-size) * 4 / 3);
+  border-radius: 4pt;
+}
+
+/* Section headings */
+.rd-section-start {
+  margin-top: var(--rd-section-gap);
+}
+.rd-block:not(.rd-section-start) {
+  margin-top: var(--rd-entry-gap);
+}
+/* The next bullet, paragraph, or row of a section that a page may break before. */
+.rd-block.rd-more-li {
+  margin-top: 1pt;
+}
+.rd-block.rd-more-p {
+  margin-top: 2pt;
+}
+.rd-block.rd-more-row {
+  margin-top: 3pt;
+}
+.rd-more-li .rd-desc,
+.rd-more-p .rd-desc,
+.rd-block > .rd-desc:first-child {
+  margin-top: 0;
+}
+.rd-first {
+  margin-top: 0 !important;
+}
+.rd-heading {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  margin-bottom: 4pt;
+  font-family: var(--rd-heading-font);
+  font-size: var(--rd-heading-size);
+  font-weight: 700;
+  letter-spacing: var(--rd-heading-spacing);
+  text-transform: var(--rd-heading-case);
+  color: var(--rd-heading-color);
+}
+.rd-heading > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4pt;
+}
+.rd-heading-underline {
+  padding-bottom: 2pt;
+  border-bottom: 0.8pt solid var(--rd-line-color);
+}
+.rd-heading-line-after::after {
+  content: '';
+  flex: 1;
+  height: 0.8pt;
+  background: var(--rd-line-color);
+}
+.rd-heading-box {
+  padding: 2pt 5pt;
+  background: var(--rd-tint);
+}
+.rd-heading-bar {
+  padding-left: 6pt;
+  border-left: 3pt solid var(--rd-line-color);
+}
+.rd-heading-top-line {
+  padding-top: 3pt;
+  border-top: 0.8pt solid var(--rd-line-color);
+}
+.rd-heading-top-bottom {
+  padding: 2pt 0;
+  border-top: 0.8pt solid var(--rd-line-color);
+  border-bottom: 0.8pt solid var(--rd-line-color);
+}
+.rd-heading-text-underline span {
+  padding-bottom: 1.5pt;
+  border-bottom: 0.8pt solid var(--rd-line-color);
+}
+.rd-heading-short-bar {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2pt;
+}
+.rd-heading-short-bar::after {
+  content: '';
+  width: 24pt;
+  height: 3pt;
+  background: var(--rd-line-color);
+}
+
+/* Declaration */
+.rd-signature {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 10pt;
+}
+.rd-signature-name {
+  min-width: 45mm;
+  padding-top: 2pt;
+  border-top: 0.6pt solid currentColor;
+  text-align: center;
+}
+
+/* Entries */
+.rd-entry {
+  display: flex;
+  gap: 5mm;
+}
+.rd-entry-left {
+  flex: 0 0 24%;
+  font-size: 0.92em;
+}
+.rd-entry-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rd-entry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8pt;
+}
+.rd-entry-title {
+  min-width: 0;
+}
+.rd-link-icon {
+  margin-left: 3pt;
+}
+.rd-meta {
+  flex: none;
+  font-size: 0.92em;
+  color: color-mix(in srgb, var(--rd-text) 75%, #fff);
+}
+.rd-meta.rd-accent {
+  color: var(--rd-accent);
+}
+.rd-sub-bold {
+  font-weight: 600;
+}
+.rd-sub-italic {
+  font-style: italic;
+}
+.rd-desc {
+  margin-top: 2pt;
+}
+.rd-desc p + p,
+.rd-desc p + ul,
+.rd-desc ul + p,
+.rd-desc p + ol,
+.rd-desc ol + p {
+  margin-top: 2pt;
+}
+.rd-desc ul,
+.rd-desc ol {
+  padding-left: 12pt;
+}
+.rd-indent {
+  padding-left: 8pt;
+}
+.rd-bullet-disc .rd-desc ul {
+  list-style: disc;
+}
+.rd-bullet-square .rd-desc ul {
+  list-style: square;
+}
+.rd-bullet-hyphen .rd-desc ul {
+  list-style: '–  ';
+}
+.rd-bullet-arrow .rd-desc ul {
+  list-style: '›  ';
+}
+.rd-desc ol {
+  list-style: decimal;
+}
+.rd-desc li + li {
+  margin-top: 1pt;
+}
+
+/* Skills, languages, interests */
+.rd-list-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--rd-cols, 2), minmax(0, 1fr));
+  gap: 3pt 10pt;
+}
+.rd-col-side .rd-list-grid {
+  grid-template-columns: 1fr;
+}
+.rd-list-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3pt;
+}
+.rd-list-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1pt 6pt;
+}
+.rd-list-bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4pt;
+}
+.rd-list-bubbles .rd-list-item {
+  padding: 1.5pt 6pt;
+  border-radius: 999px;
+  background: var(--rd-tint);
+}
+.rd-dots {
+  display: inline-flex;
+  gap: 2pt;
+}
+.rd-dots i {
+  width: 5pt;
+  height: 5pt;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--rd-level-color) 22%, #fff);
+}
+.rd-dots i.on {
+  background: var(--rd-level-color);
+}
+.rd-bar {
+  display: inline-block;
+  width: 48pt;
+  height: 4pt;
+  border-radius: 2pt;
+  background: color-mix(in srgb, var(--rd-level-color) 22%, #fff);
+  overflow: hidden;
+}
+.rd-bar i {
+  display: block;
+  height: 100%;
+  background: var(--rd-level-color);
+}
+
+/* Footer */
+.rd-footer {
+  position: absolute;
+  left: var(--rd-mx);
+  right: var(--rd-mx);
+  bottom: calc(var(--rd-mb) * 0.35);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82em;
+  color: color-mix(in srgb, var(--rd-text) 60%, #fff);
+}
