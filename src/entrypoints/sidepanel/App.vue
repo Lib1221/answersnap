@@ -28,6 +28,7 @@ import { useEmail } from './useEmail';
 import { useInterview } from './useInterview';
 import { useJobFit } from './useJobFit';
 import { useLetter } from './useLetter';
+import { useResume } from './useResume';
 import { useTracker } from './useTracker';
 
 const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSelection } =
@@ -41,6 +42,7 @@ const fit = useJobFit(job);
 const interview = useInterview(job);
 const email = useEmail(job);
 const tracker = useTracker(job);
+const resume = useResume(job);
 // A scan from the "Fill this form" menu opens the Form tab.
 watch(
   () => form.fields.value,
@@ -215,6 +217,7 @@ function openSettings(section?: string) {
         :interview="interview"
         :email="email"
         :tracker="tracker"
+        :resume="resume"
         @open-settings="openSettings"
       />
     </main>

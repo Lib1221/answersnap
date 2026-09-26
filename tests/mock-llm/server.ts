@@ -163,6 +163,27 @@ const STORIES = {
   ],
 };
 
+/** Resume tailoring: two rewrites and one invented bullet (dropped in stick-to-profile mode). */
+const RESUME = {
+  summary: 'Backend engineer with 5 years of Python building payments APIs.',
+  bullets: [
+    {
+      original: 'Moved report generation to Celery workers.',
+      tailored:
+        'Cut billing report latency from 900 ms to 240 ms by moving generation to Celery workers.',
+      assumed: false,
+    },
+    {
+      original: 'Built a DRF API for payment reconciliation.',
+      tailored:
+        'Built billing reconciliation APIs in Django REST Framework handling 2M requests a day.',
+      assumed: false,
+    },
+    { original: null, tailored: 'Deployed services to Kubernetes.', assumed: false },
+  ],
+  skills: ['Python', 'Django', 'PostgreSQL', 'Python'],
+};
+
 /** Non-streamed replies: structured profile JSON, tool use, or an image transcription. */
 function completeText(raw: string): string {
   if (/Write an answer for every field/.test(raw)) return batchJson(raw);
@@ -170,6 +191,7 @@ function completeText(raw: string): string {
   if (/You compare a candidate with a job post/.test(raw)) return JSON.stringify(FIT);
   if (/You prepare a candidate for a job interview/.test(raw)) return JSON.stringify(INTERVIEW);
   if (/You help a candidate build a bank of STAR stories/.test(raw)) return JSON.stringify(STORIES);
+  if (/You tailor a candidate's resume to a job post/.test(raw)) return JSON.stringify(RESUME);
   if (/Transcribe all readable text/.test(raw)) return TRANSCRIPT;
   if (/Extract the candidate's profile/.test(raw)) return PROFILE;
   return canned(raw);

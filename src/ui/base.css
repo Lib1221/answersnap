@@ -23,6 +23,11 @@
   --radius-card: 12px;
 }
 
+/* Reserve the scrollbar's space so content that grows past the fold can't reflow the layout. */
+html {
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   background: var(--surface);

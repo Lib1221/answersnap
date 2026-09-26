@@ -35,7 +35,7 @@ extension can do is in one place. Items marked "needs Liben's OK" touch a hard r
 
 - [ ] Reminders to follow up on applications with no reply after N days (needs the
       `alarms` and `notifications` permissions: needs Liben's OK)
-- [ ] Resume tailoring: suggested resume bullet rewrites for a job post
+- [x] Resume tailoring: your bullets reworded for the job, a tailored summary, and skills order (Job > Resume)
 - [x] Answer versions: every draft and refinement kept; step back and refine from any; "Another angle"
 - [ ] Keyboard-only flow: snip, draft, insert without the mouse
 - [ ] Per-site memory: remember answers given on a site and reuse them on its later steps
