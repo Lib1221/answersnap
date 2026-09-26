@@ -5,11 +5,13 @@ import EmailPanel from './EmailPanel.vue';
 import FitPanel from './FitPanel.vue';
 import InterviewPanel from './InterviewPanel.vue';
 import LetterTab from './LetterTab.vue';
+import TrackerBar from './TrackerBar.vue';
 import type { useEmail } from './useEmail';
 import type { useInterview } from './useInterview';
 import type { useJob } from './useJob';
 import type { useJobFit } from './useJobFit';
 import type { useLetter } from './useLetter';
+import type { useTracker } from './useTracker';
 
 const props = defineProps<{
   job: ReturnType<typeof useJob>;
@@ -17,6 +19,7 @@ const props = defineProps<{
   fit: ReturnType<typeof useJobFit>;
   interview: ReturnType<typeof useInterview>;
   email: ReturnType<typeof useEmail>;
+  tracker: ReturnType<typeof useTracker>;
 }>();
 const emit = defineEmits<{ openSettings: [section?: string] }>();
 
@@ -31,6 +34,11 @@ const sub = ref<Sub>('letter');
 </script>
 
 <template>
+  <TrackerBar
+    :state="props.tracker"
+    :job="props.job"
+    @open-settings="(s) => emit('openSettings', s)"
+  />
   <div class="flex gap-1.5" role="group" aria-label="Job tools" data-testid="job-tools">
     <button
       v-for="s in SUBS"

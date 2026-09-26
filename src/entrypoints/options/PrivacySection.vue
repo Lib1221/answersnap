@@ -210,8 +210,9 @@ async function deleteEverything() {
     <div class="flex flex-col gap-2">
       <h3 class="font-medium">Delete all data</h3>
       <p class="text-[13px] text-graphite-2">
-        Removes your API keys, sources, profile, standard answers, saved answers, and settings, and
-        gives back every site permission. Uninstalling the extension does the same.
+        Removes your API keys, sources, profile, standard answers, saved answers, tracked
+        applications, and settings, and gives back every site permission. Uninstalling the extension
+        does the same.
       </p>
       <button
         v-if="!confirmDelete"

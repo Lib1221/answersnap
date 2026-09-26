@@ -8,14 +8,17 @@ where that data lives, and who receives it.
 
 ## What AnswerSnap handles
 
-- **Your candidate data:** the resume files, website text, notes, profile, and standard answers
-  (such as your notice period or rate) that you add in the extension's settings.
+- **Your candidate data:** the resume files, website text, notes, cover letter, stories, profile,
+  and standard answers (such as your notice period or rate) that you add in the extension's
+  settings.
 - **Saved answers:** answers you insert, copy, or save, with the question and the site they were
   for.
 - **The area you snip:** when you snip a question, a screenshot of that area and the visible text
   in it, the page title and site name (no query strings), and details of the form field you are
   filling (its label and character limit).
 - **Job posts you choose to add**, from a snip, a selection, or a page.
+- **Your application tracker:** for each job post you save, the site, role, company, the status
+  you set, and your notes. It is never sent to the AI provider.
 - **Your AI provider API key**, which you paste in yourself.
 
 ## Where it is stored

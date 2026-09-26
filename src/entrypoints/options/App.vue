@@ -5,6 +5,7 @@ import AppCredit from '@/ui/AppCredit.vue';
 import Icon, { type IconName } from '@/ui/AppIcon.vue';
 import LogoMark from '@/ui/LogoMark.vue';
 import { corruptNoticeItem } from '@/storage/items';
+import ApplicationsSection from './ApplicationsSection.vue';
 import CoverLetterSection from './CoverLetterSection.vue';
 import GettingStartedSection from './GettingStartedSection.vue';
 import PrivacySection from './PrivacySection.vue';
@@ -16,6 +17,7 @@ import WritingStyleSection from './WritingStyleSection.vue';
 
 const SECTIONS = [
   { id: 'welcome', title: 'Getting started', icon: 'flag' },
+  { id: 'applications', title: 'Applications', icon: 'briefcase' },
   { id: 'provider', title: 'AI provider', icon: 'key' },
   { id: 'sources', title: 'Sources', icon: 'file' },
   { id: 'profile', title: 'Profile', icon: 'user' },
@@ -98,6 +100,7 @@ async function dismissCorrupt() {
         </div>
         <div class="card p-8">
           <GettingStartedSection v-if="current === 'welcome'" />
+          <ApplicationsSection v-else-if="current === 'applications'" />
           <ProviderSection v-else-if="current === 'provider'" />
           <SourcesSection v-else-if="current === 'sources'" />
           <ProfileSection v-else-if="current === 'profile'" />

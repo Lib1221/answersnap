@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ApplicationsSchema, getApplications, saveApplications } from '@/kb/applications';
 import { LibrarySchema, getLibrary, saveLibrary } from '@/kb/library';
 import { ProfileRecordSchema, StandardAnswersSchema } from '@/kb/profileSchema';
 import {
@@ -14,7 +15,7 @@ import {
 import { SettingsSchema, SourcesSchema } from './schema';
 
 // Export and import (spec 13.3): one JSON file with settings (never the API keys), sources,
-// profile, standard answers, and library. Import validates everything before replacing.
+// profile, standard answers, library, and tracked applications. Import validates everything before replacing.
 
 export const EXPORT_FORMAT = 'answersnap-export';
 
@@ -27,6 +28,8 @@ export const ExportSchema = z.object({
   profile: ProfileRecordSchema.nullable(),
   standardAnswers: StandardAnswersSchema,
   library: LibrarySchema,
+  /** Added after v1; older exports have none. */
+  applications: ApplicationsSchema.default([]),
 });
 export type ExportData = z.infer<typeof ExportSchema>;
 
@@ -41,6 +44,7 @@ export async function buildExport(now = new Date()): Promise<ExportData> {
     profile: await getProfile(),
     standardAnswers: await getStandardAnswers(),
     library: await getLibrary(),
+    applications: await getApplications(),
   };
 }
 
@@ -69,6 +73,7 @@ export function describeImport(d: ExportData): string[] {
       ? `Profile for ${d.profile.profile.fullName ?? 'an unnamed candidate'}`
       : 'No profile',
     `${d.library.length} saved ${d.library.length === 1 ? 'answer' : 'answers'}`,
+    `${d.applications.length} tracked ${d.applications.length === 1 ? 'application' : 'applications'}`,
     `Settings: ${d.settings.provider === 'gemini' ? 'Google Gemini' : 'Anthropic'}, ${d.settings.model}`,
   ];
 }
@@ -81,6 +86,7 @@ export async function applyImport(d: ExportData): Promise<void> {
   else await profileItem.removeValue();
   await saveStandardAnswers(d.standardAnswers);
   await saveLibrary(d.library);
+  await saveApplications(d.applications);
 }
 
 /** "Delete all data": both storage areas and every optional host permission. */

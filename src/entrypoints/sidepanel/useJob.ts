@@ -8,6 +8,7 @@ import {
   watchJobContext,
   type JobContext,
 } from '@/kb/jobContext';
+import { trackJob } from '@/kb/applications';
 import { transcribeImage } from '@/kb/profileBuilder';
 import { describeError, LlmError } from '@/llm/errors';
 import { createAppProvider } from '@/llm/provider';
@@ -70,7 +71,13 @@ export function useJob() {
       : undefined;
   }
 
-  async function save(host: string, pageTitle: string, text: string, append: boolean) {
+  async function save(
+    host: string,
+    pageTitle: string,
+    text: string,
+    append: boolean,
+    url?: string,
+  ) {
     const existing = append ? await getJobContext(host) : null;
     const ctx = await buildJobContext({
       hostname: host,
@@ -80,6 +87,8 @@ export function useJob() {
       summarize: await summarizer(),
     });
     await setJobContext(ctx);
+    // Saving a job post starts tracking the application (Settings > Applications).
+    await trackJob({ hostname: host, url, company: ctx.company, role: ctx.title });
     await setHost(host);
     await load();
   }
@@ -112,7 +121,7 @@ export function useJob() {
             : 'No readable text on this page.';
         return;
       }
-      await save(new URL(read.url).hostname, read.title, read.text, false);
+      await save(new URL(read.url).hostname, read.title, read.text, false, read.url);
     } catch (err) {
       error.value =
         err instanceof LlmError
@@ -149,7 +158,13 @@ export function useJob() {
         const s = await summarizer();
         if (s) text = await transcribeImage(s.provider, s.model, capture.image.dataUrl);
       }
-      await save(capture.page.hostname, capture.page.title, text, pendingAppend);
+      await save(
+        capture.page.hostname,
+        capture.page.title,
+        text,
+        pendingAppend,
+        `https://${capture.page.hostname}${capture.page.path}`,
+      );
     } catch (err) {
       error.value = describeError(err);
     } finally {
