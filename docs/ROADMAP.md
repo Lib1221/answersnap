@@ -39,7 +39,7 @@ extension can do is in one place. Items marked "needs Liben's OK" touch a hard r
 - [x] Answer versions: every draft and refinement kept; step back and refine from any; "Another angle"
 - [ ] Keyboard-only flow: snip, draft, insert without the mouse
 - [ ] Per-site memory: remember answers given on a site and reuse them on its later steps
-- [ ] Weekly summary on the Applications page (applied, interviews, offers)
+- [x] Follow-up radar: last 7 days, reply rate, and applications waiting too long (Applications page and Job tab)
 - [x] LinkedIn headline options and About section from the profile (Profile tab)
 
 ## Later

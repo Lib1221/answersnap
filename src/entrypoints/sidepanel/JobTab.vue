@@ -35,6 +35,14 @@ const SUBS: { id: Sub; label: string; icon: IconName }[] = [
   { id: 'email', label: 'Email', icon: 'pen' },
 ];
 const sub = ref<Sub>('letter');
+
+/** The tracker's nudge: open Email set up for a follow-up. */
+function followUp() {
+  props.email.setKind(
+    props.tracker.current.value?.status === 'interviewing' ? 'check-in' : 'follow-up',
+  );
+  sub.value = 'email';
+}
 </script>
 
 <template>
@@ -42,6 +50,7 @@ const sub = ref<Sub>('letter');
     :state="props.tracker"
     :job="props.job"
     @open-settings="(s) => emit('openSettings', s)"
+    @follow-up="followUp"
   />
   <div
     class="grid grid-cols-5 gap-1 rounded-[10px] border border-rule bg-paper p-1"

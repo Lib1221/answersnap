@@ -8,7 +8,7 @@ const props = defineProps<{
   state: ReturnType<typeof useTracker>;
   job: ReturnType<typeof useJob>;
 }>();
-const emit = defineEmits<{ openSettings: [section?: string] }>();
+const emit = defineEmits<{ openSettings: [section?: string]; followUp: [] }>();
 const t = props.state;
 </script>
 
@@ -44,4 +44,14 @@ const t = props.state;
       See all
     </button>
   </div>
+  <p
+    v-if="props.job.job.value && t.followUpDays.value !== null"
+    class="flex flex-wrap items-center gap-2 rounded-control border border-canary-edge bg-canary px-3 py-2 text-[13px] text-ink-strong"
+    data-testid="follow-up-nudge"
+  >
+    No news in {{ t.followUpDays.value }} days.
+    <button class="btn btn-quiet min-h-0 p-0" type="button" @click="emit('followUp')">
+      Write a follow-up
+    </button>
+  </p>
 </template>

@@ -4,11 +4,13 @@ import {
   APPLICATION_STATUSES,
   countByStatus,
   getApplications,
+  needsFollowUp,
   removeApplication,
   STATUS_LABELS,
   toCsv,
   updateApplication,
   watchApplications,
+  weekSummary,
   type Application,
   type ApplicationStatus,
 } from '@/kb/applications';
@@ -28,6 +30,17 @@ onUnmounted(() => unwatch?.());
 
 const CLOSED: ApplicationStatus[] = ['rejected', 'withdrawn'];
 const counts = computed(() => countByStatus(list.value));
+const week = computed(() => weekSummary(list.value));
+const followUps = computed(() => needsFollowUp(list.value));
+
+async function markFollowedUp(a: Application) {
+  const today = new Date().toISOString();
+  const note = `Followed up on ${today.slice(0, 10)}.`;
+  await updateApplication(a.id, {
+    followedUpAt: today,
+    notes: a.notes.trim() ? `${a.notes.trim()}\n${note}` : note,
+  });
+}
 const shown = computed(() =>
   [...list.value]
     .filter((a) =>
@@ -70,6 +83,65 @@ function exportCsv() {
         Every job post you save in the side panel is tracked here. Move it along from the Job tab or
         here. Stored only in this browser.
       </p>
+    </div>
+
+    <div v-if="list.length" class="card flex flex-col gap-3 p-4" data-testid="week-summary">
+      <p class="eyebrow">Last 7 days</p>
+      <dl class="grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <div
+          v-for="[label, n] in [
+            ['Saved', week.saved],
+            ['Applied', week.applied],
+            ['Interviews', week.interviews],
+            ['Offers', week.offers],
+          ] as const"
+          :key="label"
+        >
+          <dt class="text-[12.5px] text-graphite-2">{{ label }}</dt>
+          <dd class="text-[20px] leading-tight font-[650] tabular-nums">{{ n }}</dd>
+        </div>
+        <div>
+          <dt class="text-[12.5px] text-graphite-2">Reply rate</dt>
+          <dd class="text-[20px] leading-tight font-[650] tabular-nums" data-testid="reply-rate">
+            {{ week.replyRate === null ? '-' : `${week.replyRate}%` }}
+          </dd>
+        </div>
+      </dl>
+      <p v-if="week.replyRate === null" class="text-[12.5px] text-graphite-2">
+        Reply rate shows once you've applied to 3 places.
+      </p>
+    </div>
+
+    <div
+      v-if="followUps.length"
+      class="card flex flex-col gap-3 border-l-4 border-l-canary-edge p-4"
+      data-testid="follow-ups"
+    >
+      <div>
+        <p class="font-medium">Time to follow up</p>
+        <p class="text-[13px] text-graphite-2">
+          No news on these for a while. Write the email from the side panel: Job, then Email, then
+          "Follow up after applying".
+        </p>
+      </div>
+      <ul class="flex flex-col gap-2">
+        <li
+          v-for="{ application: a, days } in followUps"
+          :key="a.id"
+          class="flex flex-wrap items-center gap-2 text-[13.5px]"
+        >
+          <span class="min-w-0 flex-1">
+            <strong class="font-medium">{{ a.role || 'Untitled role' }}</strong>
+            <span v-if="a.company" class="text-graphite-2"> at {{ a.company }}</span>
+            <span class="text-graphite-2">
+              · {{ STATUS_LABELS[a.status].toLowerCase() }}, no news in {{ days }} days</span
+            >
+          </span>
+          <button class="btn min-h-0 py-1 text-[13px]" type="button" @click="markFollowedUp(a)">
+            <Icon name="check" :size="14" /> Mark followed up
+          </button>
+        </li>
+      </ul>
     </div>
 
     <ul class="grid grid-cols-3 gap-2 sm:grid-cols-6" data-testid="application-counts">

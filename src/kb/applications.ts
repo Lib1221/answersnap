@@ -34,6 +34,8 @@ export const ApplicationSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   history: z.array(z.object({ status: z.enum(APPLICATION_STATUSES), at: z.string() })),
+  /** Last time the candidate followed up (the radar's clock restarts here). */
+  followedUpAt: z.string().optional(),
 });
 export type Application = z.infer<typeof ApplicationSchema>;
 export const ApplicationsSchema = z.array(ApplicationSchema);
@@ -101,7 +103,7 @@ export async function trackJob(
 
 export async function updateApplication(
   id: string,
-  patch: Partial<Pick<Application, 'status' | 'notes' | 'company' | 'role'>>,
+  patch: Partial<Pick<Application, 'status' | 'notes' | 'company' | 'role' | 'followedUpAt'>>,
   now = new Date(),
 ): Promise<void> {
   const iso = now.toISOString();
@@ -155,4 +157,62 @@ export function toCsv(list: Application[]): string {
     a.notes,
   ]);
   return [header, ...rows].map((r) => r.map(csvCell).join(',')).join('\n') + '\n';
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+/** Days without news before the radar suggests a follow-up. */
+export const FOLLOW_UP_AFTER_DAYS: Partial<Record<ApplicationStatus, number>> = {
+  applied: 7,
+  interviewing: 5,
+};
+
+/** The last status change or follow-up: what "no news for N days" counts from. */
+export function lastActivity(a: Application): string {
+  const last = a.history.at(-1)?.at ?? a.createdAt;
+  return a.followedUpAt && a.followedUpAt > last ? a.followedUpAt : last;
+}
+
+export function daysIdle(a: Application, now = new Date()): number {
+  return Math.floor((now.getTime() - Date.parse(lastActivity(a))) / DAY_MS);
+}
+
+/** Applied or interviewing with no news for a while, longest wait first. */
+export function needsFollowUp(
+  list: Application[],
+  now = new Date(),
+): { application: Application; days: number }[] {
+  return list
+    .map((application) => ({ application, days: daysIdle(application, now) }))
+    .filter(({ application, days }) => {
+      const after = FOLLOW_UP_AFTER_DAYS[application.status];
+      return after !== undefined && days >= after;
+    })
+    .sort((a, b) => b.days - a.days);
+}
+
+export interface WeekSummary {
+  saved: number;
+  applied: number;
+  interviews: number;
+  offers: number;
+  /** Share of applications that heard back (interview, offer, or rejection); null below 3. */
+  replyRate: number | null;
+}
+
+export function weekSummary(list: Application[], now = new Date()): WeekSummary {
+  const since = now.getTime() - 7 * DAY_MS;
+  const reachedThisWeek = (a: Application, status: ApplicationStatus) =>
+    a.history.some((h) => h.status === status && Date.parse(h.at) >= since);
+  const everApplied = list.filter((a) => a.history.some((h) => h.status === 'applied'));
+  const heardBack = everApplied.filter((a) =>
+    a.history.some((h) => ['interviewing', 'offer', 'rejected'].includes(h.status)),
+  );
+  return {
+    saved: list.filter((a) => Date.parse(a.createdAt) >= since).length,
+    applied: list.filter((a) => reachedThisWeek(a, 'applied')).length,
+    interviews: list.filter((a) => reachedThisWeek(a, 'interviewing')).length,
+    offers: list.filter((a) => reachedThisWeek(a, 'offer')).length,
+    replyRate:
+      everApplied.length >= 3 ? Math.round((heardBack.length / everApplied.length) * 100) : null,
+  };
 }

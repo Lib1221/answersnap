@@ -46,5 +46,9 @@ export function useEmail(job: ReturnType<typeof useJob>) {
     });
   }
 
-  return { answer, insert, kind, company, role, recipient, notes, write };
+  function setKind(k: EmailKind) {
+    kind.value = k;
+  }
+
+  return { answer, insert, kind, company, role, recipient, notes, write, setKind };
 }

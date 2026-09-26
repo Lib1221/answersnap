@@ -1,6 +1,8 @@
 import { computed, onMounted, onUnmounted, shallowRef } from 'vue';
 import {
+  daysIdle,
   findApplication,
+  FOLLOW_UP_AFTER_DAYS,
   getApplications,
   trackJob,
   updateApplication,
@@ -28,6 +30,15 @@ export function useTracker(job: ReturnType<typeof useJob>) {
     return j ? findApplication(list.value, j.hostname, j.title) : undefined;
   });
 
+  /** Days without news when the radar says it's time to follow up, else null. */
+  const followUpDays = computed(() => {
+    const a = current.value;
+    const after = a && FOLLOW_UP_AFTER_DAYS[a.status];
+    if (!a || after === undefined) return null;
+    const days = daysIdle(a);
+    return days >= after ? days : null;
+  });
+
   async function setStatus(status: ApplicationStatus) {
     if (current.value) await updateApplication(current.value.id, { status });
     await load();
@@ -41,5 +52,5 @@ export function useTracker(job: ReturnType<typeof useJob>) {
     await load();
   }
 
-  return { current, setStatus, track };
+  return { current, followUpDays, setStatus, track };
 }
