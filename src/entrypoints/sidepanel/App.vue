@@ -9,7 +9,7 @@ import CropThumb from '@/ui/CropThumb.vue';
 import AnswerPanel from './AnswerPanel.vue';
 import JobBar from './JobBar.vue';
 import FormFillTab from './FormFillTab.vue';
-import LetterTab from './LetterTab.vue';
+import JobTab from './JobTab.vue';
 import LibraryTab from './LibraryTab.vue';
 import { useFormFill } from './useFormFill';
 import ProfileTab from './ProfileTab.vue';
@@ -24,6 +24,7 @@ import Icon, { type IconName } from '@/ui/AppIcon.vue';
 import LogoMark from '@/ui/LogoMark.vue';
 import { useInsert } from './useInsert';
 import { useJob } from './useJob';
+import { useJobFit } from './useJobFit';
 import { useLetter } from './useLetter';
 
 const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSelection } =
@@ -33,6 +34,7 @@ const job = useJob();
 const insert = useInsert(capture, answer);
 const form = useFormFill();
 const letter = useLetter(job);
+const fit = useJobFit(job);
 // A scan from the "Fill this form" menu opens the Form tab.
 watch(
   () => form.fields.value,
@@ -40,11 +42,11 @@ watch(
     if (f.length) tab.value = 'form';
   },
 );
-type TabId = 'answer' | 'letter' | 'form' | 'library' | 'profile';
+type TabId = 'answer' | 'job' | 'form' | 'library' | 'profile';
 const tab = ref<TabId>('answer');
 const TABS: { id: TabId; label: string; icon: IconName }[] = [
   { id: 'answer', label: 'Answer', icon: 'sparkle' },
-  { id: 'letter', label: 'Letter', icon: 'mail' },
+  { id: 'job', label: 'Job', icon: 'briefcase' },
   { id: 'form', label: 'Form', icon: 'form' },
   { id: 'library', label: 'Library', icon: 'bookmark' },
   { id: 'profile', label: 'Profile', icon: 'user' },
@@ -198,8 +200,8 @@ function openSettings(section?: string) {
     <main v-if="tab === 'library'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <LibraryTab :can-use="view.kind === 'captured'" @use="useSaved" />
     </main>
-    <main v-else-if="tab === 'letter'" class="flex flex-1 flex-col gap-3 px-4 py-4">
-      <LetterTab :state="letter" :job="job" @open-settings="openSettings" />
+    <main v-else-if="tab === 'job'" class="flex flex-1 flex-col gap-3 px-4 py-4">
+      <JobTab :job="job" :letter="letter" :fit="fit" @open-settings="openSettings" />
     </main>
     <main v-else-if="tab === 'form'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <FormFillTab :state="form" />

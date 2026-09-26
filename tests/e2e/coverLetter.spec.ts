@@ -42,7 +42,7 @@ test('the Letter tab writes a cover letter from the profile and your own letter'
   await expect(options.getByRole('status')).toHaveText('Saved');
 
   await panel.bringToFront();
-  await panel.getByRole('tab', { name: 'Letter' }).click();
+  await panel.getByRole('tab', { name: 'Job' }).click();
   await expect(panel.getByTestId('letter-no-job')).toBeVisible();
   await expect(panel.getByTestId('letter-add-own')).toHaveCount(0);
   await panel.getByTestId('letter-company').fill('Globex');
@@ -73,7 +73,7 @@ test('the Letter tab writes a cover letter from the profile and your own letter'
 
 test('without a saved letter the Letter tab offers to add one', async ({ panel }) => {
   await seed(panel);
-  await panel.getByRole('tab', { name: 'Letter' }).click();
+  await panel.getByRole('tab', { name: 'Job' }).click();
   await expect(panel.getByTestId('letter-add-own')).toBeVisible();
   await expect(panel.getByTestId('letter-write')).toHaveText(/Write cover letter/);
 });

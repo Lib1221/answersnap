@@ -94,10 +94,42 @@ function factCheckJson(raw: string): string {
   return JSON.stringify({ checks });
 }
 
+/** Job fit check: a fixed analysis of Jamie against the fixture job post. */
+const FIT = {
+  score: 72.4,
+  summary: 'You match the core Python and payments work. Kubernetes is the main gap.',
+  requirements: [
+    {
+      requirement: 'Kubernetes in production',
+      mustHave: false,
+      met: false,
+      evidence: null,
+      advice: 'Lead with your Docker and CI work at Ledgerly.',
+    },
+    {
+      requirement: '5+ years of Python',
+      mustHave: true,
+      met: true,
+      evidence: 'Python since 2019 at Ledgerly and Brightpath',
+      advice: null,
+    },
+    {
+      requirement: 'Payments or billing APIs',
+      mustHave: true,
+      met: true,
+      evidence: 'Payments APIs with Django at Ledgerly',
+      advice: null,
+    },
+  ],
+  keywords: ['Django', 'PostgreSQL', 'reconciliation', 'Django'],
+  talkingPoints: ['Cut invoicing p95 latency from 900 ms to 240 ms with Celery.'],
+};
+
 /** Non-streamed replies: structured profile JSON, tool use, or an image transcription. */
 function completeText(raw: string): string {
   if (/Write an answer for every field/.test(raw)) return batchJson(raw);
   if (/You check a drafted job application answer/.test(raw)) return factCheckJson(raw);
+  if (/You compare a candidate with a job post/.test(raw)) return JSON.stringify(FIT);
   if (/Transcribe all readable text/.test(raw)) return TRANSCRIPT;
   if (/Extract the candidate's profile/.test(raw)) return PROFILE;
   return canned(raw);

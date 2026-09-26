@@ -110,11 +110,11 @@ test('latency budgets: overlay after the trigger, thumbnail after the drag', asy
   }
 });
 
-test('the panel has Answer, Letter, Form, Library, and Profile tabs', async ({ panel }) => {
+test('the panel has Answer, Job, Form, Library, and Profile tabs', async ({ panel }) => {
   await seed(panel);
   await expect(panel.getByRole('tab')).toHaveText([
     'Answer',
-    'Letter',
+    'Job',
     'Form',
     'Library',
     'Profile',
