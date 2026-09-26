@@ -1,10 +1,22 @@
+import type { UploadInfo } from '@/messaging/protocol';
 import type { FieldInfo, FieldKind, Rect } from '@/storage/schema';
 import { center, distance, elementRect, intersects, union } from './geometry';
 import type { VisibilityChecker } from './hiddenText';
 import { hintFor, labelFor } from './labels';
 import { collapse, visibleTextOf } from './visibleText';
 
-const TEXT_INPUT_TYPES = new Set(['text', 'email', 'url', 'tel', 'number', 'search', '']);
+// date and month: scholarship forms ask for birth and passport dates in native pickers.
+const TEXT_INPUT_TYPES = new Set([
+  'text',
+  'email',
+  'url',
+  'tel',
+  'number',
+  'search',
+  'date',
+  'month',
+  '',
+]);
 export const MAX_CANDIDATES = 5;
 const CURRENT_VALUE_CAP = 2000;
 
@@ -204,10 +216,38 @@ export function choiceLabel(input: HTMLInputElement, checker: VisibilityChecker)
   );
 }
 
+const SECTION_SELECTOR = 'h1, h2, h3, h4, h5, h6, legend, [role="heading"]';
+const SECTION_CAP = 80;
+
+/** The last heading or legend before the element: "Passport", "Father's details". */
+export function sectionFor(el: Element, headings: Element[]): string | undefined {
+  let found: Element | undefined;
+  for (const h of headings) {
+    if (h.contains(el)) continue;
+    if (h.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) found = h;
+    else break;
+  }
+  const text = found ? collapse(found.textContent ?? '') : '';
+  return text ? text.slice(0, SECTION_CAP) : undefined;
+}
+
+/** name, id, autocomplete, pattern, min, max: the attributes exact filling keys off. */
+function attributeHints(el: Element, info: FieldInfo) {
+  const get = (a: string) => el.getAttribute(a)?.trim() || undefined;
+  info.name = get('name');
+  info.domId = get('id');
+  const ac = get('autocomplete');
+  if (ac && ac !== 'on' && ac !== 'off') info.autocomplete = ac;
+  info.pattern = get('pattern');
+  info.min = get('min');
+  info.max = get('max');
+}
+
 export function describeField(
   f: Fillable,
   confidence: FieldInfo['confidence'],
   checker: VisibilityChecker,
+  headings?: Element[],
 ): FieldInfo {
   const info: FieldInfo = { targetId: registerElement(f.el), kind: f.kind, confidence };
   if (f.members.length) {
@@ -218,6 +258,13 @@ export function describeField(
     const checked = f.members.filter((m) => m.checked).map((m) => choiceLabel(m, checker));
     if (checked.length) info.currentValue = checked.join(', ');
     info.required = f.members.some((m) => m.required) || undefined;
+    if (headings) {
+      info.section = sectionFor(container, headings);
+      info.name = f.members[0]!.name || undefined;
+      info.optionValues = f.members.map((m) => m.value);
+      for (const k of Object.keys(info) as (keyof FieldInfo)[])
+        if (info[k] === undefined) delete info[k];
+    }
     return info;
   }
 
@@ -230,6 +277,10 @@ export function describeField(
   }
   info.label = labelFor(el, checker);
   info.hint = hintFor(el, checker);
+  if (headings) {
+    info.section = sectionFor(el, headings);
+    attributeHints(el, info);
+  }
   if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
     if (el instanceof HTMLInputElement) info.inputType = el.type || 'text';
     if (el.maxLength > 0) info.maxLength = el.maxLength;
@@ -239,6 +290,10 @@ export function describeField(
     if (el.required) info.required = true;
   } else if (el instanceof HTMLSelectElement) {
     info.options = Array.from(el.options, (o) => collapse(o.text)).filter(Boolean);
+    if (headings)
+      info.optionValues = Array.from(el.options)
+        .filter((o) => collapse(o.text))
+        .map((o) => o.value);
     const selected = el.selectedOptions[0];
     if (selected?.value) info.currentValue = collapse(selected.text);
     if (el.required) info.required = true;
@@ -275,7 +330,12 @@ export function findCandidates(
 
 export const MAX_FORM_FIELDS = 40;
 
-export function scanForm(doc: Document, checker: VisibilityChecker): FieldInfo[] {
+export function scanForm(
+  doc: Document,
+  checker: VisibilityChecker,
+  max = MAX_FORM_FIELDS,
+): FieldInfo[] {
+  const headings = queryAllDeep(doc, SECTION_SELECTOR).filter((h) => collapse(h.textContent ?? ''));
   const fields = collectFillable(doc, checker)
     .filter((f) => !f.inIframe)
     .sort((a, b) =>
@@ -283,11 +343,24 @@ export function scanForm(doc: Document, checker: VisibilityChecker): FieldInfo[]
     );
   const out: FieldInfo[] = [];
   for (const f of fields) {
-    const info = describeField(f, 'inside', checker);
-    // A field with no label, placeholder, or helper text has no question to answer.
-    if (!info.label && !info.placeholder && !info.hint) continue;
+    const info = describeField(f, 'inside', checker, headings);
+    // A field with no label, placeholder, or helper text has no question to answer, unless its
+    // options say what it is (the day and month dropdowns of a split date).
+    if (!info.label && !info.placeholder && !info.hint && !info.options?.length && !info.name)
+      continue;
     out.push(info);
-    if (out.length >= MAX_FORM_FIELDS) break;
+    if (out.length >= max) break;
   }
   return out;
+}
+
+/** File uploads: listed, never filled (a page can't be given files without the user). */
+export function scanUploads(doc: Document, checker: VisibilityChecker): UploadInfo[] {
+  return queryAllDeep(doc, 'input[type="file"]')
+    .filter((el): el is HTMLInputElement => el instanceof HTMLInputElement && !el.disabled)
+    .map((el) => ({
+      label: labelFor(el, checker) || el.getAttribute('aria-label') || el.name || 'File upload',
+      ...(el.accept ? { accept: el.accept } : {}),
+      ...(el.required ? { required: true } : {}),
+    }));
 }

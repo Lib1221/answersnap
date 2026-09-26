@@ -10,6 +10,7 @@ import AnswerPanel from './AnswerPanel.vue';
 import JobBar from './JobBar.vue';
 import FormFillTab from './FormFillTab.vue';
 import JobTab from './JobTab.vue';
+import ScholarshipTab from './ScholarshipTab.vue';
 import ShortcutsHelp from './ShortcutsHelp.vue';
 import LibraryTab from './LibraryTab.vue';
 import { useFormFill } from './useFormFill';
@@ -30,6 +31,7 @@ import { useInterview } from './useInterview';
 import { useJobFit } from './useJobFit';
 import { useLetter } from './useLetter';
 import { useResume } from './useResume';
+import { useScholarship } from './useScholarship';
 import { useTracker } from './useTracker';
 
 const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSelection } =
@@ -44,6 +46,7 @@ const interview = useInterview(job);
 const email = useEmail(job);
 const tracker = useTracker(job);
 const resume = useResume(job);
+const scholarship = useScholarship(job);
 // A scan from the "Fill this form" menu opens the Form tab.
 watch(
   () => form.fields.value,
@@ -51,11 +54,13 @@ watch(
     if (f.length) tab.value = 'form';
   },
 );
-type TabId = 'answer' | 'job' | 'form' | 'library' | 'profile';
+type TabId = 'answer' | 'job' | 'scholarship' | 'form' | 'library' | 'profile';
 const tab = ref<TabId>('answer');
 const TABS: { id: TabId; label: string; icon: IconName }[] = [
   { id: 'answer', label: t('panel_tab_answer', 'Answer'), icon: 'sparkle' },
   { id: 'job', label: t('panel_tab_job', 'Job'), icon: 'briefcase' },
+  // "Scholarship" doesn't fit a sixth of the panel in English; the tab's heading says it in full.
+  { id: 'scholarship', label: t('panel_tab_scholarship', 'Study'), icon: 'cap' },
   { id: 'form', label: t('panel_tab_form', 'Form'), icon: 'form' },
   { id: 'library', label: t('panel_tab_library', 'Library'), icon: 'bookmark' },
   { id: 'profile', label: t('panel_tab_profile', 'Profile'), icon: 'user' },
@@ -139,7 +144,7 @@ function typing(e: KeyboardEvent): boolean {
 
 /** Alt shortcuts, by physical key so Option on a Mac works too. */
 function onAltKey(e: KeyboardEvent): boolean {
-  const n = /^Digit([1-5])$/.exec(e.code)?.[1];
+  const n = /^Digit([1-6])$/.exec(e.code)?.[1];
   if (n) {
     tab.value = TABS[Number(n) - 1]!.id;
     return true;
@@ -242,7 +247,7 @@ function openSettings(section?: string) {
     <JobBar :state="job" />
 
     <nav class="px-3 pt-3" :aria-label="t('panel_nav', 'Panel')">
-      <div class="grid grid-cols-5 gap-1 rounded-[10px] bg-rule/60 p-1" role="tablist">
+      <div class="grid grid-cols-6 gap-0.5 rounded-[10px] bg-rule/60 p-1" role="tablist">
         <button
           v-for="tb in TABS"
           :key="tb.id"
@@ -278,6 +283,9 @@ function openSettings(section?: string) {
         :resume="resume"
         @open-settings="openSettings"
       />
+    </main>
+    <main v-else-if="tab === 'scholarship'" class="flex flex-1 flex-col gap-3 px-4 py-4">
+      <ScholarshipTab :state="scholarship" :job="job" @open-settings="openSettings" />
     </main>
     <main v-else-if="tab === 'form'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <FormFillTab :state="form" />

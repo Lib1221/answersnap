@@ -6,15 +6,6 @@
   "extDescription": {
     "message": "Snip an application question. Get a draft answer written from your own resume and website."
   },
-  "actionTitle": {
-    "message": "Snip a question ($P1$)",
-    "placeholders": {
-      "p1": {
-        "content": "$1",
-        "example": "Alt+Shift+Q"
-      }
-    }
-  },
   "commandSnip": {
     "message": "Snip a question and draft an answer"
   },
@@ -735,6 +726,81 @@
   "form_untick": {
     "message": "Untick any you'll answer yourself."
   },
+  "guide_cf_1": {
+    "message": "16 characters. For people born abroad, characters 12 to 15 are Z and three digits for the country (Ethiopia is Z315)."
+  },
+  "guide_cf_2": {
+    "message": "Portals can compute a provisional code, but only the Agenzia delle Entrate or an Italian embassy issues the real one. Use the real one when you have it."
+  },
+  "guide_cf_title": {
+    "message": "Codice fiscale"
+  },
+  "guide_dov_1": {
+    "message": "Comparability: a Dichiarazione di Valore (DOV) from the Italian embassy, or a CIMEA Statement of Comparability."
+  },
+  "guide_dov_2": {
+    "message": "Authenticity: a CIMEA Statement of Verification, legalization, or apostille. Many universities make these optional at pre-enrolment but ask for them at enrolment."
+  },
+  "guide_dov_title": {
+    "message": "Recognition of your degree"
+  },
+  "guide_dsu_1": {
+    "message": "You need an ISEE parificato, made through a CAF, based on your family composition, income, and property abroad (the year before last)."
+  },
+  "guide_dsu_2": {
+    "message": "Documents must be issued or legalized by the Italian authorities in your country and translated into Italian. Self-declarations are not accepted."
+  },
+  "guide_dsu_3": {
+    "message": "Calls usually open around June and close between July and September. Start the ISEE early: it takes weeks."
+  },
+  "guide_dsu_title": {
+    "message": "Regional scholarships (DSU: ER.GO, ESU, EDISU, DiSCo, DSU Toscana)"
+  },
+  "guide_iyt_1": {
+    "message": "Names come from the passport MRZ. English B2, a one-page CV, a video of 59 seconds or less, and your transcript with the GPA."
+  },
+  "guide_iyt_title": {
+    "message": "Invest Your Talent in Italy"
+  },
+  "guide_maeci_1": {
+    "message": "Apply at studyinitaly.esteri.it; the 2026/27 call closed in March. Age limits: 28 for master's, 30 for PhD."
+  },
+  "guide_maeci_2": {
+    "message": "Italian or English at B2 level. Your passport is needed to register."
+  },
+  "guide_maeci_title": {
+    "message": "Italian Government (MAECI) scholarships"
+  },
+  "guide_universitaly_1": {
+    "message": "Names exactly as in the passport, in Latin letters without accents; write XXX if you have no surname. They cannot be changed after saving."
+  },
+  "guide_universitaly_2": {
+    "message": "Birth date is three dropdowns (day, month, year). Phone with the country code."
+  },
+  "guide_universitaly_3": {
+    "message": "Upload a face photo and your passport: PDF, JPEG, or PNG, 10 MB at most. One application per academic year."
+  },
+  "guide_universitaly_title": {
+    "message": "Universitaly pre-enrolment (non-EU students)"
+  },
+  "guide_uploads_1": {
+    "message": "PDF is the safe choice. Use file names without accents or special characters. Limits are often 10 MB per file."
+  },
+  "guide_uploads_2": {
+    "message": "On some portals (Padua, Polimi) documents can no longer be changed after you submit or pay the fee."
+  },
+  "guide_uploads_title": {
+    "message": "Uploads"
+  },
+  "guide_visa_1": {
+    "message": "Embassy checklists ask for a passport valid at least 90 days beyond the visa, with two blank pages. It must also cover your whole stay for the residence permit."
+  },
+  "guide_visa_2": {
+    "message": "Apply for the permesso di soggiorno within 8 days of arriving in Italy."
+  },
+  "guide_visa_title": {
+    "message": "Visa and residence permit"
+  },
   "insert_copied": {
     "message": "Copied"
   },
@@ -1193,6 +1259,9 @@
   "panel_tab_profile": {
     "message": "Profile"
   },
+  "panel_tab_scholarship": {
+    "message": "Study"
+  },
   "panelIdle": {
     "message": "Snip a question to draft an answer."
   },
@@ -1426,6 +1495,446 @@
       }
     }
   },
+  "sch_add_it": {
+    "message": "Add it"
+  },
+  "sch_add_key": {
+    "message": "Add your API key to start."
+  },
+  "sch_add_resume": {
+    "message": "Add your resume so essays have something to draw from."
+  },
+  "sch_already": {
+    "message": "Already filled on the page: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_cant_read": {
+    "message": "Couldn't read the fields on this page."
+  },
+  "sch_changed": {
+    "message": "$P1$ need a look.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_age": {
+    "message": "Age limit $P1$: you will be $P2$ on $P3$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "sch_check_age_unknown": {
+    "message": "Age limit $P1$: add your birth date to check.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_born_after": {
+    "message": "Must be born on or after $P1$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_deadline": {
+    "message": "$P1$: $P2$, in $P3$ days.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "sch_check_deadline_past": {
+    "message": "$P1$: $P2$, already passed.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_lang": {
+    "message": "$P1$ required; yours: $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_lang_unknown": {
+    "message": "$P1$ required; add your test in Applicant details.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_passport": {
+    "message": "Passport valid until $P1$ ($P2$ months after the last deadline).",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_passport_unknown": {
+    "message": "Add your passport expiry date to check it covers your stay."
+  },
+  "sch_details_pct": {
+    "message": "Your details: $P1$%",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_draft": {
+    "message": "Draft from my profile"
+  },
+  "sch_draft_error": {
+    "message": "Couldn't draft the answers. Try again."
+  },
+  "sch_drafting": {
+    "message": "Drafting"
+  },
+  "sch_edit_details": {
+    "message": "Edit"
+  },
+  "sch_essays": {
+    "message": "Essay questions ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_failed": {
+    "message": "Couldn't fill this field. Copy the value and paste it."
+  },
+  "sch_fill_intro": {
+    "message": "Open the application page, then scan it. Your personal details are filled from Applicant details, never guessed and never sent to the AI. Nothing is submitted."
+  },
+  "sch_fill_this": {
+    "message": "Fill this field"
+  },
+  "sch_for_you": {
+    "message": "For you to answer ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_for_you_why": {
+    "message": "Not in your details, or not something to guess (other people's details, choices about the programme). They stay empty."
+  },
+  "sch_from_details": {
+    "message": "From your details ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_gesture_hint": {
+    "message": "Press Alt+Shift+Q or click the AnswerSnap icon on the page first, then try again."
+  },
+  "sch_guide_intro": {
+    "message": "From the portals' own guides (September 2026). Rules change every year: the current call always wins."
+  },
+  "sch_insert": {
+    "message": "Fill $P1$ fields",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_issue_guessed": {
+    "message": "Date format guessed from the page language: check it."
+  },
+  "sch_issue_missing": {
+    "message": "Not in your details yet."
+  },
+  "sch_issue_no_option": {
+    "message": "None of the page's options match your details."
+  },
+  "sch_issue_pattern": {
+    "message": "The page expects a different format."
+  },
+  "sch_issue_too_long": {
+    "message": "Longer than this field allows."
+  },
+  "sch_key_age": {
+    "message": "Age"
+  },
+  "sch_key_authority": {
+    "message": "Passport issuing authority"
+  },
+  "sch_key_birth_city": {
+    "message": "City of birth"
+  },
+  "sch_key_birth_country": {
+    "message": "Country of birth"
+  },
+  "sch_key_birth_date": {
+    "message": "Date of birth"
+  },
+  "sch_key_cf": {
+    "message": "Codice fiscale"
+  },
+  "sch_key_citizenship": {
+    "message": "Citizenship"
+  },
+  "sch_key_city": {
+    "message": "City"
+  },
+  "sch_key_country": {
+    "message": "Country"
+  },
+  "sch_key_degree": {
+    "message": "Degree"
+  },
+  "sch_key_doc_type": {
+    "message": "Document type"
+  },
+  "sch_key_domicile_same": {
+    "message": "Current address same as residence"
+  },
+  "sch_key_edu_country": {
+    "message": "Country of study"
+  },
+  "sch_key_email": {
+    "message": "Email"
+  },
+  "sch_key_expiry": {
+    "message": "Passport expiry date"
+  },
+  "sch_key_family": {
+    "message": "Family name"
+  },
+  "sch_key_father": {
+    "message": "Father's name"
+  },
+  "sch_key_field": {
+    "message": "Field of study"
+  },
+  "sch_key_full": {
+    "message": "Full name"
+  },
+  "sch_key_given": {
+    "message": "Given names"
+  },
+  "sch_key_grade": {
+    "message": "Final grade"
+  },
+  "sch_key_graduation": {
+    "message": "Graduation date"
+  },
+  "sch_key_house": {
+    "message": "House number"
+  },
+  "sch_key_institution": {
+    "message": "University"
+  },
+  "sch_key_issue": {
+    "message": "Passport issue date"
+  },
+  "sch_key_issuing_country": {
+    "message": "Passport issuing country"
+  },
+  "sch_key_marital": {
+    "message": "Marital status"
+  },
+  "sch_key_mother": {
+    "message": "Mother's name"
+  },
+  "sch_key_national_id": {
+    "message": "National ID number"
+  },
+  "sch_key_native": {
+    "message": "Native language"
+  },
+  "sch_key_no_cf": {
+    "message": "No Italian tax code"
+  },
+  "sch_key_passport": {
+    "message": "Passport number"
+  },
+  "sch_key_phone": {
+    "message": "Phone"
+  },
+  "sch_key_phone_code": {
+    "message": "Phone country code"
+  },
+  "sch_key_phone_national": {
+    "message": "Phone number"
+  },
+  "sch_key_postal": {
+    "message": "Postal code"
+  },
+  "sch_key_region": {
+    "message": "Region or province"
+  },
+  "sch_key_scale": {
+    "message": "Grading scale"
+  },
+  "sch_key_second_citizenship": {
+    "message": "Second citizenship"
+  },
+  "sch_key_sex": {
+    "message": "Sex"
+  },
+  "sch_key_street": {
+    "message": "Street"
+  },
+  "sch_likely": {
+    "message": "Matched from the label and its neighbors: glance at it."
+  },
+  "sch_no_fields": {
+    "message": "No form fields found on this page."
+  },
+  "sch_optional": {
+    "message": "optional"
+  },
+  "sch_page_shows": {
+    "message": "The page now shows \"$P1$\". Fix it by hand or edit and fill again.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_part_day": {
+    "message": "day"
+  },
+  "sch_part_month": {
+    "message": "month"
+  },
+  "sch_part_year": {
+    "message": "year"
+  },
+  "sch_req_again": {
+    "message": "Read again"
+  },
+  "sch_req_documents": {
+    "message": "Documents ($P1$ of $P2$ ready)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_req_eligibility": {
+    "message": "Who can apply"
+  },
+  "sch_req_error": {
+    "message": "Couldn't read the requirements. Try again."
+  },
+  "sch_req_intro": {
+    "message": "Reads the saved page for deadlines, eligibility, documents, and language minimums, then checks them against your details."
+  },
+  "sch_req_reading": {
+    "message": "Reading the requirements…"
+  },
+  "sch_req_run": {
+    "message": "Read the requirements"
+  },
+  "sch_req_save_how": {
+    "message": "Open the scholarship call or the programme page, then use Set job above and read the whole page."
+  },
+  "sch_req_save_page": {
+    "message": "Save the call or programme page first"
+  },
+  "sch_req_steps": {
+    "message": "Steps and fees"
+  },
+  "sch_required": {
+    "message": "required"
+  },
+  "sch_rescan": {
+    "message": "Scan again"
+  },
+  "sch_row_verified": {
+    "message": "Verified on the page"
+  },
+  "sch_scan": {
+    "message": "Scan this page"
+  },
+  "sch_scanning": {
+    "message": "Scanning"
+  },
+  "sch_subtitle": {
+    "message": "Exact personal details, verified after filling."
+  },
+  "sch_title": {
+    "message": "Scholarships and admissions"
+  },
+  "sch_uploads": {
+    "message": "Uploads on this page ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_uploads_why": {
+    "message": "Browsers only let you attach files yourself. Have these ready:"
+  },
+  "sch_verified": {
+    "message": "$P1$ verified on the page.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_view_fill": {
+    "message": "Fill"
+  },
+  "sch_view_guide": {
+    "message": "Italy guide"
+  },
+  "sch_view_requirements": {
+    "message": "Requirements"
+  },
+  "sch_views": {
+    "message": "Scholarship tools"
+  },
   "shortcuts_close": {
     "message": "Close"
   },
@@ -1444,8 +1953,8 @@
   "shortcuts_stop": {
     "message": "Stop drafting, or cancel a snip"
   },
-  "shortcuts_tabs": {
-    "message": "Answer, Job, Form, Library, Profile"
+  "shortcuts_tabs_six": {
+    "message": "Answer, Job, Scholarship, Form, Library, Profile"
   },
   "shortcuts_this_list": {
     "message": "This list"

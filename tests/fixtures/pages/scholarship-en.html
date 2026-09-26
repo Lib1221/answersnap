@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Application: MSc Data Science, University of Padua (DreamApply)</title>
+    <style>
+      body {
+        font: 15px/1.5 sans-serif;
+        margin: 32px;
+        width: 640px;
+      }
+      label {
+        display: block;
+        margin-top: 12px;
+      }
+      input:not([type='radio']):not([type='checkbox']):not([type='file']),
+      select,
+      textarea {
+        width: 520px;
+        display: block;
+      }
+      fieldset {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Profile</h1>
+    <h2>Name</h2>
+    <label for="gn">Given name</label
+    ><input id="gn" name="applicant[given_name]" autocomplete="given-name" />
+    <label for="mn">Middle name</label><input id="mn" name="applicant[middle_name]" />
+    <label for="fn">Family name</label
+    ><input id="fn" name="applicant[family_name]" autocomplete="family-name" />
+    <label for="pfn">Previous family name</label
+    ><input id="pfn" name="applicant[previous_family_name]" />
+    <label for="gender">Gender</label>
+    <select id="gender" name="applicant[gender]">
+      <option value="">Choose…</option>
+      <option value="F">Female</option>
+      <option value="M">Male</option>
+    </select>
+    <label for="cit">Citizenship</label>
+    <select id="cit" name="applicant[citizenship]">
+      <option value="">Choose…</option>
+      <option value="ER">Eritrea</option>
+      <option value="ET">Ethiopia</option>
+      <option value="IT">Italy</option>
+    </select>
+    <h2>Identity document</h2>
+    <label for="doctype">Document type</label>
+    <select id="doctype">
+      <option value="">Choose…</option>
+      <option>ID-card</option>
+      <option>Passport</option>
+    </select>
+    <label for="docno">Number</label><input id="docno" name="document[number]" />
+    <label for="issue">Issue date</label><input id="issue" type="date" name="document[issued]" />
+    <label for="expiry">Expiry date</label
+    ><input id="expiry" type="date" name="document[expires]" />
+    <label for="doccountry">Country of issue</label>
+    <select id="doccountry">
+      <option value="">Choose…</option>
+      <option value="ET">Ethiopia</option>
+      <option value="IT">Italy</option>
+    </select>
+    <h2>Birth</h2>
+    <label for="dob">Date of birth</label><input id="dob" type="date" name="birth[date]" />
+    <label for="cob">Country of birth</label>
+    <select id="cob">
+      <option value="">Choose…</option>
+      <option value="ET">Ethiopia</option>
+      <option value="IT">Italy</option>
+    </select>
+    <label for="pob">Place of birth</label><input id="pob" name="birth[place]" />
+    <h1>Contacts</h1>
+    <label for="street">Street address</label><input id="street" name="address[street]" />
+    <label for="house">House number</label><input id="house" name="address[house]" />
+    <label for="city">City</label><input id="city" name="address[city]" />
+    <label for="zip">Postal code</label><input id="zip" name="address[zip]" />
+    <label for="country">Country</label>
+    <select id="country">
+      <option value="">Choose…</option>
+      <option value="ET">Ethiopia</option>
+      <option value="IT">Italy</option>
+    </select>
+    <label for="mobile">Mobile telephone</label
+    ><input id="mobile" type="tel" placeholder="+372 12345678" /> <label for="email">E-mail</label
+    ><input id="email" type="email" />
+    <h2>Emergency contact</h2>
+    <label for="ec-name">Full name</label><input id="ec-name" /> <label for="ec-phone">Phone</label
+    ><input id="ec-phone" type="tel" />
+    <h1>Motivation</h1>
+    <label for="why">Why do you want to join this programme?</label
+    ><textarea id="why" rows="4"></textarea>
+    <h1>Documents</h1>
+    <label for="up-passport">Copy of passport</label
+    ><input id="up-passport" type="file" accept=".pdf" required />
+    <label for="up-transcript">Transcript of records</label
+    ><input id="up-transcript" type="file" accept=".pdf" />
+    <p><button type="submit">Submit</button></p>
+  </body>
+</html>

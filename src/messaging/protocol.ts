@@ -3,6 +3,13 @@ import type { FieldInfo, PageInfo, Rect, Size, SnipMode } from '@/storage/schema
 
 // One typed protocol for every context (spec 8). Payload fields sit directly on the message.
 
+/** A file upload on the page: the extension can't attach files, so it lists them as a checklist. */
+export interface UploadInfo {
+  label: string;
+  accept?: string;
+  required?: boolean;
+}
+
 export type StartSnipError = 'NEEDS_GESTURE' | 'RESTRICTED_PAGE' | 'INJECT_FAILED';
 
 export interface MessageMap {
@@ -56,8 +63,9 @@ export interface MessageMap {
   };
   /** "Fill form": every visible field on the page. */
   SCAN_FORM: {
-    msg: { type: 'SCAN_FORM' };
-    reply: { page: PageInfo; fields: FieldInfo[] };
+    /** `max`: how many fields to return (Fill form keeps the default; Scholarship asks for more). */
+    msg: { type: 'SCAN_FORM'; max?: number };
+    reply: { page: PageInfo; fields: FieldInfo[]; uploads?: UploadInfo[] };
   };
   /** Is a capture runtime listening in this tab? */
   PING: {

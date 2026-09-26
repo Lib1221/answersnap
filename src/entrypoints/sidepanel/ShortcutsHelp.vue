@@ -52,9 +52,9 @@ const ctrl = isMac ? 'Cmd' : 'Ctrl';
         </dt>
         <dd>{{ t('shortcuts_versions', 'Previous or next version') }}</dd>
         <dt>
-          <kbd class="kbd">{{ alt }}+1 to 5</kbd>
+          <kbd class="kbd">{{ alt }}+1 to 6</kbd>
         </dt>
-        <dd>{{ t('shortcuts_tabs', 'Answer, Job, Form, Library, Profile') }}</dd>
+        <dd>{{ t('shortcuts_tabs_six', 'Answer, Job, Scholarship, Form, Library, Profile') }}</dd>
         <dt><kbd class="kbd">Esc</kbd></dt>
         <dd>{{ t('shortcuts_stop', 'Stop drafting, or cancel a snip') }}</dd>
         <dt><kbd class="kbd">?</kbd></dt>

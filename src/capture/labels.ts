@@ -91,8 +91,12 @@ export function hintFor(el: Element, checker: VisibilityChecker): string | undef
       if (r.y < bottom - 4) continue;
       if (r.y - bottom > HINT_BELOW_PX) break;
       if (isFieldLike(sib)) break;
-      // A label or legend below the field belongs to the next field, not to this one.
-      if (sib.matches('label, legend, fieldset') || sib.querySelector('label[for], legend')) break;
+      // A label, legend, or heading below the field belongs to what comes next, not to this one.
+      if (
+        sib.matches('label, legend, fieldset, h1, h2, h3, h4, h5, h6, [role="heading"]') ||
+        sib.querySelector('label[for], legend, h1, h2, h3, h4, h5, h6')
+      )
+        break;
       const t = visibleTextOf(sib, checker, 200);
       if (t) return t;
     }

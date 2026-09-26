@@ -55,8 +55,14 @@ export function build() {
   const existing = JSON.parse(readFileSync(enPath, 'utf8'));
   const found = extract();
   const out = {};
-  // Manifest-only keys stay as written.
-  for (const [k, v] of Object.entries(existing)) if (!found.has(k) && !v.generated) out[k] = v;
+  // Keys the manifest uses (__MSG_name__) stay as written; anything else not in the code is gone.
+  const manifestKeys = new Set(
+    [...readFileSync(join(root, 'wxt.config.ts'), 'utf8').matchAll(/__MSG_(\w+)__/g)].map(
+      (m) => m[1],
+    ),
+  );
+  for (const [k, v] of Object.entries(existing))
+    if (!found.has(k) && manifestKeys.has(k)) out[k] = v;
   for (const [k, msg] of [...found].sort(([a], [b]) => a.localeCompare(b)))
     out[k] = {
       ...toChrome(msg),
@@ -66,7 +72,12 @@ export function build() {
   for (const name of readdirSync(join(root, 'src/locales'))) {
     const lang = name.replace(/\.json$/, '');
     const map = JSON.parse(readFileSync(join(root, 'src/locales', name), 'utf8'));
-    files[lang] = Object.fromEntries(Object.entries(map).map(([k, m]) => [k, toChrome(m)]));
+    // Only keys English still has: removed strings drop out of every language.
+    files[lang] = Object.fromEntries(
+      Object.entries(map)
+        .filter(([k]) => k in out)
+        .map(([k, m]) => [k, toChrome(m)]),
+    );
   }
   return files;
 }

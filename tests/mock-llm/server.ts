@@ -195,6 +195,29 @@ const LINKEDIN = {
   skills: ['Python', 'Django'],
 };
 
+/** Scholarship call requirements. */
+const REQUIREMENTS = {
+  program: 'Padua International Excellence Scholarship 2027/28',
+  institution: 'University of Padua',
+  deadlines: [
+    { what: 'Applications open', date: '2027-02-02', note: '' },
+    { what: 'Applications close', date: '2027-03-15', note: '13:00 CET' },
+  ],
+  eligibility: [
+    { criterion: 'Under 30 at the deadline', kind: 'age', maxAge: 29, bornOnOrAfter: null },
+    { criterion: "Bachelor's degree", kind: 'degree', maxAge: null, bornOnOrAfter: null },
+  ],
+  documents: [
+    { name: 'Copy of passport', details: 'PDF, max 10 MB', required: true },
+    { name: 'Transcript of records', details: 'with grading scale', required: true },
+    { name: 'Motivation letter', details: '1 page', required: false },
+  ],
+  language: [{ test: 'IELTS', minimum: '6.5' }],
+  fees: [{ what: 'Application fee', amount: 'EUR 30' }],
+  steps: ['Apply online before the deadline'],
+  warnings: ['Data cannot be changed after submission.'],
+};
+
 /** Non-streamed replies: structured profile JSON, tool use, or an image transcription. */
 function completeText(raw: string): string {
   if (/Write an answer for every field/.test(raw)) return batchJson(raw);
@@ -203,6 +226,8 @@ function completeText(raw: string): string {
   if (/You prepare a candidate for a job interview/.test(raw)) return JSON.stringify(INTERVIEW);
   if (/You help a candidate build a bank of STAR stories/.test(raw)) return JSON.stringify(STORIES);
   if (/You tailor a candidate's resume to a job post/.test(raw)) return JSON.stringify(RESUME);
+  if (/You read a scholarship call or a university admission page/.test(raw))
+    return JSON.stringify(REQUIREMENTS);
   if (/You write a candidate's LinkedIn headline/.test(raw)) return JSON.stringify(LINKEDIN);
   if (/Transcribe all readable text/.test(raw)) return TRANSCRIPT;
   if (/Extract the candidate's profile/.test(raw)) return PROFILE;

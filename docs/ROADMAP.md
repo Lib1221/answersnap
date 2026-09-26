@@ -24,7 +24,8 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [x] Story bank: STAR stories, with suggestions drafted from your resume
 - [x] Answer versions: every draft and refinement kept; "Another angle"
 - [x] LinkedIn headline options and About section (Profile tab)
-- [x] Keyboard shortcuts: Alt+1 to 5, Alt+C, Alt+R, Alt+arrows, and ? for the list
+- [x] Keyboard shortcuts: Alt+1 to 6, Alt+C, Alt+R, Alt+arrows, and ? for the list
+- [x] Scholarship and university forms (Study tab): exact personal details from a verified profile (passport MRZ, codice fiscale check), fitted to each field's format, verified after filling; requirements reader with eligibility checks; Italy guide
 
 ## Next
 

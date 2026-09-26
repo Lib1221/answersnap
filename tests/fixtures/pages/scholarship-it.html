@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pre-iscrizione - Dati anagrafici</title>
+    <style>
+      body {
+        font: 15px/1.5 sans-serif;
+        margin: 32px;
+        width: 640px;
+      }
+      label {
+        display: block;
+        margin-top: 12px;
+      }
+      input:not([type='radio']):not([type='checkbox']),
+      select {
+        width: 520px;
+        display: block;
+      }
+      .row select {
+        display: inline-block;
+        width: 160px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Dati personali</h2>
+    <label for="cognome">Cognome</label><input id="cognome" name="cognome" />
+    <label for="nome">Nome</label><input id="nome" name="nome" />
+    <fieldset>
+      <legend>Sesso</legend>
+      <label><input type="radio" name="sesso" value="M" /> Maschio</label>
+      <label><input type="radio" name="sesso" value="F" /> Femmina</label>
+    </fieldset>
+    <label for="gg">Data di nascita</label>
+    <div class="row">
+      <select id="gg" name="nascita_giorno">
+        <option value="">Giorno</option>
+      </select>
+      <select id="mm" name="nascita_mese">
+        <option value="">Mese</option>
+      </select>
+      <select id="aaaa" name="nascita_anno">
+        <option value="">Anno</option>
+      </select>
+    </div>
+    <label for="nazione">Nazione</label>
+    <select id="nazione" name="nazione_nascita">
+      <option value="">--</option>
+      <option>ERITREA</option>
+      <option>REPUBBLICA FEDERALE DEMOCRATICA D'ETIOPIA</option>
+      <option>ITALIA</option>
+    </select>
+    <label for="prov">Provincia</label><input id="prov" name="prov_nascita" />
+    <label for="comune">Comune/Città</label><input id="comune" name="comune_nascita" />
+    <label for="citt">Prima cittadinanza</label>
+    <select id="citt" name="cittadinanza">
+      <option value="">--</option>
+      <option>ERITREA</option>
+      <option>ETIOPIA</option>
+      <option>ITALIA</option>
+    </select>
+    <label for="cf">Codice fiscale</label><input id="cf" name="cf" maxlength="16" />
+    <h2>Documento di identità</h2>
+    <label for="tipo">Tipo documento</label>
+    <select id="tipo">
+      <option value="">--</option>
+      <option>Carta d'identità</option>
+      <option>Passaporto</option>
+    </select>
+    <label for="numdoc">Numero</label><input id="numdoc" /> <label for="ril">Data Rilascio</label
+    ><input id="ril" placeholder="gg/mm/aaaa" /> <label for="scad">Data Scadenza Validità</label
+    ><input id="scad" placeholder="gg/mm/aaaa" />
+    <h2>Recapito</h2>
+    <label for="mail">E-mail</label><input id="mail" /> <label for="pec">E-mail certificata</label
+    ><input id="pec" /> <label for="pref">Pref. Internazionale</label><input id="pref" />
+    <label for="cell">Cellulare</label><input id="cell" maxlength="17" />
+    <script>
+      const add = (id, values) =>
+        values.forEach((v) => document.getElementById(id).add(new Option(v, v)));
+      add(
+        'gg',
+        Array.from({ length: 31 }, (_, i) => String(i + 1)),
+      );
+      add('mm', [
+        'Gennaio',
+        'Febbraio',
+        'Marzo',
+        'Aprile',
+        'Maggio',
+        'Giugno',
+        'Luglio',
+        'Agosto',
+        'Settembre',
+        'Ottobre',
+        'Novembre',
+        'Dicembre',
+      ]);
+      add(
+        'aaaa',
+        Array.from({ length: 60 }, (_, i) => String(2010 - i)),
+      );
+    </script>
+  </body>
+</html>

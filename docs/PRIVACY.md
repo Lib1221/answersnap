@@ -17,6 +17,10 @@ where that data lives, and who receives it.
   in it, the page title and site name (no query strings), and details of the form field you are
   filling (its label and character limit).
 - **Job posts you choose to add**, from a snip, a selection, or a page.
+- **Your applicant details** (for scholarship and university forms): names, birth date and place,
+  citizenship, passport and ID numbers and dates, codice fiscale, contact details, addresses,
+  education, and language tests. They are stored only on this computer, are never sent to the AI
+  provider, never synced, and never exported. They are only written into forms you fill.
 - **Your application tracker:** for each job post you save, the site, role, company, the status
   you set, and your notes. It is never sent to the AI provider. Follow-up reminders are checked
   on this computer and shown as Chrome notifications; you can turn them off.

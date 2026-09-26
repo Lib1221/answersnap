@@ -183,9 +183,13 @@ export async function snipLabel(panel: Page, page: Page, selector: string) {
 }
 
 /** Save the fixture job post (job.html) through the job bar, like a user would. */
-export async function saveJob(panel: Page, context: import('@playwright/test').BrowserContext) {
+export async function saveJob(
+  panel: Page,
+  context: import('@playwright/test').BrowserContext,
+  file = 'job.html',
+) {
   const page = await context.newPage();
-  await page.goto(`${FIXTURES}/job.html`);
+  await page.goto(`${FIXTURES}/${file}`);
   await page.evaluate(() => {
     const range = document.createRange();
     range.selectNodeContents(document.getElementById('post')!);

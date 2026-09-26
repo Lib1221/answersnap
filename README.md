@@ -20,6 +20,12 @@ Made by Liben.
     keywords to use
   - **Interview:** the questions you're likely to get, with suggested answers from your profile
   - **Email:** thank-you notes, follow-ups, and replies to offers
+- **Scholarships and university applications (Study tab):** your passport, birth, citizenship,
+  address, and education details are filled exactly, in the format each field expects (DreamApply,
+  Universitaly, Esse3, and other portals), then checked on the page. Read your passport's
+  machine-readable lines to fill your details, validate your codice fiscale, check a call's
+  deadlines, age limits, and language minimums against your details, and keep a document
+  checklist. Personal details are never sent to the AI.
 - **Application tracker:** every job post you save is tracked, from saved to offer, with notes
   and a CSV export.
 - **Story bank:** your STAR stories, used first for "tell me about a time" questions.

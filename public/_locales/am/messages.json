@@ -5,14 +5,6 @@
   "extDescription": {
     "message": "የማመልከቻ ጥያቄ ይቁረጡ። ከራስዎ ሲቪ እና ድረ ገጽ የተጻፈ ረቂቅ መልስ ያግኙ።"
   },
-  "actionTitle": {
-    "message": "ጥያቄ ቁረጥ ($P1$)",
-    "placeholders": {
-      "p1": {
-        "content": "$1"
-      }
-    }
-  },
   "commandSnip": {
     "message": "ጥያቄ ቁረጥ እና መልስ አርቅቅ"
   },
@@ -1442,9 +1434,6 @@
   "shortcuts_stop": {
     "message": "ማርቀቁን አቁም፣ ወይም መቁረጡን ሰርዝ"
   },
-  "shortcuts_tabs": {
-    "message": "መልስ፣ ሥራ፣ ቅጽ፣ ቤተ መጻሕፍት፣ መገለጫ"
-  },
   "shortcuts_this_list": {
     "message": "ይህ ዝርዝር"
   },
@@ -1518,5 +1507,526 @@
   },
   "version_your_change": {
     "message": "የእርስዎ ለውጥ"
+  },
+  "guide_cf_1": {
+    "message": "16 ቁምፊዎች። ከጣሊያን ውጭ ለተወለዱ ሰዎች ከ12 እስከ 15 ያሉት ቁምፊዎች Z እና የአገሩ ሦስት አሃዞች ናቸው (የኢትዮጵያ Z315 ነው)።"
+  },
+  "guide_cf_2": {
+    "message": "ፖርታሎች ጊዜያዊ ኮድ ማስላት ይችላሉ፣ ነገር ግን ትክክለኛውን የሚሰጡት Agenzia delle Entrate ወይም የጣሊያን ኤምባሲ ብቻ ናቸው። ትክክለኛው ካለዎት እሱን ይጠቀሙ።"
+  },
+  "guide_cf_title": {
+    "message": "Codice fiscale"
+  },
+  "guide_dov_1": {
+    "message": "ተመጣጣኝነት: ከጣሊያን ኤምባሲ የሚገኝ Dichiarazione di Valore (DOV)፣ ወይም የ CIMEA የተመጣጣኝነት መግለጫ (Statement of Comparability)።"
+  },
+  "guide_dov_2": {
+    "message": "ትክክለኛነት: የ CIMEA የማረጋገጫ መግለጫ (Statement of Verification)፣ ሕጋዊ ማረጋገጫ፣ ወይም አፖስቲል። ብዙ ዩኒቨርሲቲዎች በቅድመ ምዝገባ ጊዜ እነዚህን አማራጭ ያደርጓቸዋል፣ ነገር ግን በምዝገባ ጊዜ ይጠይቋቸዋል።"
+  },
+  "guide_dov_title": {
+    "message": "የዲግሪዎ እውቅና"
+  },
+  "guide_dsu_1": {
+    "message": "በቤተሰብዎ አባላት፣ ገቢ እና በውጭ አገር ባለ ንብረት (የአምናው የቀደመው ዓመት) ላይ የተመሰረተ፣ በ CAF በኩል የሚዘጋጅ ISEE parificato ያስፈልግዎታል።"
+  },
+  "guide_dsu_2": {
+    "message": "ሰነዶች በአገርዎ ባሉ የጣሊያን ባለሥልጣናት መሰጠት ወይም ሕጋዊ መደረግ፣ እና ወደ ጣሊያንኛ መተርጎም አለባቸው። የራስ መግለጫዎች ተቀባይነት የላቸውም።"
+  },
+  "guide_dsu_3": {
+    "message": "ጥሪዎች ብዙውን ጊዜ በጁን አካባቢ ይከፈታሉ፣ እና በጁላይ እና በሴፕቴምበር መካከል ይዘጋሉ። ISEE ቀድመው ይጀምሩ: ሳምንታት ይወስዳል።"
+  },
+  "guide_dsu_title": {
+    "message": "የክልል ስኮላርሺፖች (DSU: ER.GO, ESU, EDISU, DiSCo, DSU Toscana)"
+  },
+  "guide_iyt_1": {
+    "message": "ስሞች የሚወሰዱት ከፓስፖርቱ MRZ ነው። የእንግሊዝኛ B2፣ አንድ ገጽ CV፣ 59 ሰከንድ ወይም ከዚያ ያነሰ ቪዲዮ፣ እና GPA ያለበት የውጤት ማስረጃዎ።"
+  },
+  "guide_iyt_title": {
+    "message": "Invest Your Talent in Italy"
+  },
+  "guide_maeci_1": {
+    "message": "በ studyinitaly.esteri.it ላይ ያመልክቱ፤ የ2026/27 ጥሪ በማርች ተዘግቷል። የዕድሜ ገደቦች: ለማስተርስ 28፣ ለዶክትሬት 30።"
+  },
+  "guide_maeci_2": {
+    "message": "ጣሊያንኛ ወይም እንግሊዝኛ በ B2 ደረጃ። ለመመዝገብ ፓስፖርትዎ ያስፈልጋል።"
+  },
+  "guide_maeci_title": {
+    "message": "የጣሊያን መንግሥት (MAECI) ስኮላርሺፖች"
+  },
+  "guide_universitaly_1": {
+    "message": "ስሞችን በፓስፖርቱ ላይ እንዳሉት በትክክል፣ ያለ አክሰንት በላቲን ፊደላት ይጻፉ፤ የቤተሰብ ስም ከሌለዎት XXX ይጻፉ። ካስቀመጡ በኋላ መቀየር አይቻልም።"
+  },
+  "guide_universitaly_2": {
+    "message": "የትውልድ ቀን ሦስት ተቆልቋይ ዝርዝሮች ነው (ቀን፣ ወር፣ ዓመት)። ስልክ ከአገር ኮድ ጋር።"
+  },
+  "guide_universitaly_3": {
+    "message": "የፊት ፎቶ እና ፓስፖርትዎን ይስቀሉ: PDF፣ JPEG፣ ወይም PNG፣ ቢበዛ 10 MB። በአንድ የትምህርት ዘመን አንድ ማመልከቻ ብቻ።"
+  },
+  "guide_universitaly_title": {
+    "message": "የ Universitaly ቅድመ ምዝገባ (ከአውሮፓ ኅብረት ውጭ ላሉ ተማሪዎች)"
+  },
+  "guide_uploads_1": {
+    "message": "PDF አስተማማኝ ምርጫ ነው። አክሰንት ወይም ልዩ ቁምፊዎች የሌላቸው የፋይል ስሞችን ይጠቀሙ። ገደቡ ብዙውን ጊዜ በአንድ ፋይል 10 MB ነው።"
+  },
+  "guide_uploads_2": {
+    "message": "በአንዳንድ ፖርታሎች (Padua, Polimi) ማመልከቻውን ከላኩ ወይም ክፍያውን ከከፈሉ በኋላ ሰነዶችን መቀየር አይቻልም።"
+  },
+  "guide_uploads_title": {
+    "message": "የሚሰቀሉ ፋይሎች"
+  },
+  "guide_visa_1": {
+    "message": "የኤምባሲ ዝርዝሮች ከቪዛው ቢያንስ 90 ቀናት በላይ የሚያገለግል፣ ሁለት ባዶ ገጾች ያሉት ፓስፖርት ይጠይቃሉ። ለመኖሪያ ፈቃዱም ሙሉ ቆይታዎን መሸፈን አለበት።"
+  },
+  "guide_visa_2": {
+    "message": "ጣሊያን በደረሱ በ8 ቀናት ውስጥ ለ permesso di soggiorno ያመልክቱ።"
+  },
+  "guide_visa_title": {
+    "message": "ቪዛ እና የመኖሪያ ፈቃድ"
+  },
+  "panel_tab_scholarship": {
+    "message": "ስኮላርሺፕ"
+  },
+  "sch_add_it": {
+    "message": "አክለው"
+  },
+  "sch_add_key": {
+    "message": "ለመጀመር የ API ቁልፍዎን ያክሉ።"
+  },
+  "sch_add_resume": {
+    "message": "ድርሰቶች የሚመሰረቱበት ነገር እንዲኖራቸው ሲቪዎን ያክሉ።"
+  },
+  "sch_already": {
+    "message": "በገጹ ላይ አስቀድሞ ተሞልቷል: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_cant_read": {
+    "message": "በዚህ ገጽ ላይ ያሉትን መስኮች ማንበብ አልተቻለም።"
+  },
+  "sch_changed": {
+    "message": "$P1$ መታየት አለባቸው።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_age": {
+    "message": "የዕድሜ ገደብ $P1$: በ$P3$ $P2$ ዓመት ይሆናሉ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "sch_check_age_unknown": {
+    "message": "የዕድሜ ገደብ $P1$: ለማረጋገጥ የትውልድ ቀንዎን ያክሉ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_born_after": {
+    "message": "በ$P1$ ወይም ከዚያ በኋላ የተወለዱ መሆን አለብዎት።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_deadline": {
+    "message": "$P1$: $P2$፣ $P3$ ቀናት ቀርተዋል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "sch_check_deadline_past": {
+    "message": "$P1$: $P2$፣ አልፏል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_lang": {
+    "message": "$P1$ ያስፈልጋል፤ የእርስዎ: $P2$።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_lang_unknown": {
+    "message": "$P1$ ያስፈልጋል፤ ፈተናዎን በአመልካች ዝርዝሮች ውስጥ ያክሉ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_passport": {
+    "message": "ፓስፖርቱ እስከ $P1$ ያገለግላል (ከመጨረሻው ቀነ ገደብ $P2$ ወራት በኋላ)።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_passport_unknown": {
+    "message": "ፓስፖርትዎ ቆይታዎን እንደሚሸፍን ለማረጋገጥ የሚያበቃበትን ቀን ያክሉ።"
+  },
+  "sch_details_pct": {
+    "message": "የእርስዎ ዝርዝሮች: $P1$%",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_draft": {
+    "message": "ከመገለጫዬ አርቅቅ"
+  },
+  "sch_draft_error": {
+    "message": "መልሶቹን ማርቀቅ አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "sch_drafting": {
+    "message": "በማርቀቅ ላይ"
+  },
+  "sch_edit_details": {
+    "message": "አርትዕ"
+  },
+  "sch_essays": {
+    "message": "የድርሰት ጥያቄዎች ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_failed": {
+    "message": "ይህን መስክ መሙላት አልተቻለም። እሴቱን ቀድተው ይለጥፉት።"
+  },
+  "sch_fill_intro": {
+    "message": "የማመልከቻ ገጹን ይክፈቱ፣ ከዚያ ይቃኙት። የግል ዝርዝሮችዎ የሚሞሉት ከአመልካች ዝርዝሮች ነው፤ በጭራሽ አይገመቱም፣ ወደ AI አይላኩም። ቅጹ በጭራሽ አይላክም።"
+  },
+  "sch_fill_this": {
+    "message": "ይህን መስክ ሙላ"
+  },
+  "sch_for_you": {
+    "message": "እርስዎ የሚመልሷቸው ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_for_you_why": {
+    "message": "በዝርዝሮችዎ ውስጥ የሌሉ፣ ወይም የሚገመቱ ያልሆኑ (የሌሎች ሰዎች ዝርዝሮች፣ ስለ ፕሮግራሙ ምርጫዎች)። ባዶ ሆነው ይቀራሉ።"
+  },
+  "sch_from_details": {
+    "message": "ከዝርዝሮችዎ ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_gesture_hint": {
+    "message": "መጀመሪያ Alt+Shift+Q ይጫኑ ወይም በገጹ ላይ የ AnswerSnap አዶውን ጠቅ ያድርጉ፣ ከዚያ እንደገና ይሞክሩ።"
+  },
+  "sch_guide_intro": {
+    "message": "ከፖርታሎቹ የራሳቸው መመሪያዎች የተወሰደ (ሴፕቴምበር 2026)። ደንቦች በየዓመቱ ይቀየራሉ: ሁልጊዜ የአሁኑ ጥሪ ነው የሚወስነው።"
+  },
+  "sch_insert": {
+    "message": "$P1$ መስኮችን ሙላ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_issue_guessed": {
+    "message": "የቀን ቅርጸቱ የተገመተው ከገጹ ቋንቋ ነው: ያረጋግጡት።"
+  },
+  "sch_issue_missing": {
+    "message": "እስካሁን በዝርዝሮችዎ ውስጥ የለም።"
+  },
+  "sch_issue_no_option": {
+    "message": "ከገጹ አማራጮች አንዱም ከዝርዝሮችዎ ጋር አይዛመድም።"
+  },
+  "sch_issue_pattern": {
+    "message": "ገጹ የተለየ ቅርጸት ይጠብቃል።"
+  },
+  "sch_issue_too_long": {
+    "message": "ይህ መስክ ከሚፈቅደው በላይ ረጅም ነው።"
+  },
+  "sch_key_age": {
+    "message": "ዕድሜ"
+  },
+  "sch_key_authority": {
+    "message": "ፓስፖርቱን የሰጠው ባለሥልጣን"
+  },
+  "sch_key_birth_city": {
+    "message": "የትውልድ ከተማ"
+  },
+  "sch_key_birth_country": {
+    "message": "የትውልድ አገር"
+  },
+  "sch_key_birth_date": {
+    "message": "የትውልድ ቀን"
+  },
+  "sch_key_cf": {
+    "message": "Codice fiscale"
+  },
+  "sch_key_citizenship": {
+    "message": "ዜግነት"
+  },
+  "sch_key_city": {
+    "message": "ከተማ"
+  },
+  "sch_key_country": {
+    "message": "አገር"
+  },
+  "sch_key_degree": {
+    "message": "ዲግሪ"
+  },
+  "sch_key_doc_type": {
+    "message": "የሰነድ ዓይነት"
+  },
+  "sch_key_domicile_same": {
+    "message": "የአሁኑ አድራሻ ከመኖሪያ አድራሻ ጋር አንድ ነው"
+  },
+  "sch_key_edu_country": {
+    "message": "የተማሩበት አገር"
+  },
+  "sch_key_email": {
+    "message": "ኢሜይል"
+  },
+  "sch_key_expiry": {
+    "message": "ፓስፖርቱ የሚያበቃበት ቀን"
+  },
+  "sch_key_family": {
+    "message": "የቤተሰብ ስም"
+  },
+  "sch_key_father": {
+    "message": "የአባት ስም"
+  },
+  "sch_key_field": {
+    "message": "የትምህርት መስክ"
+  },
+  "sch_key_full": {
+    "message": "ሙሉ ስም"
+  },
+  "sch_key_given": {
+    "message": "የመጀመሪያ ስም"
+  },
+  "sch_key_grade": {
+    "message": "የመጨረሻ ውጤት"
+  },
+  "sch_key_graduation": {
+    "message": "የምረቃ ቀን"
+  },
+  "sch_key_house": {
+    "message": "የቤት ቁጥር"
+  },
+  "sch_key_institution": {
+    "message": "ዩኒቨርሲቲ"
+  },
+  "sch_key_issue": {
+    "message": "ፓስፖርቱ የተሰጠበት ቀን"
+  },
+  "sch_key_issuing_country": {
+    "message": "ፓስፖርቱን የሰጠው አገር"
+  },
+  "sch_key_marital": {
+    "message": "የጋብቻ ሁኔታ"
+  },
+  "sch_key_mother": {
+    "message": "የእናት ስም"
+  },
+  "sch_key_national_id": {
+    "message": "የብሔራዊ መታወቂያ ቁጥር"
+  },
+  "sch_key_native": {
+    "message": "የአፍ መፍቻ ቋንቋ"
+  },
+  "sch_key_no_cf": {
+    "message": "የጣሊያን የግብር ኮድ የለም"
+  },
+  "sch_key_passport": {
+    "message": "የፓስፖርት ቁጥር"
+  },
+  "sch_key_phone": {
+    "message": "ስልክ"
+  },
+  "sch_key_phone_code": {
+    "message": "የአገር የስልክ ኮድ"
+  },
+  "sch_key_phone_national": {
+    "message": "የስልክ ቁጥር"
+  },
+  "sch_key_postal": {
+    "message": "የፖስታ ኮድ"
+  },
+  "sch_key_region": {
+    "message": "ክልል ወይም አውራጃ"
+  },
+  "sch_key_scale": {
+    "message": "የውጤት መለኪያ"
+  },
+  "sch_key_second_citizenship": {
+    "message": "ሁለተኛ ዜግነት"
+  },
+  "sch_key_sex": {
+    "message": "ጾታ"
+  },
+  "sch_key_street": {
+    "message": "መንገድ"
+  },
+  "sch_likely": {
+    "message": "ከመለያው እና ከአጠገቡ ካሉት ጋር ተዛምዷል: ይመልከቱት።"
+  },
+  "sch_no_fields": {
+    "message": "በዚህ ገጽ ላይ የቅጽ መስኮች አልተገኙም።"
+  },
+  "sch_optional": {
+    "message": "አማራጭ"
+  },
+  "sch_page_shows": {
+    "message": "ገጹ አሁን \"$P1$\" ያሳያል። በእጅ ያስተካክሉት ወይም አርትዕ አድርገው እንደገና ይሙሉ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_req_again": {
+    "message": "እንደገና አንብብ"
+  },
+  "sch_req_documents": {
+    "message": "ሰነዶች ($P1$ ከ$P2$ ዝግጁ)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_req_eligibility": {
+    "message": "ማን ማመልከት ይችላል"
+  },
+  "sch_req_error": {
+    "message": "መስፈርቶቹን ማንበብ አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "sch_req_intro": {
+    "message": "የተቀመጠውን ገጽ ለቀነ ገደቦች፣ ለብቁነት፣ ለሰነዶች እና ለዝቅተኛ የቋንቋ ደረጃዎች ያነባል፣ ከዚያ ከዝርዝሮችዎ ጋር ያመሳክራቸዋል።"
+  },
+  "sch_req_reading": {
+    "message": "መስፈርቶቹን በማንበብ ላይ…"
+  },
+  "sch_req_run": {
+    "message": "መስፈርቶቹን አንብብ"
+  },
+  "sch_req_save_how": {
+    "message": "የስኮላርሺፕ ጥሪውን ወይም የፕሮግራሙን ገጽ ይክፈቱ፣ ከዚያ ከላይ ያለውን \"ሥራ አዘጋጅ\" ተጠቅመው ሙሉውን ገጽ ያንብቡ።"
+  },
+  "sch_req_save_page": {
+    "message": "መጀመሪያ ጥሪውን ወይም የፕሮግራሙን ገጽ አስቀምጥ"
+  },
+  "sch_req_steps": {
+    "message": "ደረጃዎች እና ክፍያዎች"
+  },
+  "sch_required": {
+    "message": "ግዴታ"
+  },
+  "sch_rescan": {
+    "message": "እንደገና ቃኝ"
+  },
+  "sch_row_verified": {
+    "message": "በገጹ ላይ ተረጋግጧል"
+  },
+  "sch_scan": {
+    "message": "ይህን ገጽ ቃኝ"
+  },
+  "sch_scanning": {
+    "message": "በመቃኘት ላይ"
+  },
+  "sch_subtitle": {
+    "message": "ትክክለኛ የግል ዝርዝሮች፣ ከተሞሉ በኋላ የሚረጋገጡ።"
+  },
+  "sch_title": {
+    "message": "ስኮላርሺፖች እና የትምህርት ቅበላ"
+  },
+  "sch_uploads": {
+    "message": "በዚህ ገጽ ላይ የሚሰቀሉ ፋይሎች ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_uploads_why": {
+    "message": "አሳሾች ፋይሎችን እራስዎ ብቻ እንዲያያይዙ ይፈቅዳሉ። እነዚህን አዘጋጅተው ይያዙ:"
+  },
+  "sch_verified": {
+    "message": "$P1$ በገጹ ላይ ተረጋግጠዋል።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_view_fill": {
+    "message": "ሙላ"
+  },
+  "sch_view_guide": {
+    "message": "የጣሊያን መመሪያ"
+  },
+  "sch_view_requirements": {
+    "message": "መስፈርቶች"
+  },
+  "sch_views": {
+    "message": "የስኮላርሺፕ መሣሪያዎች"
+  },
+  "shortcuts_tabs_six": {
+    "message": "መልስ፣ ሥራ፣ ስኮላርሺፕ፣ ቅጽ፣ ማህደር፣ መገለጫ"
+  },
+  "sch_part_day": {
+    "message": "ቀን"
+  },
+  "sch_part_month": {
+    "message": "ወር"
+  },
+  "sch_part_year": {
+    "message": "ዓመት"
   }
 }

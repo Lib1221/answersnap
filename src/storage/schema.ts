@@ -34,6 +34,17 @@ export const FieldInfoSchema = z.object({
   hint: z.string().optional(),
   currentValue: z.string().optional(),
   options: z.array(z.string()).optional(),
+  /** Option values, parallel to `options` (country lists often use codes like IT or ITA). */
+  optionValues: z.array(z.string()).optional(),
+  /** The element's name, id, and autocomplete attributes: strong hints for exact filling. */
+  name: z.string().optional(),
+  domId: z.string().optional(),
+  autocomplete: z.string().optional(),
+  pattern: z.string().optional(),
+  min: z.string().optional(),
+  max: z.string().optional(),
+  /** The nearest heading or legend above the field ("Passport", "Father's details"). */
+  section: z.string().optional(),
   inIframe: z.boolean().optional(),
   confidence: z.enum(['focused', 'inside', 'below', 'right', 'picked']),
 });

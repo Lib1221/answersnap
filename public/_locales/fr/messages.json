@@ -5,14 +5,6 @@
   "extDescription": {
     "message": "Capturez une question de candidature. Obtenez un brouillon de réponse rédigé à partir de votre CV et de votre site web."
   },
-  "actionTitle": {
-    "message": "Capturer une question ($P1$)",
-    "placeholders": {
-      "p1": {
-        "content": "$1"
-      }
-    }
-  },
   "commandSnip": {
     "message": "Capturer une question et rédiger une réponse"
   },
@@ -1442,9 +1434,6 @@
   "shortcuts_stop": {
     "message": "Arrêter la rédaction, ou annuler une capture"
   },
-  "shortcuts_tabs": {
-    "message": "Réponse, Offre, Formulaire, Bibliothèque, Profil"
-  },
   "shortcuts_this_list": {
     "message": "Cette liste"
   },
@@ -1518,5 +1507,526 @@
   },
   "version_your_change": {
     "message": "Votre modification"
+  },
+  "guide_cf_1": {
+    "message": "16 caractères. Pour les personnes nées à l'étranger, les caractères 12 à 15 sont Z suivi de trois chiffres pour le pays (l'Éthiopie correspond à Z315)."
+  },
+  "guide_cf_2": {
+    "message": "Les portails peuvent calculer un code provisoire, mais seuls l'Agenzia delle Entrate ou une ambassade d'Italie délivrent le vrai code. Utilisez le vrai dès que vous l'avez."
+  },
+  "guide_cf_title": {
+    "message": "Codice fiscale"
+  },
+  "guide_dov_1": {
+    "message": "Comparabilité : une Dichiarazione di Valore (DOV) de l'ambassade d'Italie, ou une attestation de comparabilité (Statement of Comparability) du CIMEA."
+  },
+  "guide_dov_2": {
+    "message": "Authenticité : une attestation de vérification (Statement of Verification) du CIMEA, une légalisation ou une apostille. Beaucoup d'universités les rendent facultatives à la préinscription mais les demandent à l'inscription."
+  },
+  "guide_dov_title": {
+    "message": "Reconnaissance de votre diplôme"
+  },
+  "guide_dsu_1": {
+    "message": "Il vous faut un ISEE parificato, établi par un CAF, selon la composition de votre famille, vos revenus et vos biens à l'étranger (de l'avant-dernière année)."
+  },
+  "guide_dsu_2": {
+    "message": "Les documents doivent être délivrés ou légalisés par les autorités italiennes de votre pays et traduits en italien. Les déclarations sur l'honneur ne sont pas acceptées."
+  },
+  "guide_dsu_3": {
+    "message": "Les appels ouvrent généralement vers juin et ferment entre juillet et septembre. Commencez l'ISEE tôt : cela prend des semaines."
+  },
+  "guide_dsu_title": {
+    "message": "Bourses régionales (DSU : ER.GO, ESU, EDISU, DiSCo, DSU Toscana)"
+  },
+  "guide_iyt_1": {
+    "message": "Les noms viennent de la MRZ du passeport. Anglais B2, un CV d'une page, une vidéo de 59 secondes maximum et votre relevé de notes avec le GPA."
+  },
+  "guide_iyt_title": {
+    "message": "Invest Your Talent in Italy"
+  },
+  "guide_maeci_1": {
+    "message": "Candidatez sur studyinitaly.esteri.it ; l'appel 2026/27 a fermé en mars. Limites d'âge : 28 ans pour le master, 30 ans pour le doctorat."
+  },
+  "guide_maeci_2": {
+    "message": "Italien ou anglais niveau B2. Votre passeport est nécessaire pour vous inscrire."
+  },
+  "guide_maeci_title": {
+    "message": "Bourses du gouvernement italien (MAECI)"
+  },
+  "guide_universitaly_1": {
+    "message": "Noms exactement comme dans le passeport, en lettres latines sans accents ; écrivez XXX si vous n'avez pas de nom de famille. Ils ne peuvent plus être modifiés après l'enregistrement."
+  },
+  "guide_universitaly_2": {
+    "message": "La date de naissance se saisit avec trois listes (jour, mois, année). Téléphone avec l'indicatif du pays."
+  },
+  "guide_universitaly_3": {
+    "message": "Joignez une photo de votre visage et votre passeport : PDF, JPEG ou PNG, 10 MB maximum. Une candidature par année universitaire."
+  },
+  "guide_universitaly_title": {
+    "message": "Préinscription Universitaly (étudiants hors UE)"
+  },
+  "guide_uploads_1": {
+    "message": "Le PDF est le choix sûr. Utilisez des noms de fichiers sans accents ni caractères spéciaux. La limite est souvent de 10 MB par fichier."
+  },
+  "guide_uploads_2": {
+    "message": "Sur certains portails (Padoue, Polimi), les documents ne peuvent plus être modifiés une fois la candidature soumise ou les frais payés."
+  },
+  "guide_uploads_title": {
+    "message": "Fichiers à joindre"
+  },
+  "guide_visa_1": {
+    "message": "Les listes de pièces des ambassades demandent un passeport valable au moins 90 jours après la fin du visa, avec deux pages vierges. Il doit aussi couvrir tout votre séjour pour le titre de séjour."
+  },
+  "guide_visa_2": {
+    "message": "Demandez le permesso di soggiorno dans les 8 jours suivant votre arrivée en Italie."
+  },
+  "guide_visa_title": {
+    "message": "Visa et titre de séjour"
+  },
+  "panel_tab_scholarship": {
+    "message": "Bourse"
+  },
+  "sch_add_it": {
+    "message": "L'ajouter"
+  },
+  "sch_add_key": {
+    "message": "Ajoutez votre clé API pour commencer."
+  },
+  "sch_add_resume": {
+    "message": "Ajoutez votre CV pour que les rédactions aient une base."
+  },
+  "sch_already": {
+    "message": "Déjà rempli sur la page : $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_cant_read": {
+    "message": "Impossible de lire les champs de cette page."
+  },
+  "sch_changed": {
+    "message": "$P1$ à vérifier.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_age": {
+    "message": "Limite d'âge $P1$ : vous aurez $P2$ ans le $P3$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "sch_check_age_unknown": {
+    "message": "Limite d'âge $P1$ : ajoutez votre date de naissance pour vérifier.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_born_after": {
+    "message": "Date de naissance exigée : le $P1$ ou après.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_deadline": {
+    "message": "$P1$ : $P2$, dans $P3$ jours.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      },
+      "p3": {
+        "content": "$3"
+      }
+    }
+  },
+  "sch_check_deadline_past": {
+    "message": "$P1$ : $P2$, date déjà passée.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_lang": {
+    "message": "$P1$ requis ; votre niveau : $P2$.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_lang_unknown": {
+    "message": "$P1$ requis ; ajoutez votre test dans Applicant details.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_check_passport": {
+    "message": "Passeport valable jusqu'au $P1$ ($P2$ mois après la dernière date limite).",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_check_passport_unknown": {
+    "message": "Ajoutez la date d'expiration de votre passeport pour vérifier qu'il couvre votre séjour."
+  },
+  "sch_details_pct": {
+    "message": "Vos informations : $P1$ %",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_draft": {
+    "message": "Rédiger à partir de mon profil"
+  },
+  "sch_draft_error": {
+    "message": "Impossible de rédiger les réponses. Réessayez."
+  },
+  "sch_drafting": {
+    "message": "Rédaction"
+  },
+  "sch_edit_details": {
+    "message": "Modifier"
+  },
+  "sch_essays": {
+    "message": "Questions de rédaction ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_failed": {
+    "message": "Impossible de remplir ce champ. Copiez la valeur et collez-la."
+  },
+  "sch_fill_intro": {
+    "message": "Ouvrez la page de candidature, puis analysez-la. Vos informations personnelles viennent de la section Applicant details : jamais devinées, jamais envoyées à l'IA. Rien n'est soumis."
+  },
+  "sch_fill_this": {
+    "message": "Remplir ce champ"
+  },
+  "sch_for_you": {
+    "message": "À vous de répondre ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_for_you_why": {
+    "message": "Absent de vos informations, ou à ne pas deviner (informations sur d'autres personnes, choix concernant le programme). Ces champs restent vides."
+  },
+  "sch_from_details": {
+    "message": "À partir de vos informations ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_gesture_hint": {
+    "message": "Appuyez d'abord sur Alt+Shift+Q ou cliquez sur l'icône AnswerSnap dans la page, puis réessayez."
+  },
+  "sch_guide_intro": {
+    "message": "D'après les guides des portails eux-mêmes (septembre 2026). Les règles changent chaque année : l'appel en cours fait toujours foi."
+  },
+  "sch_insert": {
+    "message": "Remplir $P1$ champs",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_issue_guessed": {
+    "message": "Format de date deviné d'après la langue de la page : vérifiez-le."
+  },
+  "sch_issue_missing": {
+    "message": "Pas encore dans vos informations."
+  },
+  "sch_issue_no_option": {
+    "message": "Aucune option de la page ne correspond à vos informations."
+  },
+  "sch_issue_pattern": {
+    "message": "La page attend un autre format."
+  },
+  "sch_issue_too_long": {
+    "message": "Plus long que ce que ce champ autorise."
+  },
+  "sch_key_age": {
+    "message": "Âge"
+  },
+  "sch_key_authority": {
+    "message": "Autorité de délivrance du passeport"
+  },
+  "sch_key_birth_city": {
+    "message": "Ville de naissance"
+  },
+  "sch_key_birth_country": {
+    "message": "Pays de naissance"
+  },
+  "sch_key_birth_date": {
+    "message": "Date de naissance"
+  },
+  "sch_key_cf": {
+    "message": "Codice fiscale"
+  },
+  "sch_key_citizenship": {
+    "message": "Nationalité"
+  },
+  "sch_key_city": {
+    "message": "Ville"
+  },
+  "sch_key_country": {
+    "message": "Pays"
+  },
+  "sch_key_degree": {
+    "message": "Diplôme"
+  },
+  "sch_key_doc_type": {
+    "message": "Type de document"
+  },
+  "sch_key_domicile_same": {
+    "message": "Adresse actuelle identique à la résidence"
+  },
+  "sch_key_edu_country": {
+    "message": "Pays des études"
+  },
+  "sch_key_email": {
+    "message": "E-mail"
+  },
+  "sch_key_expiry": {
+    "message": "Date d'expiration du passeport"
+  },
+  "sch_key_family": {
+    "message": "Nom de famille"
+  },
+  "sch_key_father": {
+    "message": "Nom du père"
+  },
+  "sch_key_field": {
+    "message": "Domaine d'études"
+  },
+  "sch_key_full": {
+    "message": "Nom complet"
+  },
+  "sch_key_given": {
+    "message": "Prénoms"
+  },
+  "sch_key_grade": {
+    "message": "Note finale"
+  },
+  "sch_key_graduation": {
+    "message": "Date d'obtention du diplôme"
+  },
+  "sch_key_house": {
+    "message": "Numéro de rue"
+  },
+  "sch_key_institution": {
+    "message": "Université"
+  },
+  "sch_key_issue": {
+    "message": "Date de délivrance du passeport"
+  },
+  "sch_key_issuing_country": {
+    "message": "Pays de délivrance du passeport"
+  },
+  "sch_key_marital": {
+    "message": "Situation familiale"
+  },
+  "sch_key_mother": {
+    "message": "Nom de la mère"
+  },
+  "sch_key_national_id": {
+    "message": "Numéro d'identité nationale"
+  },
+  "sch_key_native": {
+    "message": "Langue maternelle"
+  },
+  "sch_key_no_cf": {
+    "message": "Pas de code fiscal italien"
+  },
+  "sch_key_passport": {
+    "message": "Numéro de passeport"
+  },
+  "sch_key_phone": {
+    "message": "Téléphone"
+  },
+  "sch_key_phone_code": {
+    "message": "Indicatif du pays"
+  },
+  "sch_key_phone_national": {
+    "message": "Numéro de téléphone"
+  },
+  "sch_key_postal": {
+    "message": "Code postal"
+  },
+  "sch_key_region": {
+    "message": "Région ou province"
+  },
+  "sch_key_scale": {
+    "message": "Barème de notation"
+  },
+  "sch_key_second_citizenship": {
+    "message": "Seconde nationalité"
+  },
+  "sch_key_sex": {
+    "message": "Sexe"
+  },
+  "sch_key_street": {
+    "message": "Rue"
+  },
+  "sch_likely": {
+    "message": "Associé d'après le libellé et ses voisins : jetez-y un œil."
+  },
+  "sch_no_fields": {
+    "message": "Aucun champ de formulaire trouvé sur cette page."
+  },
+  "sch_optional": {
+    "message": "facultatif"
+  },
+  "sch_page_shows": {
+    "message": "La page affiche maintenant « $P1$ ». Corrigez-le à la main, ou modifiez et remplissez à nouveau.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_req_again": {
+    "message": "Relire"
+  },
+  "sch_req_documents": {
+    "message": "Documents ($P1$ sur $P2$ prêts)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_req_eligibility": {
+    "message": "Qui peut candidater"
+  },
+  "sch_req_error": {
+    "message": "Impossible de lire les conditions. Réessayez."
+  },
+  "sch_req_intro": {
+    "message": "Lit la page enregistrée pour trouver les dates limites, les conditions d'admissibilité, les documents et les niveaux de langue minimum, puis les compare à vos informations."
+  },
+  "sch_req_reading": {
+    "message": "Lecture des conditions…"
+  },
+  "sch_req_run": {
+    "message": "Lire les conditions"
+  },
+  "sch_req_save_how": {
+    "message": "Ouvrez l'appel à candidatures ou la page du programme, puis utilisez Définir l'offre ci-dessus et lisez toute la page."
+  },
+  "sch_req_save_page": {
+    "message": "Enregistrez d'abord l'appel ou la page du programme"
+  },
+  "sch_req_steps": {
+    "message": "Étapes et frais"
+  },
+  "sch_required": {
+    "message": "obligatoire"
+  },
+  "sch_rescan": {
+    "message": "Analyser à nouveau"
+  },
+  "sch_row_verified": {
+    "message": "Vérifié sur la page"
+  },
+  "sch_scan": {
+    "message": "Analyser cette page"
+  },
+  "sch_scanning": {
+    "message": "Analyse"
+  },
+  "sch_subtitle": {
+    "message": "Informations personnelles exactes, vérifiées après remplissage."
+  },
+  "sch_title": {
+    "message": "Bourses et admissions"
+  },
+  "sch_uploads": {
+    "message": "Fichiers à joindre sur cette page ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_uploads_why": {
+    "message": "Les navigateurs exigent que vous joigniez les fichiers vous-même. Préparez ceux-ci :"
+  },
+  "sch_verified": {
+    "message": "$P1$ vérifiés sur la page.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_view_fill": {
+    "message": "Remplir"
+  },
+  "sch_view_guide": {
+    "message": "Guide Italie"
+  },
+  "sch_view_requirements": {
+    "message": "Conditions"
+  },
+  "sch_views": {
+    "message": "Outils pour les bourses"
+  },
+  "shortcuts_tabs_six": {
+    "message": "Réponse, Offre, Bourse, Remplir, Archives, Profil"
+  },
+  "sch_part_day": {
+    "message": "jour"
+  },
+  "sch_part_month": {
+    "message": "mois"
+  },
+  "sch_part_year": {
+    "message": "année"
   }
 }
