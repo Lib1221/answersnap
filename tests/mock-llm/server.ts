@@ -292,7 +292,11 @@ function bump(key: string): number {
 /** Match keywords in the conversation only; the system blocks hold the resume. */
 function canned(raw: string): string {
   const body = JSON.parse(raw) as { messages?: unknown; contents?: unknown };
-  const turns = JSON.stringify(body.messages ?? body.contents ?? '');
+  // Earlier answers on the same site (every fixture is 127.0.0.1) aren't the question.
+  const turns = JSON.stringify(body.messages ?? body.contents ?? '').replace(
+    /<earlier_answers>[\s\S]*?<\/earlier_answers>/g,
+    '',
+  );
   return CANNED.find(([re]) => re.test(turns))?.[1] ?? FALLBACK;
 }
 

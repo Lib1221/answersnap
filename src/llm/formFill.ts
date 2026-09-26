@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { earlierAnswersBlock, neutralize } from '@/kb/contextBuilder';
-import { matchOption, rankMatches, STRONG_MATCH } from '@/kb/similarity';
+import { matchOption, normalizeLabel, rankMatches, STRONG_MATCH } from '@/kb/similarity';
 import { earlierOnSite, type LibraryEntry } from '@/kb/library';
 import type { FieldInfo, PageInfo, Settings } from '@/storage/schema';
 import { parseLimits, type Limits } from './limits';
@@ -199,6 +199,12 @@ export async function draftForm(opts: {
     } else toModel.push(p);
   }
 
+  // Earlier pages of this application, minus questions that are fields of this very form (those
+  // are being answered now, some just reused from the library).
+  const thisForm = new Set(prepared.map((p) => normalizeLabel(p.question)));
+  const earlierAnswers = earlierOnSite(opts.library, opts.page.hostname)
+    .filter((e) => !thisForm.has(normalizeLabel(e.question)))
+    .map((e) => ({ question: e.question, answer: e.answer }));
   const usage: Usage[] = [];
   const system = [
     { text: renderBatchRules(opts.settings.styleRules, opts.settings.fillGaps) },
@@ -224,10 +230,7 @@ export async function draftForm(opts: {
                   settings: opts.settings,
                   today: opts.today,
                   jobContext: opts.jobContext,
-                  earlierAnswers: earlierOnSite(opts.library, opts.page.hostname).map((e) => ({
-                    question: e.question,
-                    answer: e.answer,
-                  })),
+                  earlierAnswers,
                 }),
               },
             ],
