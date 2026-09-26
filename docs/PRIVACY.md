@@ -42,7 +42,8 @@ or Ollama running on your own computer), using your own API key, and only when y
 
 - **When you snip a question:** the screenshot of the snipped area (unless you turn screenshots
   off), the visible text in it, the page title and site, the field's label and limits, your job
-  post if you set one, up to three similar saved answers, and your candidate data.
+  post if you set one, up to three similar saved answers, the answers you gave on the same site
+  in the last day (so a multi-page application stays consistent), and your candidate data.
 - **When you build your profile:** the text of your enabled sources.
 - **When you use "Read with AI":** the images of the pages or snips you are importing.
 - **When you test your key:** a request for the list of available models, which contains no

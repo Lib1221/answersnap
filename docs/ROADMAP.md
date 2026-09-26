@@ -28,7 +28,7 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 
 ## Next
 
-- [ ] Per-site memory: carry answers across the steps of one multi-page application
+- [x] Multi-page applications: answers from earlier pages on the same site keep later ones consistent
 - [ ] Translations of the UI (strings already go through `t()`)
 - [ ] Firefox build (WXT supports it; the side panel becomes a sidebar)
 - [ ] Sync across devices with `storage.sync` (size limits; needs a design)

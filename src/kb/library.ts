@@ -34,6 +34,33 @@ export async function getLibrary(): Promise<LibraryEntry[]> {
     : [];
 }
 
+/** How far back "earlier in this application" reaches. */
+export const APPLICATION_WINDOW_HOURS = 24;
+
+/**
+ * Answers given on this site recently: the earlier pages of a multi-page application. Newest
+ * first; the current question is left out.
+ */
+export function earlierOnSite(
+  entries: LibraryEntry[],
+  hostname: string,
+  exceptQuestion = '',
+  now = new Date(),
+  limit = 8,
+): LibraryEntry[] {
+  const since = now.getTime() - APPLICATION_WINDOW_HOURS * 60 * 60 * 1000;
+  const skip = exceptQuestion.trim().toLowerCase();
+  return entries
+    .filter(
+      (e) =>
+        e.hostname === hostname &&
+        Date.parse(e.updatedAt) >= since &&
+        e.question.trim().toLowerCase() !== skip,
+    )
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+    .slice(0, limit);
+}
+
 /** Over the cap, the oldest unpinned entries go first. */
 export function enforceCap(entries: LibraryEntry[], cap = LIBRARY_CAP): LibraryEntry[] {
   if (entries.length <= cap) return entries;

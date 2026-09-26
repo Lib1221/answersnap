@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { neutralize } from '@/kb/contextBuilder';
+import { earlierAnswersBlock, neutralize } from '@/kb/contextBuilder';
 import { matchOption, rankMatches, STRONG_MATCH } from '@/kb/similarity';
-import type { LibraryEntry } from '@/kb/library';
+import { earlierOnSite, type LibraryEntry } from '@/kb/library';
 import type { FieldInfo, PageInfo, Settings } from '@/storage/schema';
 import { parseLimits, type Limits } from './limits';
 import { renderBatchRules } from './prompts';
@@ -97,6 +97,7 @@ export function batchUserText(opts: {
   settings: Settings;
   today: string;
   jobContext?: string | null;
+  earlierAnswers?: { question: string; answer: string }[];
 }): string {
   const { page, settings } = opts;
   const meta = [
@@ -125,6 +126,7 @@ export function batchUserText(opts: {
     opts.jobContext?.trim()
       ? `<job_context>\n${neutralize(opts.jobContext.trim())}\n</job_context>`
       : '',
+    opts.earlierAnswers?.length ? earlierAnswersBlock(opts.earlierAnswers) : '',
     `<fields>\n${fields.join('\n')}\n</fields>`,
     `<options>today: ${opts.today}; tone: ${settings.tone}; length: short fields get the value or one or two sentences, text boxes about 120 words at most and always under max_chars, except cover letter fields, which get a full cover letter of about 300 words with a greeting and sign-off; language: ${language}</options>`,
     'Write an answer for every field.',
@@ -222,6 +224,10 @@ export async function draftForm(opts: {
                   settings: opts.settings,
                   today: opts.today,
                   jobContext: opts.jobContext,
+                  earlierAnswers: earlierOnSite(opts.library, opts.page.hostname).map((e) => ({
+                    question: e.question,
+                    answer: e.answer,
+                  })),
                 }),
               },
             ],

@@ -23,7 +23,13 @@ import {
   type Usage,
 } from '@/llm/types';
 import { loadCandidateData } from '@/kb/candidate';
-import { getLibrary, updateEntry, upsertEntry, type LibraryEntry } from '@/kb/library';
+import {
+  earlierOnSite,
+  getLibrary,
+  updateEntry,
+  upsertEntry,
+  type LibraryEntry,
+} from '@/kb/library';
 import { rankMatches, STRONG_MATCH } from '@/kb/similarity';
 import { getApiKey, getSettings, lastRequestItem } from '@/storage/items';
 import type { PendingCapture, Settings } from '@/storage/schema';
@@ -334,7 +340,8 @@ export function useAnswer() {
     limits.value = lim;
 
     // Library first (spec 3.6): a strong match pauses for Reuse / Adapt / Write new.
-    const matches = rankMatches(questionOf(capture), await getLibrary());
+    const library = await getLibrary();
+    const matches = rankMatches(questionOf(capture), library);
     if (!opts.force && matches[0] && matches[0].score >= STRONG_MATCH) {
       match.value = matches[0];
       phase.value = 'match';
@@ -356,6 +363,10 @@ export function useAnswer() {
       today: todayIso(),
       jobContext: jobPromptText(job),
       savedAnswers: examples.map((e) => ({ question: e.question, answer: e.answer })),
+      // Multi-page applications: what this site was already told (minus the examples above).
+      earlierAnswers: earlierOnSite(library, capture.page.hostname, questionOf(capture))
+        .filter((e) => !examples.some((x) => x.id === e.id))
+        .map((e) => ({ question: e.question, answer: e.answer })),
       length: opts.length,
     });
     const first: ChatMessage = { role: 'user', content };

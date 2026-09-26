@@ -20,7 +20,7 @@ export interface CandidateData {
 }
 
 const OUR_TAGS =
-  'page_meta|page_text|field_info|job_context|saved_answers|example|options|candidate_profile|standard_answers|source_documents|source|question|type|answer|missing|notes|fields|field|placeholder|current_value|answer_sentences|target_role';
+  'page_meta|page_text|field_info|job_context|saved_answers|example|options|candidate_profile|standard_answers|source_documents|source|question|type|answer|missing|notes|fields|field|placeholder|current_value|answer_sentences|target_role|earlier_answers';
 const TAG_LIKE = new RegExp(`<(/?)(${OUR_TAGS})\\b`, 'gi');
 
 /** Page content is untrusted: stop it from closing or opening our tags. */
@@ -80,6 +80,8 @@ export interface UserTurnInput {
   today: string;
   jobContext?: string | null;
   savedAnswers?: { question: string; answer: string }[];
+  /** Answers already given on earlier pages of this application. */
+  earlierAnswers?: { question: string; answer: string }[];
   /** Length for <options> instead of the settings' guide (the Letter tab's choice). */
   length?: string;
 }
@@ -99,6 +101,17 @@ function fieldLine(f: PendingCapture['field']): string {
     .filter(([, v]) => v !== undefined && v !== '')
     .map(([k, v]) => `${k}: ${neutralize(String(v))}`)
     .join('; ');
+}
+
+/**
+ * Answers the candidate gave on earlier pages of this application: keep facts consistent and
+ * don't retell the same story.
+ */
+export function earlierAnswersBlock(answers: { question: string; answer: string }[]): string {
+  const items = answers.map(
+    (a) => `<example question="${attr(a.question)}">${neutralize(a.answer)}</example>`,
+  );
+  return `<earlier_answers>\nThe candidate already gave these answers earlier in this application. Keep facts consistent with them, and use a different example unless the question asks for the same one.\n${items.join('\n')}\n</earlier_answers>`;
 }
 
 export function buildUserText(input: UserTurnInput): string {
@@ -123,6 +136,7 @@ export function buildUserText(input: UserTurnInput): string {
       .map((s) => `<example question="${attr(s.question)}">${neutralize(s.answer)}</example>`);
     blocks.push(`<saved_answers>\n${examples.join('\n')}\n</saved_answers>`);
   }
+  if (input.earlierAnswers?.length) blocks.push(earlierAnswersBlock(input.earlierAnswers));
   const language =
     settings.answerLanguage === 'auto' ? 'same as the question' : settings.answerLanguage;
   const words = limits.maxWords ? `; word limit: ${limits.maxWords}` : '';
