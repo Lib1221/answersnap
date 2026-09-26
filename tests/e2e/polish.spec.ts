@@ -110,9 +110,15 @@ test('latency budgets: overlay after the trigger, thumbnail after the drag', asy
   }
 });
 
-test('the panel has Answer, Library, and Profile tabs', async ({ panel }) => {
+test('the panel has Answer, Letter, Form, Library, and Profile tabs', async ({ panel }) => {
   await seed(panel);
-  await expect(panel.getByRole('tab')).toHaveText(['Answer', 'Form', 'Library', 'Profile']);
+  await expect(panel.getByRole('tab')).toHaveText([
+    'Answer',
+    'Letter',
+    'Form',
+    'Library',
+    'Profile',
+  ]);
   await panel.getByRole('tab', { name: 'Profile' }).click();
   await expect(panel.getByTestId('profile-tab')).toContainText('Sources');
 });

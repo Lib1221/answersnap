@@ -126,7 +126,7 @@ export function batchUserText(opts: {
       ? `<job_context>\n${neutralize(opts.jobContext.trim())}\n</job_context>`
       : '',
     `<fields>\n${fields.join('\n')}\n</fields>`,
-    `<options>today: ${opts.today}; tone: ${settings.tone}; length: short fields get the value or one or two sentences, text boxes about 120 words at most and always under max_chars; language: ${language}</options>`,
+    `<options>today: ${opts.today}; tone: ${settings.tone}; length: short fields get the value or one or two sentences, text boxes about 120 words at most and always under max_chars, except cover letter fields, which get a full cover letter of about 300 words with a greeting and sign-off; language: ${language}</options>`,
     'Write an answer for every field.',
   ]
     .filter(Boolean)

@@ -13,6 +13,8 @@ import type { useInsert } from './useInsert';
 const props = defineProps<{
   state: ReturnType<typeof useAnswer>;
   insert: ReturnType<typeof useInsert>;
+  /** The Letter tab: letter wording and a taller box. */
+  letter?: boolean;
 }>();
 const emit = defineEmits<{ openSettings: [section?: string] }>();
 
@@ -93,7 +95,8 @@ const cacheOff = computed(() => {
 <template>
   <section class="card flex flex-col gap-3 p-3.5" data-testid="answer-section">
     <p class="eyebrow flex items-center gap-1.5">
-      <Icon name="sparkle" :size="14" class="text-ink" /> Your answer
+      <Icon :name="letter ? 'mail' : 'sparkle'" :size="14" class="text-ink" />
+      {{ letter ? 'Your cover letter' : 'Your answer' }}
     </p>
     <p
       v-if="s.fallbackNote.value"
@@ -123,7 +126,7 @@ const cacheOff = computed(() => {
         data-testid="answer"
         class="field-input min-h-36 resize-y p-3 text-[15px] leading-[1.6]"
         :readonly="streaming"
-        rows="6"
+        :rows="letter ? 16 : 6"
       />
       <p
         class="text-[13px] tabular-nums"
@@ -345,6 +348,7 @@ const cacheOff = computed(() => {
     >
       <span v-if="ins.picking.value">Click the field on the page. Esc cancels.</span>
       <span v-else-if="targetText">Target: {{ targetText }}</span>
+      <span v-else-if="letter">Copy the letter, or pick the cover letter field on the page.</span>
       <span v-else>No text field found near the question. Copy the answer or pick a field.</span>
       <button
         class="btn btn-quiet min-h-0"

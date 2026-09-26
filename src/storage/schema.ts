@@ -158,7 +158,7 @@ export type Settings = z.infer<typeof SettingsSchema>;
 
 export const KnowledgeSourceSchema = z.object({
   id: z.string(),
-  kind: z.enum(['resume', 'website', 'tab', 'note', 'ai-transcript']),
+  kind: z.enum(['resume', 'website', 'tab', 'note', 'ai-transcript', 'cover-letter']),
   label: z.string(),
   url: z.string().optional(),
   fileName: z.string().optional(),

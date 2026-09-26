@@ -148,6 +148,8 @@ export function useAnswer() {
   let jobText: string | null = null;
   let controller: AbortController | null = null;
   let lastCapture: PendingCapture | null = null;
+  /** Output tokens for this run when it needs more than the settings' default (letters). */
+  let runMaxTokens = 0;
   /** A saved answer that closely matches this question (spec 3.6). */
   const match = shallowRef<{ entry: LibraryEntry; score: number } | null>(null);
   const canRefine = ref(false);
@@ -203,7 +205,12 @@ export function useAnswer() {
       const parser = new TagParser();
       try {
         await convo.provider.stream(
-          { model: s.model, maxTokens: s.maxOutputTokens, system: convo.system, messages },
+          {
+            model: s.model,
+            maxTokens: Math.max(s.maxOutputTokens, runMaxTokens),
+            system: convo.system,
+            messages,
+          },
           signal,
           (e) => {
             if (e.kind === 'text') {
@@ -276,10 +283,20 @@ export function useAnswer() {
     return capture.pageText.slice(0, 400) || capture.field?.label || '';
   }
 
-  async function run(capture: PendingCapture, opts: { force?: 'new' | 'adapt' } = {}) {
+  async function run(
+    capture: PendingCapture,
+    opts: {
+      force?: 'new' | 'adapt';
+      /** Letter tab: its own length, limits, and output budget. */
+      length?: string;
+      limits?: Limits;
+      maxTokens?: number;
+    } = {},
+  ) {
     const adaptFrom = opts.force === 'adapt' ? match.value?.entry : undefined;
     reset();
     lastCapture = capture;
+    runMaxTokens = opts.maxTokens ?? 0;
     const s = await getSettings();
     settings.value = s;
     model.value = s.model;
@@ -294,7 +311,7 @@ export function useAnswer() {
       return;
     }
 
-    const lim = parseLimits(capture.pageText, capture.field);
+    const lim = opts.limits ?? parseLimits(capture.pageText, capture.field);
     limits.value = lim;
 
     // Library first (spec 3.6): a strong match pauses for Reuse / Adapt / Write new.
@@ -320,6 +337,7 @@ export function useAnswer() {
       today: todayIso(),
       jobContext: jobPromptText(job),
       savedAnswers: examples.map((e) => ({ question: e.question, answer: e.answer })),
+      length: opts.length,
     });
     const first: ChatMessage = { role: 'user', content };
     convo = {

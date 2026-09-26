@@ -23,7 +23,8 @@ export type IconName =
   | 'flag'
   | 'book'
   | 'target'
-  | 'alert';
+  | 'alert'
+  | 'mail';
 
 defineProps<{ name: IconName; size?: number }>();
 
@@ -84,6 +85,7 @@ const PATHS: Record<IconName, string[]> = {
     'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
     'M12 12h.01',
   ],
+  mail: ['M3 6h18v12H3z', 'm3 7 9 6 9-6'],
   alert: [
     'M12 9v4',
     'M12 17h.01',

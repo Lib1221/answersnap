@@ -5,6 +5,7 @@ import AppCredit from '@/ui/AppCredit.vue';
 import Icon, { type IconName } from '@/ui/AppIcon.vue';
 import LogoMark from '@/ui/LogoMark.vue';
 import { corruptNoticeItem } from '@/storage/items';
+import CoverLetterSection from './CoverLetterSection.vue';
 import GettingStartedSection from './GettingStartedSection.vue';
 import PrivacySection from './PrivacySection.vue';
 import ProfileSection from './ProfileSection.vue';
@@ -19,6 +20,7 @@ const SECTIONS = [
   { id: 'sources', title: 'Sources', icon: 'file' },
   { id: 'profile', title: 'Profile', icon: 'user' },
   { id: 'standard-answers', title: 'Standard answers', icon: 'book' },
+  { id: 'cover-letter', title: 'Cover letter', icon: 'mail' },
   { id: 'writing-style', title: 'Writing style', icon: 'pen' },
   { id: 'privacy', title: 'Privacy', icon: 'shield' },
 ] as const satisfies readonly { id: string; title: string; icon: IconName }[];
@@ -100,6 +102,7 @@ async function dismissCorrupt() {
           <SourcesSection v-else-if="current === 'sources'" />
           <ProfileSection v-else-if="current === 'profile'" />
           <StandardAnswersSection v-else-if="current === 'standard-answers'" />
+          <CoverLetterSection v-else-if="current === 'cover-letter'" />
           <WritingStyleSection v-else-if="current === 'writing-style'" />
           <PrivacySection v-else-if="current === 'privacy'" />
         </div>

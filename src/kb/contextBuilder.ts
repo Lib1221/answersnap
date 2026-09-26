@@ -2,6 +2,7 @@ import { renderSystemRules } from '@/llm/prompts';
 import type { ContentPart, SystemBlock } from '@/llm/types';
 import type { KnowledgeSource, PendingCapture, Settings } from '@/storage/schema';
 import { lengthGuide, type Limits } from '@/llm/limits';
+import { isCoverLetterQuestion, LETTER_LENGTHS } from './coverLetter';
 
 // Context assembly (spec 10.6). Block order is what makes caching work:
 //   system[0] rules (changes only with settings)
@@ -79,6 +80,8 @@ export interface UserTurnInput {
   today: string;
   jobContext?: string | null;
   savedAnswers?: { question: string; answer: string }[];
+  /** Length for <options> instead of the settings' guide (the Letter tab's choice). */
+  length?: string;
 }
 
 function fieldLine(f: PendingCapture['field']): string {
@@ -123,8 +126,17 @@ export function buildUserText(input: UserTurnInput): string {
   const language =
     settings.answerLanguage === 'auto' ? 'same as the question' : settings.answerLanguage;
   const words = limits.maxWords ? `; word limit: ${limits.maxWords}` : '';
+  const letterField =
+    settings.length === 'auto' &&
+    !limits.explicitChars &&
+    isCoverLetterQuestion([pageText, capture.field?.label].filter(Boolean).join('\n'));
+  const length =
+    input.length ??
+    (letterField
+      ? `${LETTER_LENGTHS.standard.guide}, always under ${limits.maxChars} characters`
+      : lengthGuide(settings.length, capture.field, limits));
   blocks.push(
-    `<options>today: ${input.today}; tone: ${settings.tone}; length: ${lengthGuide(settings.length, capture.field, limits)}; language: ${language}; hard character limit: ${limits.maxChars}${words}</options>`,
+    `<options>today: ${input.today}; tone: ${settings.tone}; length: ${length}; language: ${language}; hard character limit: ${limits.maxChars}${words}</options>`,
   );
   blocks.push('Write the answer.');
   return blocks.join('\n');

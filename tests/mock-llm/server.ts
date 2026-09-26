@@ -108,6 +108,11 @@ const log: unknown[] = [];
 const counters = new Map<string, number>();
 
 const CANNED: [RegExp, string][] = [
+  // Letter tab.
+  [
+    /Write a cover letter for/i,
+    "<question>Write a cover letter.</question>\n<type>long_text</type>\n<answer>Dear Hiring Manager,\n\nI build payments APIs with Django at Ledgerly, where I moved report generation to Celery workers and cut p95 latency from 900 ms to 240 ms.\n\nI'd bring the same care to your backend team.\n\nBest regards,\nJamie Park</answer>\n<missing></missing>\n<notes></notes>",
+  ],
   // "Fix it" after a fact check: the rewrite drops the unsupported claim. Listed first so it wins.
   [
     /state things the candidate data doesn't support/i,

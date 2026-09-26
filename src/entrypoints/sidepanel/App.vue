@@ -9,6 +9,7 @@ import CropThumb from '@/ui/CropThumb.vue';
 import AnswerPanel from './AnswerPanel.vue';
 import JobBar from './JobBar.vue';
 import FormFillTab from './FormFillTab.vue';
+import LetterTab from './LetterTab.vue';
 import LibraryTab from './LibraryTab.vue';
 import { useFormFill } from './useFormFill';
 import ProfileTab from './ProfileTab.vue';
@@ -23,6 +24,7 @@ import Icon, { type IconName } from '@/ui/AppIcon.vue';
 import LogoMark from '@/ui/LogoMark.vue';
 import { useInsert } from './useInsert';
 import { useJob } from './useJob';
+import { useLetter } from './useLetter';
 
 const { view, capture, jobCapture, status, busy, snip, allowAllSites, cancelSelection } =
   useCapture();
@@ -30,6 +32,7 @@ const answer = useAnswer();
 const job = useJob();
 const insert = useInsert(capture, answer);
 const form = useFormFill();
+const letter = useLetter(job);
 // A scan from the "Fill this form" menu opens the Form tab.
 watch(
   () => form.fields.value,
@@ -37,9 +40,11 @@ watch(
     if (f.length) tab.value = 'form';
   },
 );
-const tab = ref<'answer' | 'form' | 'library' | 'profile'>('answer');
-const TABS: { id: 'answer' | 'form' | 'library' | 'profile'; label: string; icon: IconName }[] = [
+type TabId = 'answer' | 'letter' | 'form' | 'library' | 'profile';
+const tab = ref<TabId>('answer');
+const TABS: { id: TabId; label: string; icon: IconName }[] = [
   { id: 'answer', label: 'Answer', icon: 'sparkle' },
+  { id: 'letter', label: 'Letter', icon: 'mail' },
   { id: 'form', label: 'Form', icon: 'form' },
   { id: 'library', label: 'Library', icon: 'bookmark' },
   { id: 'profile', label: 'Profile', icon: 'user' },
@@ -113,6 +118,7 @@ function onKey(e: KeyboardEvent) {
   if (e.key !== 'Escape') return;
   if (status.value?.state === 'selecting') void cancelSelection();
   else if (['drafting', 'streaming'].includes(answer.phase.value)) answer.stop();
+  else if (['drafting', 'streaming'].includes(letter.answer.phase.value)) letter.answer.stop();
 }
 
 onMounted(async () => {
@@ -168,13 +174,13 @@ function openSettings(section?: string) {
     <JobBar :state="job" />
 
     <nav class="px-3 pt-3" aria-label="Panel">
-      <div class="grid grid-cols-4 gap-1 rounded-[10px] bg-rule/60 p-1" role="tablist">
+      <div class="grid grid-cols-5 gap-1 rounded-[10px] bg-rule/60 p-1" role="tablist">
         <button
           v-for="tb in TABS"
           :key="tb.id"
           role="tab"
           type="button"
-          class="flex items-center justify-center gap-1.5 rounded-[8px] py-1.5 text-[12.5px] font-medium transition-colors"
+          class="flex items-center justify-center gap-1 rounded-[8px] py-1.5 text-[12px] font-medium transition-colors"
           :class="
             tab === tb.id
               ? 'bg-paper text-graphite shadow-[var(--shadow-sm)]'
@@ -191,6 +197,9 @@ function openSettings(section?: string) {
 
     <main v-if="tab === 'library'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <LibraryTab :can-use="view.kind === 'captured'" @use="useSaved" />
+    </main>
+    <main v-else-if="tab === 'letter'" class="flex flex-1 flex-col gap-3 px-4 py-4">
+      <LetterTab :state="letter" :job="job" @open-settings="openSettings" />
     </main>
     <main v-else-if="tab === 'form'" class="flex flex-1 flex-col gap-4 px-4 py-4">
       <FormFillTab :state="form" />
