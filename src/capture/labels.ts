@@ -7,13 +7,32 @@ const ABOVE_PX = 300;
 const HINT_BELOW_PX = 60;
 const FIELD_SELECTOR = 'input, textarea, select, [contenteditable], [role="textbox"]';
 
-function textFromIds(el: Element, attr: string, checker: VisibilityChecker): string {
+/** Elements an attribute points to by id, in the element's own document or shadow root. */
+function byIds(el: Element, attr: string): HTMLElement[] {
   const ids = el.getAttribute(attr)?.split(/\s+/).filter(Boolean) ?? [];
-  const doc = el.ownerDocument;
+  const root = el.getRootNode() as Document | ShadowRoot;
+  const find = (id: string) =>
+    ('getElementById' in root ? root.getElementById(id) : null) ??
+    el.ownerDocument.getElementById(id);
+  return ids.map(find).filter((n): n is HTMLElement => n instanceof HTMLElement);
+}
+
+/** The form's own error message for a field: what its aria-describedby alert says. */
+export function errorFor(el: Element): string | undefined {
+  const text = [...byIds(el, 'aria-errormessage'), ...byIds(el, 'aria-describedby')]
+    .filter(
+      (n) =>
+        n.matches('[role="alert"], [aria-live="assertive"]') || n.querySelector('[role="alert"]'),
+    )
+    .map((n) => collapse(n.textContent ?? ''))
+    .filter(Boolean)
+    .join(' ');
+  return text ? text.slice(0, 200) : undefined;
+}
+
+function textFromIds(el: Element, attr: string, checker: VisibilityChecker): string {
   return collapse(
-    ids
-      .map((id) => doc.getElementById(id))
-      .filter((n): n is HTMLElement => n !== null)
+    byIds(el, attr)
       .map((n) => visibleTextOf(n, checker, LABEL_MAX))
       .join(' '),
   ).slice(0, LABEL_MAX);

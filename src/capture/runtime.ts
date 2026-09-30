@@ -9,6 +9,7 @@ import {
   scanForm,
   scanUploads,
 } from './fields';
+import { dialogInfo, openDialog } from './dialog';
 import { clampRect, elementRect } from './geometry';
 import { applyChoice } from './choice';
 import { insertText } from './insert';
@@ -146,10 +147,14 @@ export function startCaptureRuntime(): void {
     PING: () => ({ ok: true }),
     SCAN_FORM: (msg) => {
       const checker = createVisibilityChecker();
+      // A form in a modal window (Easy Apply): only its fields, never the page behind it.
+      const dialog = openDialog(document, checker);
+      const root = dialog ?? document;
       return {
         page: pageInfo(),
-        fields: scanForm(document, checker, msg.max),
-        uploads: scanUploads(document, checker),
+        fields: scanForm(root, checker, msg.max),
+        uploads: scanUploads(root, checker),
+        ...(dialog ? { dialog: dialogInfo(dialog) } : {}),
       };
     },
     READ_PAGE_TEXT: (msg) => readPageText(msg.scope),

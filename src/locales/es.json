@@ -538,5 +538,13 @@
   "li_tailor_no_job": "No se pudo leer este empleo. Ábrelo para que se vea su descripción e inténtalo de nuevo.",
   "li_tailor_failed": "No se pudo empezar. Recarga la página e inténtalo de nuevo.",
   "linkedin_failed": "No se pudo escribir el borrador de LinkedIn. Inténtalo de nuevo.",
-  "li_tailor_loading": "El empleo aún se está cargando. Inténtalo de nuevo en un momento."
+  "li_tailor_loading": "El empleo aún se está cargando. Inténtalo de nuevo en un momento.",
+  "form_dialog_step": "Este paso: $1",
+  "form_dialog": "El formulario de la ventana abierta",
+  "form_dialog_final": "Es el último paso. Revisa todo en la página y luego envíalo tú.",
+  "form_dialog_next": "Después de insertar, haz clic tú en Siguiente en la página y vuelve a escanear para el paso siguiente.",
+  "form_you_answer": "Esta la respondes tú en la página.",
+  "form_from_resume": "De tu currículum",
+  "form_pick_suggestion": "Después de insertar, elige la sugerencia que coincida en la página.",
+  "form_page_error": "El formulario dice: $1"
 }

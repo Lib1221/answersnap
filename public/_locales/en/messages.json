@@ -517,6 +517,23 @@
   "form_check_page": {
     "message": "Check the page, then submit it yourself."
   },
+  "form_dialog": {
+    "message": "The form in the open window"
+  },
+  "form_dialog_final": {
+    "message": "This is the last step. Check everything on the page, then submit it yourself."
+  },
+  "form_dialog_next": {
+    "message": "After inserting, click Next on the page yourself, then Scan again for the next step."
+  },
+  "form_dialog_step": {
+    "message": "This step: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
   "form_draft_failed": {
     "message": "Couldn't draft the answers. Try again."
   },
@@ -618,6 +635,9 @@
   "form_from_library": {
     "message": "From your saved answers"
   },
+  "form_from_resume": {
+    "message": "From your resume"
+  },
   "form_gesture_hint": {
     "message": "Right-click the page and choose \"Fill this form with AnswerSnap\", or press Alt+Shift+Q there first."
   },
@@ -690,6 +710,17 @@
   "form_no_match": {
     "message": "None of the options matched."
   },
+  "form_page_error": {
+    "message": "The form says: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_pick_suggestion": {
+    "message": "After inserting, pick the matching suggestion on the page."
+  },
   "form_reading": {
     "message": "Reading the form"
   },
@@ -725,6 +756,9 @@
   },
   "form_untick": {
     "message": "Untick any you'll answer yourself."
+  },
+  "form_you_answer": {
+    "message": "You answer this one on the page."
   },
   "guide_cf_1": {
     "message": "16 characters. For people born abroad, characters 12 to 15 are Z and three digits for the country (Ethiopia is Z315)."

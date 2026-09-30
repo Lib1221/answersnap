@@ -87,7 +87,37 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
       </p>
     </div>
 
-    <template v-else-if="f.phase.value === 'scanned' || f.phase.value === 'drafting'">
+    <div
+      v-if="f.dialog.value && f.phase.value !== 'idle' && f.phase.value !== 'scanning'"
+      class="card flex flex-col gap-1 p-3 text-[13px]"
+      data-testid="form-dialog"
+    >
+      <p class="font-medium">
+        {{
+          f.dialog.value.heading
+            ? t('form_dialog_step', 'This step: $1', f.dialog.value.heading)
+            : t('form_dialog', 'The form in the open window')
+        }}
+        <span v-if="f.dialog.value.progress !== undefined" class="text-graphite-2 tabular-nums">
+          ({{ f.dialog.value.progress }}%)</span
+        >
+      </p>
+      <p class="text-graphite-2">
+        {{
+          f.dialog.value.final
+            ? t(
+                'form_dialog_final',
+                'This is the last step. Check everything on the page, then submit it yourself.',
+              )
+            : t(
+                'form_dialog_next',
+                'After inserting, click Next on the page yourself, then Scan again for the next step.',
+              )
+        }}
+      </p>
+    </div>
+
+    <template v-if="f.phase.value === 'scanned' || f.phase.value === 'drafting'">
       <p>
         {{ foundText() }}
         {{ t('form_untick', "Untick any you'll answer yourself.") }}
@@ -145,7 +175,7 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
       </div>
     </template>
 
-    <template v-else>
+    <template v-else-if="f.phase.value !== 'idle' && f.phase.value !== 'scanning'">
       <p class="text-[13px] text-graphite-2">
         {{
           t(
@@ -175,12 +205,15 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
               v-model="item.insert"
               type="checkbox"
               class="mt-1"
-              :disabled="busy() || !item.answer.trim()"
+              :disabled="busy() || !item.answer.trim() || item.locked"
             />
             <span>{{ item.question || label(item.field) }}</span>
           </label>
+          <p v-if="item.locked" class="text-[13px] text-graphite-2" data-testid="form-you">
+            {{ t('form_you_answer', 'You answer this one on the page.') }}
+          </p>
           <select
-            v-if="isChoice(item)"
+            v-else-if="isChoice(item)"
             v-model="item.answer"
             class="field-input px-2 py-1.5"
             :aria-label="t('form_answer_for', 'Answer for $1', label(item.field))"
@@ -198,6 +231,18 @@ const busy = () => f.phase.value === 'drafting' || f.phase.value === 'inserting'
           <p class="flex flex-wrap gap-x-3 text-[12px] text-graphite-2">
             <span v-if="item.source === 'library'">{{
               t('form_from_library', 'From your saved answers')
+            }}</span>
+            <span v-if="item.source === 'rule'" data-testid="form-from-resume">{{
+              t('form_from_resume', 'From your resume')
+            }}</span>
+            <span v-if="item.field.combobox">{{
+              t(
+                'form_pick_suggestion',
+                'After inserting, pick the matching suggestion on the page.',
+              )
+            }}</span>
+            <span v-if="item.field.error" class="text-carbon-pink-text">{{
+              t('form_page_error', 'The form says: $1', item.field.error)
             }}</span>
             <span v-if="item.type === 'assessment'">{{
               t('form_assessment', 'A test question, so no answer is drafted')

@@ -60,6 +60,12 @@ export async function deleteResume(id: string): Promise<void> {
   await saveResumes((await getResumes()).filter((r) => r.id !== id));
 }
 
+/** The master: marked so, or the only resume that isn't itself a tailored copy. */
+export function masterOf(list: Resume[]): Resume | undefined {
+  const originals = list.filter((r) => !r.tailoring);
+  return originals.find((r) => r.master) ?? (originals.length === 1 ? originals[0] : undefined);
+}
+
 export function duplicateResume(r: Resume): Resume {
   // JSON copy: resumes are plain data, and structuredClone throws on Vue's reactive proxies.
   const copy = JSON.parse(JSON.stringify(r)) as Resume;

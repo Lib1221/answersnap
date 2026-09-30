@@ -1,5 +1,5 @@
 import type { InsertMode, InsertResult } from '@/capture/insert';
-import type { FieldInfo, PageInfo, Rect, Size, SnipMode } from '@/storage/schema';
+import type { DialogInfo, FieldInfo, PageInfo, Rect, Size, SnipMode } from '@/storage/schema';
 
 // One typed protocol for every context (spec 8). Payload fields sit directly on the message.
 
@@ -76,7 +76,8 @@ export interface MessageMap {
   SCAN_FORM: {
     /** `max`: how many fields to return (Fill form keeps the default; Scholarship asks for more). */
     msg: { type: 'SCAN_FORM'; max?: number };
-    reply: { page: PageInfo; fields: FieldInfo[]; uploads?: UploadInfo[] };
+    /** `dialog`: the form is in a modal window, and only its fields were read. */
+    reply: { page: PageInfo; fields: FieldInfo[]; uploads?: UploadInfo[]; dialog?: DialogInfo };
   };
   /** Is a capture runtime listening in this tab? */
   PING: {

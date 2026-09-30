@@ -9,7 +9,8 @@ import type { InsertResult } from './insert';
 export { FUZZY_MIN, matchOption, normalizeLabel } from '@/kb/similarity';
 
 function groupMembers(input: HTMLInputElement): HTMLInputElement[] {
-  const root = input.form ?? input.ownerDocument;
+  // Its form, else its own document or shadow root (LinkedIn can host the form in one).
+  const root = input.form ?? (input.getRootNode() as Document | ShadowRoot);
   if (input.name) {
     return Array.from(
       root.querySelectorAll<HTMLInputElement>(`input[type="${input.type}"]`),

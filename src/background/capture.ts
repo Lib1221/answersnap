@@ -214,6 +214,7 @@ export async function scanFormFromTab(tab: Browser.tabs.Tab | undefined): Promis
       tabId: tab.id,
       page: scan.page,
       fields: scan.fields,
+      ...(scan.dialog ? { dialog: scan.dialog } : {}),
       createdAt: Date.now(),
     });
   } catch (err) {

@@ -2,7 +2,7 @@ import type { UploadInfo } from '@/messaging/protocol';
 import type { FieldInfo, FieldKind, Rect } from '@/storage/schema';
 import { center, distance, elementRect, intersects, union } from './geometry';
 import type { VisibilityChecker } from './hiddenText';
-import { hintFor, labelFor } from './labels';
+import { errorFor, hintFor, labelFor } from './labels';
 import { collapse, visibleTextOf } from './visibleText';
 
 // date and month: scholarship forms ask for birth and passport dates in native pickers.
@@ -58,7 +58,7 @@ const MIN_IFRAME_W = 40;
 const MIN_IFRAME_H = 20;
 
 function queryAllDeep(
-  root: Document | ShadowRoot,
+  root: Document | ShadowRoot | Element,
   selector: string,
   out: Element[] = [],
 ): Element[] {
@@ -120,7 +120,7 @@ function choiceRect(input: HTMLInputElement): Rect {
   return union(rects) ?? elementRect(input);
 }
 
-export function collectFillable(doc: Document, checker: VisibilityChecker): Fillable[] {
+export function collectFillable(doc: Document | Element, checker: VisibilityChecker): Fillable[] {
   const found: Fillable[] = [];
   const groups = new Map<Element | string, HTMLInputElement[]>();
   const nameCounts = new Map<string, number>();
@@ -260,6 +260,7 @@ export function describeField(
     info.required = f.members.some((m) => m.required) || undefined;
     if (headings) {
       info.section = sectionFor(container, headings);
+      info.error = errorFor(container) ?? errorFor(f.members[0]!);
       info.name = f.members[0]!.name || undefined;
       info.optionValues = f.members.map((m) => m.value);
       for (const k of Object.keys(info) as (keyof FieldInfo)[])
@@ -280,6 +281,9 @@ export function describeField(
   if (headings) {
     info.section = sectionFor(el, headings);
     attributeHints(el, info);
+    if (el.getAttribute('role') === 'combobox' || el.getAttribute('aria-autocomplete') === 'list')
+      info.combobox = true;
+    info.error = errorFor(el);
   }
   if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
     if (el instanceof HTMLInputElement) info.inputType = el.type || 'text';
@@ -295,7 +299,11 @@ export function describeField(
         .filter((o) => collapse(o.text))
         .map((o) => o.value);
     const selected = el.selectedOptions[0];
-    if (selected?.value) info.currentValue = collapse(selected.text);
+    // "Select an option" on top is a prompt, not an answer (LinkedIn gives it that value).
+    const prompt =
+      el.selectedIndex === 0 &&
+      /^\W*(select|choose|pick|please)\b|^\W*$/i.test(selected?.text ?? '');
+    if (selected?.value && !prompt) info.currentValue = collapse(selected.text);
     if (el.required) info.required = true;
   } else {
     const text = collapse((el as HTMLElement).innerText ?? el.textContent ?? '');
@@ -330,8 +338,9 @@ export function findCandidates(
 
 export const MAX_FORM_FIELDS = 40;
 
+/** Every field of the page, or of the modal window the form is in (`root`). */
 export function scanForm(
-  doc: Document,
+  doc: Document | Element,
   checker: VisibilityChecker,
   max = MAX_FORM_FIELDS,
 ): FieldInfo[] {
@@ -355,7 +364,7 @@ export function scanForm(
 }
 
 /** File uploads: listed, never filled (a page can't be given files without the user). */
-export function scanUploads(doc: Document, checker: VisibilityChecker): UploadInfo[] {
+export function scanUploads(doc: Document | Element, checker: VisibilityChecker): UploadInfo[] {
   return queryAllDeep(doc, 'input[type="file"]')
     .filter((el): el is HTMLInputElement => el instanceof HTMLInputElement && !el.disabled)
     .map((el) => ({

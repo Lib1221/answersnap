@@ -2,7 +2,7 @@ import { ref, shallowRef, type Ref } from 'vue';
 import { loadCandidateData } from '@/kb/candidate';
 import { candidateBlock } from '@/kb/contextBuilder';
 import type { Resume } from '@/kb/resume/model';
-import { saveResume, saveResumes } from '@/kb/resume/store';
+import { masterOf, saveResume, saveResumes } from '@/kb/resume/store';
 import { applyTailoring, nextTrim, outlineResume, resumeText } from '@/kb/resume/tailorApply';
 import {
   dropTailorRequest,
@@ -43,11 +43,7 @@ export function useTailor(deps: TailorDeps) {
   const letterError = ref('');
   let request: TailorRequest | null = null;
 
-  /** The master: marked so, or the only resume that isn't itself a tailored copy. */
-  function findMaster(): Resume | undefined {
-    const originals = deps.resumes.value.filter((r) => !r.tailoring);
-    return originals.find((r) => r.master) ?? (originals.length === 1 ? originals[0] : undefined);
-  }
+  const findMaster = () => masterOf(deps.resumes.value);
 
   async function start(id: string) {
     phase.value = 'loading';

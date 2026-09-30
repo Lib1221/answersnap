@@ -111,6 +111,14 @@ describe('performance budgets (spec 17, M7)', () => {
     expect(size).toBeLessThan(20 * 1024);
   });
 
+  it('page scripts never submit a form or hand a page files (hard rules 1 and 2)', async () => {
+    for (const file of ['capture.js', 'content-scripts/linkedin.js']) {
+      const code = await readFile(join(lastBuildDir, file), 'utf8');
+      const found = code.match(/requestSubmit\(|\.submit\(\)|\.files\s*=[^=]/)?.[0] ?? null;
+      expect(found, file).toBeNull();
+    }
+  });
+
   it("never posts to LinkedIn's page: no message would carry the extension's id", async () => {
     const code = await readFile(join(lastBuildDir, 'content-scripts/linkedin.js'), 'utf8');
     // WXT's only post to the page is guarded by this option, set in the script's definition.

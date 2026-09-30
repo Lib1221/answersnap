@@ -13,7 +13,10 @@ Made by Liben.
   voice from your resume, website, and notes. Edit, refine (shorter, longer, more formal), and
   insert it into the field.
 - **Fill the whole form:** scan every field on a page, draft all the answers in one request,
-  review them, then insert the ones you tick. It never submits the form.
+  review them, then insert the ones you tick. It never submits the form. In a pop-up form like
+  LinkedIn's Easy Apply it reads only that window, one step at a time. Screening questions that
+  can reject you are answered from your own data (years with a skill are counted from your dated
+  jobs), and self-identification, consents, and work authorization are left to you.
 - **Job tab** for the job post you save:
   - **Letter:** a cover letter tailored to the job, in the voice of a letter you wrote before
   - **Fit:** a match score, the requirements you meet (with evidence), gaps with advice, and

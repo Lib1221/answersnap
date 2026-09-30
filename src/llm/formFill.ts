@@ -23,7 +23,10 @@ export interface FormFieldDraft {
   type: AnswerType;
   missing: string[];
   notes: string;
-  source: 'model' | 'library' | 'none';
+  /** rule: answered by code from the candidate's data; you: left to the candidate. */
+  source: 'model' | 'library' | 'rule' | 'you' | 'none';
+  /** Never filled by AnswerSnap (self-identification, consents): no answer box at all. */
+  locked?: boolean;
   /** Library entry the answer came from, when reused. */
   libraryId?: string;
 }
@@ -139,15 +142,19 @@ export function batchUserText(opts: {
  * Saved answers that closely match a field's question are reused without asking the model.
  * Essays only from the same site: "why I want to join Acme" must not land in Globex's form.
  */
+/** One site, many employers (LinkedIn's Easy Apply): the site doesn't tell whose form it is. */
+export const sharedSite = (hostname: string) => /(^|\.)linkedin\.com$/i.test(hostname);
+
 export function libraryMatch(
   question: string,
   library: LibraryEntry[],
   hostname: string,
   fillGaps = false,
 ): LibraryEntry | null {
+  const sameEmployer = (e: LibraryEntry) => e.hostname === hostname && !sharedSite(hostname);
   const usable = library.filter(
     (e) =>
-      (e.hostname === hostname || !['long_text', 'unclear'].includes(e.questionType)) &&
+      (sameEmployer(e) || !['long_text', 'unclear'].includes(e.questionType)) &&
       !(fillGaps && admitsGap(e.answer)),
   );
   const [best] = rankMatches(question, usable, STRONG_MATCH);
@@ -202,7 +209,10 @@ export async function draftForm(opts: {
   // Earlier pages of this application, minus questions that are fields of this very form (those
   // are being answered now, some just reused from the library).
   const thisForm = new Set(prepared.map((p) => normalizeLabel(p.question)));
-  const earlierAnswers = earlierOnSite(opts.library, opts.page.hostname)
+  // On a site many employers share, the last day's answers belong to other applications.
+  const earlierAnswers = (
+    sharedSite(opts.page.hostname) ? [] : earlierOnSite(opts.library, opts.page.hostname)
+  )
     .filter((e) => !thisForm.has(normalizeLabel(e.question)))
     .map((e) => ({ question: e.question, answer: e.answer }));
   const usage: Usage[] = [];

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Northwind | Jobs</title>
+  </head>
+  <body>
+    <!-- The page behind the window: never scanned while the window is open. -->
+    <header><input id="search" placeholder="Search jobs" /></header>
+    <main><h1>Backend Engineer at Northwind</h1></main>
+
+    <div role="dialog" aria-modal="true" aria-labelledby="apply-header">
+      <h2 id="apply-header">Apply to Northwind</h2>
+      <progress aria-valuenow="50" max="100" value="50"></progress>
+      <form id="apply">
+        <h3>Additional Questions</h3>
+        <label for="years-python">How many years of work experience do you have with Python?</label>
+        <input id="years-python" required aria-describedby="years-python-error" />
+        <div id="years-python-error" role="alert">Enter a whole number between 0 and 99</div>
+
+        <fieldset>
+          <legend>Do you have experience with Terraform?</legend>
+          <input type="radio" id="tf-yes" name="tf" value="yes" /><label for="tf-yes">Yes</label>
+          <input type="radio" id="tf-no" name="tf" value="no" /><label for="tf-no">No</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Are you legally authorized to work in the United States?</legend>
+          <input type="radio" id="auth-yes" name="auth" value="yes" /><label for="auth-yes"
+            >Yes</label
+          >
+          <input type="radio" id="auth-no" name="auth" value="no" /><label for="auth-no">No</label>
+        </fieldset>
+
+        <label for="gender">Gender</label>
+        <select id="gender">
+          <option>Select an option</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>I don't wish to answer</option>
+        </select>
+
+        <label for="why">Why do you want to join Northwind?</label>
+        <textarea id="why"></textarea>
+
+        <label for="city">Location (city)</label>
+        <input id="city" role="combobox" aria-autocomplete="list" />
+
+        <input type="checkbox" id="follow-company-checkbox" checked />
+        <label for="follow-company-checkbox">Follow Northwind to stay up to date</label>
+
+        <button type="button" id="back" aria-label="Back to previous step">Back</button>
+        <button type="button" id="next" aria-label="Continue to next step">Next</button>
+      </form>
+    </div>
+    <script>
+      document.getElementById('next').addEventListener('click', () => (window.nextClicked = true));
+      document.getElementById('apply').addEventListener('submit', (e) => {
+        e.preventDefault();
+        window.submitted = true;
+      });
+    </script>
+  </body>
+</html>

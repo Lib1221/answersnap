@@ -538,5 +538,13 @@
   "li_tailor_no_job": "Impossible de lire cette offre. Ouvrez-la pour afficher sa description, puis réessayez.",
   "li_tailor_failed": "Impossible de démarrer. Rechargez la page et réessayez.",
   "linkedin_failed": "Impossible de rédiger le brouillon LinkedIn. Réessayez.",
-  "li_tailor_loading": "L'offre est encore en cours de chargement. Réessayez dans un instant."
+  "li_tailor_loading": "L'offre est encore en cours de chargement. Réessayez dans un instant.",
+  "form_dialog_step": "Cette étape : $1",
+  "form_dialog": "Le formulaire de la fenêtre ouverte",
+  "form_dialog_final": "C'est la dernière étape. Vérifiez tout sur la page, puis envoyez-la vous-même.",
+  "form_dialog_next": "Après l'insertion, cliquez vous-même sur Suivant sur la page, puis scannez à nouveau pour l'étape suivante.",
+  "form_you_answer": "Vous répondez à celle-ci sur la page.",
+  "form_from_resume": "Tiré de votre CV",
+  "form_pick_suggestion": "Après l'insertion, choisissez la suggestion correspondante sur la page.",
+  "form_page_error": "Le formulaire indique : $1"
 }

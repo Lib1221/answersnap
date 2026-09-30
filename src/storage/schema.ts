@@ -46,9 +46,23 @@ export const FieldInfoSchema = z.object({
   /** The nearest heading or legend above the field ("Passport", "Father's details"). */
   section: z.string().optional(),
   inIframe: z.boolean().optional(),
+  /** A type-and-pick box (location, school): the answer must be picked from its suggestions. */
+  combobox: z.boolean().optional(),
+  /** The form's own error message for the field ("Please enter a valid answer"). */
+  error: z.string().optional(),
   confidence: z.enum(['focused', 'inside', 'below', 'right', 'picked']),
 });
 export type FieldInfo = z.infer<typeof FieldInfoSchema>;
+
+/** A form in a modal window (LinkedIn's Easy Apply): its step heading and progress. */
+export const DialogInfoSchema = z.object({
+  heading: z.string().optional(),
+  /** Percent done, when the window shows a progress bar. */
+  progress: z.number().optional(),
+  /** Submit is showing: the last step, which the user checks and submits themselves. */
+  final: z.boolean().optional(),
+});
+export type DialogInfo = z.infer<typeof DialogInfoSchema>;
 
 export const PageInfoSchema = z.object({
   title: z.string(),

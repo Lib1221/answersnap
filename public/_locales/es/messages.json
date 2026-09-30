@@ -2067,5 +2067,39 @@
   },
   "li_tailor_loading": {
     "message": "El empleo aún se está cargando. Inténtalo de nuevo en un momento."
+  },
+  "form_dialog_step": {
+    "message": "Este paso: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "form_dialog": {
+    "message": "El formulario de la ventana abierta"
+  },
+  "form_dialog_final": {
+    "message": "Es el último paso. Revisa todo en la página y luego envíalo tú."
+  },
+  "form_dialog_next": {
+    "message": "Después de insertar, haz clic tú en Siguiente en la página y vuelve a escanear para el paso siguiente."
+  },
+  "form_you_answer": {
+    "message": "Esta la respondes tú en la página."
+  },
+  "form_from_resume": {
+    "message": "De tu currículum"
+  },
+  "form_pick_suggestion": {
+    "message": "Después de insertar, elige la sugerencia que coincida en la página."
+  },
+  "form_page_error": {
+    "message": "El formulario dice: $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
   }
 }

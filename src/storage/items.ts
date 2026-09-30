@@ -63,6 +63,7 @@ export const pendingFormItem = storage.defineItem<{
   tabId: number;
   page: import('./schema').PageInfo;
   fields: import('./schema').FieldInfo[];
+  dialog?: import('./schema').DialogInfo;
   createdAt: number;
 }>('session:pendingForm');
 
