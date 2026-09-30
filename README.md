@@ -34,7 +34,8 @@ Made by Liben.
   own bullets, a matching summary and title line, the most relevant projects, all within two
   pages. The **Job match** tab shows the keyword score before and after, what could reject the
   application whatever the resume says (location, work authorization, years), and everything
-  added that isn't in your resume, for you to keep or remove. A cover letter comes with it. Your
+  added that isn't in your resume, for you to keep or remove, and **what changed** from your master
+  resume, word by word, each with an Undo. A cover letter comes with it. Your
   master resume never changes, and nothing is sent until you click. Set your **dealbreakers**
   (where you can work, remote only, visa sponsorship, lowest pay, titles or companies to skip) in
   Settings, and a job that hits one asks before anything goes to the AI.

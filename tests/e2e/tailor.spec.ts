@@ -117,6 +117,13 @@ test('one click: a tailored two-page resume, a cover letter, and the master unto
   await item.getByTestId('assumed-remove').click();
   await expect.poll(() => docText(page)).not.toContain('Deployed containerized services');
 
+  // What changed: every difference from the master, word by word, each with an undo.
+  const headline = page.getByTestId('change-item').filter({ hasText: 'Title line' });
+  await expect(headline.getByTestId('change-diff').locator('ins')).not.toHaveCount(0);
+  await headline.getByTestId('change-undo').click();
+  await expect.poll(() => docText(page)).not.toContain('Senior Backend Engineer | Python, Django');
+  await expect(page.getByTestId('change-item').filter({ hasText: 'Title line' })).toHaveCount(0);
+
   // Cover letter: written, shown in the same design, and editable.
   await expect(page.getByTestId('letter-text')).toHaveValue(/Dear Hiring Manager/, {
     timeout: 20_000,

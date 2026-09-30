@@ -649,6 +649,7 @@ async function deleteMine(id: string) {
             v-if="tab === 'match' && current.tailoring"
             :key="current.id"
             :resume="current"
+            :master="resumes.find((r) => r.id === current?.tailoring?.sourceResumeId) ?? null"
             :letter-state="tailor.letter.value"
             :letter-error="tailor.letterError.value"
             :showing="showing"

@@ -2,11 +2,12 @@
 import { computed, onMounted, ref } from 'vue';
 import { updateApplication } from '@/kb/applications';
 import { checkDealbreakers } from '@/kb/dealbreakers';
+import { resumeChanges, undoChange, wordDiff, type Change } from '@/kb/resume/diff';
 import { getSettings } from '@/storage/items';
 import type { Resume } from '@/kb/resume/model';
 import { addSkill, removeAssumed, resumeText } from '@/kb/resume/tailorApply';
 import { matchKeywords, type Assumed, type Keyword } from '@/kb/resume/tailoring';
-import { safeUrl } from '@/kb/richText';
+import { plainText, safeUrl } from '@/kb/richText';
 import Icon from '@/ui/AppIcon.vue';
 
 // "Job match" for a resume tailored to one job: how well it matches the job's keywords now, what
@@ -17,6 +18,8 @@ const props = defineProps<{
   letterState: 'idle' | 'writing' | 'error';
   letterError: string;
   showing: 'resume' | 'letter';
+  /** The master resume the copy was made from, for "What changed" (null when it's gone). */
+  master: Resume | null;
 }>();
 const emit = defineEmits<{
   update: [resume: Resume];
@@ -32,6 +35,21 @@ const must = computed(() => tl.value.keywords.filter((k) => k.importance === 'mu
 const nice = computed(() => tl.value.keywords.filter((k) => k.importance === 'nice'));
 const jobUrl = computed(() => safeUrl(tl.value.job.url));
 const applied = ref(false);
+
+const changes = computed(() => (props.master ? resumeChanges(props.master, props.resume) : []));
+const KIND: Record<Change['kind'], string> = {
+  headline: 'Reworded',
+  summary: 'Rewritten',
+  'line-changed': 'Reworded',
+  'line-added': 'Added',
+  'line-removed': 'Cut',
+  hidden: 'Left out',
+  order: 'Reordered',
+};
+const pieces = (c: Change) => wordDiff(plainText(c.before), plainText(c.after));
+function undo(c: Change) {
+  if (props.master) emit('update', undoChange(props.resume, props.master, c));
+}
 /** The candidate's dealbreakers this job hits, with the settings as they are now. */
 const hits = ref<string[]>([]);
 onMounted(async () => {
@@ -230,6 +248,64 @@ async function markApplied() {
           <li v-for="(x, i) in tl.trimmed" :key="i">{{ x }}</li>
         </ul>
         <p class="mt-1.5">Everything left out is still in your master resume.</p>
+      </details>
+    </section>
+
+    <section class="card flex flex-col gap-2 p-4" aria-labelledby="changes-h">
+      <h3 id="changes-h" class="text-[14px] font-semibold">
+        What changed
+        <span class="font-normal text-graphite-2 tabular-nums">({{ changes.length }})</span>
+      </h3>
+      <p v-if="!master" class="text-[13px] text-graphite-2">
+        The master resume this copy was made from is gone, so there's nothing to compare.
+      </p>
+      <p v-else-if="!changes.length" class="text-[13px] text-graphite-2" data-testid="changes-none">
+        This copy is the same as your master resume.
+      </p>
+      <details v-else open class="flex flex-col gap-2">
+        <summary class="cursor-pointer text-[12.5px] text-graphite-2">
+          Every difference from your master resume. Undo puts your own version back.
+        </summary>
+        <ul class="mt-2 flex flex-col gap-2">
+          <li
+            v-for="c in changes"
+            :key="c.id"
+            class="flex flex-col gap-1 rounded-control border border-rule px-2.5 py-2"
+            data-testid="change-item"
+          >
+            <span class="flex items-baseline justify-between gap-2 text-[12px] text-graphite-2">
+              <span>{{ c.where }}</span>
+              <span class="shrink-0 font-medium">{{ KIND[c.kind] }}</span>
+            </span>
+            <p v-if="c.kind === 'order'" class="text-[13px]">
+              Put the most relevant first. Undo restores your order.
+            </p>
+            <p v-else-if="c.kind === 'hidden'" class="text-[13px]">
+              {{ plainText(c.before) }} is left out of this copy.
+            </p>
+            <p v-else class="text-[13px] leading-snug" data-testid="change-diff">
+              <template v-for="(p, i) in pieces(c)" :key="i">
+                <del
+                  v-if="p.kind === 'del'"
+                  class="me-[3px] rounded-[3px] bg-carbon-pink text-carbon-pink-text"
+                  >{{ p.text }}</del
+                ><ins
+                  v-else-if="p.kind === 'ins'"
+                  class="rounded-[3px] bg-success-soft text-success no-underline"
+                  >{{ p.text }}</ins
+                ><span v-else>{{ p.text }}</span>
+              </template>
+            </p>
+            <button
+              type="button"
+              class="btn btn-quiet min-h-7 self-start px-2 text-[12.5px]"
+              data-testid="change-undo"
+              @click="undo(c)"
+            >
+              Undo
+            </button>
+          </li>
+        </ul>
       </details>
     </section>
 
