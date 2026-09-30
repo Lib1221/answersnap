@@ -21,6 +21,7 @@ import { applyTemplate } from '@/kb/resume/templates';
 import { getProfile } from '@/storage/items';
 import Icon from '@/ui/AppIcon.vue';
 import LogoMark from '@/ui/LogoMark.vue';
+import AtsPanel from './AtsPanel.vue';
 import ContentEditor from './ContentEditor.vue';
 import CoverLetterPages from './CoverLetterPages.vue';
 import ImportResume from './ImportResume.vue';
@@ -33,19 +34,20 @@ import SectionColumns from './SectionColumns.vue';
 import TemplateGallery from './TemplateGallery.vue';
 import ThumbFit from './ThumbFit.vue';
 
-type Tab = 'match' | 'content' | 'customize' | 'templates';
+type Tab = 'match' | 'content' | 'customize' | 'templates' | 'ats';
 const tab = ref<Tab>('content');
 const TAB_LABELS: Record<Tab, string> = {
   match: 'Job match',
   content: 'Content',
   customize: 'Customize',
   templates: 'Templates',
+  ats: 'ATS',
 };
 /** A tailored copy opens on its job match. */
 const tabs = computed<Tab[]>(() =>
   current.value?.tailoring
-    ? ['match', 'content', 'customize', 'templates']
-    : ['content', 'customize', 'templates'],
+    ? ['match', 'content', 'customize', 'templates', 'ats']
+    : ['content', 'customize', 'templates', 'ats'],
 );
 /** The document in the preview (and the one Download PDF saves). */
 const showing = ref<'resume' | 'letter'>('resume');
@@ -659,6 +661,7 @@ async function deleteMine(id: string) {
             @download="downloadDoc"
           />
           <ContentEditor v-else-if="tab === 'content'" v-model="current" />
+          <AtsPanel v-else-if="tab === 'ats'" :resume="current" />
           <template v-else-if="tab === 'customize'">
             <SectionColumns
               v-if="current.design.columns === 'two'"

@@ -551,3 +551,38 @@ test('the Professional design lays out entries and skill groups like FlowCV', as
   // The website as the resume prints it.
   await expect(doc.locator('.rd-contacts')).toContainText('www.jamie.dev');
 });
+
+test('ATS preview: the text a parser reads, what it would miss, and a downloaded PDF read back', async ({
+  context,
+  extensionId,
+  panel,
+}, testInfo) => {
+  test.setTimeout(60_000);
+  await seed(panel);
+  await seedProfile(panel);
+  const page = await openBuilder(context, extensionId);
+  await page.getByTestId('resume-start-profile').click();
+  await page.getByTestId('tab-ats').click();
+  const text = page.getByTestId('ats-text');
+  await expect(text).toContainText('Jamie Park');
+  await expect(text).not.toContainText('**');
+  await expect(page.getByTestId('ats-ok').first()).toContainText('Your email is readable.');
+
+  // A heading parsers don't know gets flagged.
+  await page.getByTestId('tab-content').click();
+  await card(page, 'Professional Experience')
+    .getByTestId('section-title-input')
+    .fill('Where I Shipped Things');
+  await page.getByTestId('tab-ats').click();
+  await expect(page.getByTestId('ats-warn')).toContainText([
+    /"Where I Shipped Things" isn't a heading parsers know/,
+  ]);
+
+  // The PDF as printed, read back with the import's reader.
+  const pdf = testInfo.outputPath('resume.pdf');
+  writeFileSync(pdf, await page.pdf({ preferCSSPageSize: true, printBackground: true }));
+  await page.getByTestId('ats-pdf-input').setInputFiles(pdf);
+  await expect(page.getByTestId('ats-panel')).toContainText('Checked in resume.pdf');
+  await expect(text).toContainText('Jamie Park');
+  await expect(text).toContainText('WHERE I SHIPPED THINGS');
+});

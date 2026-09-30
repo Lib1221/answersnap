@@ -42,7 +42,7 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [x] Easy Apply co-pilot: LinkedIn's screening questions answered from your own data (years counted from your dated jobs), the rest drafted, inserted only when you click, and never Next or Submit
 - [x] Should I apply: your dealbreakers (where you can work, remote only, sponsorship, pay, title words, companies, words in the post) checked in code before tailoring
 - [x] What changed: every difference between the tailored copy and your master, word by word, each with an Undo
-- [ ] ATS preview: the text an applicant tracking system reads from the PDF
+- [x] ATS preview: the text an applicant tracking system reads, what it would miss, and a check of the PDF you downloaded
 - [ ] Several master resumes (for example ML and backend), picked per job
 - [ ] Tailor from any job site with a shortcut (no new permissions)
 - [ ] Referral and recruiter messages for a job

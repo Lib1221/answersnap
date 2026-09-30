@@ -46,7 +46,9 @@ Made by Liben.
   computer) or pick one of 9 templates, or save your own.
   Write it in English, Italian, French, Spanish, or German, with the GDPR consent line Italian
   applications ask for. Download PDF saves real, selectable text that matches the preview page
-  for page. Open it from Settings or the Profile tab.
+  for page, and the **ATS** tab shows the text an applicant tracking system reads from it and
+  what it would miss (it can also read back the PDF you downloaded). Open it from Settings or the
+  Profile tab.
 - **Application tracker:** every job post you save is tracked, from saved to offer, with notes
   and a CSV export.
 - **Story bank:** your STAR stories, used first for "tell me about a time" questions.
