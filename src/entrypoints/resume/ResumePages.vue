@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch 
 import { PAGE_MM } from '@/kb/resume/format';
 import type { Resume } from '@/kb/resume/model';
 import { FONTS, headingFontOf, nameFontOf } from '@/kb/resume/fonts';
+import { bottomMarginMm, pageClasses, pageVars } from './doc/pageStyle';
 import { buildBlocks, paginate, type Block, type Page } from './doc/blocks';
 import DocBlock from './doc/DocBlock.vue';
 import './doc/doc.css';
@@ -13,7 +14,9 @@ import './doc/fonts.css';
 
 const props = defineProps<{ resume: Resume; firstPageOnly?: boolean }>();
 const emit = defineEmits<{
-  pages: [count: number];
+  /** The page count, and the updatedAt of the resume measured (so a caller can wait for its own
+   * change to be measured). */
+  pages: [count: number, updatedAt: string];
   /** True when a single piece (one paragraph, one bullet) is taller than a page and gets cut. */
   overflow: [tooTall: boolean];
 }>();
@@ -24,11 +27,6 @@ const two = computed(() => d.value.columns === 'two');
 const blocks = computed(() => buildBlocks(props.resume));
 const header = computed(() => blocks.value.find((b) => b.kind === 'header')!);
 const headerInSide = computed(() => header.value.column === 'side');
-
-/** Bottom margin in mm: at least 12 mm when the footer is on, so it never covers text. */
-const bottomMm = computed(() =>
-  d.value.footer === 'none' ? d.value.marginY : Math.max(d.value.marginY, 12),
-);
 
 const nameFontKey = computed(() => nameFontOf(d.value));
 
@@ -50,57 +48,9 @@ async function fontsLoaded() {
   await document.fonts.ready;
 }
 
-const vars = computed(() => {
-  const x = d.value;
-  const page = PAGE_MM[x.page];
-  const font = FONTS[x.font].stack;
-  const headingFont = x.headingFont === 'same' ? font : FONTS[x.headingFont].stack;
-  const name = FONTS[nameFontKey.value];
-  const muted = `color-mix(in srgb, ${x.text} 55%, #fff)`;
-  return {
-    '--rd-page-w': `${page.w}mm`,
-    '--rd-page-h': `${page.h}mm`,
-    '--rd-mx': `${x.marginX}mm`,
-    '--rd-my': `${x.marginY}mm`,
-    '--rd-mb': `${bottomMm.value}mm`,
-    '--rd-side-w': `calc((${page.w}mm - ${2 * x.marginX}mm - 7mm) * ${x.sideWidth / 100})`,
-    '--rd-font': font,
-    '--rd-heading-font': headingFont,
-    '--rd-name-font': name.stack,
-    '--rd-size': `${x.fontSize}pt`,
-    '--rd-lh': String(x.lineHeight),
-    '--rd-name-size': `${x.nameSize}pt`,
-    // A font without a real bold (most creative fonts) stays regular rather than smeared.
-    '--rd-name-weight': x.nameBold && name.bold ? '700' : '400',
-    '--rd-heading-size': `${x.headingSize}em`,
-    '--rd-heading-case':
-      x.headingCase === 'upper'
-        ? 'uppercase'
-        : x.headingCase === 'capitalize'
-          ? 'capitalize'
-          : 'none',
-    '--rd-heading-spacing': x.headingCase === 'upper' ? '0.06em' : '0',
-    '--rd-heading-color': x.accentOn.headings ? x.accent : x.text,
-    '--rd-line-color': x.accentOn.headingLine ? x.accent : muted,
-    '--rd-level-color': x.accentOn.levels ? x.accent : x.text,
-    '--rd-accent': x.accent,
-    '--rd-text': x.text,
-    '--rd-tint': `color-mix(in srgb, ${x.accent} 12%, #fff)`,
-    '--rd-entry-gap': `${x.entrySpacing}pt`,
-    '--rd-section-gap': `${x.sectionSpacing}pt`,
-    '--rd-photo-size': `${x.photoSize}px`,
-  } as Record<string, string>;
-});
-
-const pageClass = computed(() => [
-  `rd-sidebar-${d.value.sidebar}`,
-  `rd-bullet-${d.value.bullet}`,
-  `rd-links-${d.value.linkStyle}`,
-  {
-    'rd-fill-sidebar': two.value && d.value.fill === 'sidebar',
-    'rd-fill-border': d.value.fill === 'border',
-  },
-]);
+const bottomMm = computed(() => bottomMarginMm(d.value));
+const vars = computed(() => pageVars(d.value));
+const pageClass = computed(() => pageClasses(d.value));
 
 // Measuring: one tall page with every block in its column, off screen.
 const measureRoot = ref<HTMLElement | null>(null);
@@ -137,7 +87,9 @@ function measure() {
     }
   }
   const page = PAGE_MM[d.value.page];
-  const capacity = (page.h - d.value.marginY - bottomMm.value) * MM - 1;
+  // Blocks fill the page down to its bottom margin. A page clips only at its edge, so a sub-pixel
+  // difference between this measure and the print lands in the margin, unseen.
+  const capacity = (page.h - d.value.marginY - bottomMm.value) * MM;
   emit(
     'overflow',
     [...heights].some(([id, h]) => h - (spacing.get(id) ?? 0) > capacity),
@@ -150,7 +102,7 @@ function measure() {
     headerHeight,
     headerInSide.value,
   );
-  emit('pages', pages.value.length);
+  emit('pages', pages.value.length, props.resume.updatedAt);
 }
 
 let timer = 0;

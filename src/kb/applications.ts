@@ -59,13 +59,22 @@ export function watchApplications(cb: () => void): () => void {
 const same = (a: string | null, b: string | null) =>
   (a ?? '').trim().toLowerCase() === (b ?? '').trim().toLowerCase();
 
-/** The application for a saved job post: same site and role (the role may be unknown). */
+/**
+ * The application for a saved job post: same site and role (the role may be unknown), and the
+ * same company when both know it, so "Software Engineer" at two companies stays two applications.
+ */
 export function findApplication(
   list: Application[],
   hostname: string,
   role: string | null,
+  company: string | null = null,
 ): Application | undefined {
-  return list.find((a) => a.hostname === hostname && same(a.role, role));
+  return list.find(
+    (a) =>
+      a.hostname === hostname &&
+      same(a.role, role) &&
+      (!company?.trim() || !a.company?.trim() || same(a.company, company)),
+  );
 }
 
 /** Start tracking a saved job post, or refresh the one already tracked. */
@@ -75,7 +84,7 @@ export async function trackJob(
 ): Promise<Application> {
   const list = await getApplications();
   const iso = now.toISOString();
-  const existing = findApplication(list, job.hostname, job.role);
+  const existing = findApplication(list, job.hostname, job.role, job.company);
   if (existing) {
     const updated: Application = {
       ...existing,

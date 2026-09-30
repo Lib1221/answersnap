@@ -33,8 +33,21 @@
   text-decoration: underline;
 }
 .rd-links-icon .rd-desc a::after {
-  content: ' ↗';
-  font-size: 0.85em;
+  content: '';
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 3pt;
+  vertical-align: -0.05em;
+  background: currentColor;
+  -webkit-mask: var(--rd-link-mask) center / contain no-repeat;
+  mask: var(--rd-link-mask) center / contain no-repeat;
+}
+.rd-link-chain {
+  --rd-link-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1'/%3E%3Cpath d='M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1'/%3E%3C/svg%3E");
+}
+.rd-link-arrow {
+  --rd-link-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4h6v6'/%3E%3Cpath d='M20 4l-9 9'/%3E%3Cpath d='M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5'/%3E%3C/svg%3E");
 }
 .rd-accent {
   color: var(--rd-accent);
@@ -45,11 +58,16 @@
 .rd-muted {
   color: color-mix(in srgb, var(--rd-text) 72%, #fff);
 }
+/* Inline, whatever the page's base styles say about svg. */
 .rd-icon {
+  display: inline-block;
   width: 0.95em;
   height: 0.95em;
   flex: none;
   vertical-align: -0.12em;
+}
+.rd-nowrap {
+  white-space: nowrap;
 }
 
 /* Columns */
@@ -132,7 +150,27 @@
 }
 .rd-jobtitle {
   margin-top: 1.5pt;
-  font-size: 1.15em;
+  font-size: var(--rd-jobtitle-size, 1.15em);
+}
+/* Relaxed header (FlowCV's spacing): room under the name and the title, between details, and
+   before the first section. */
+.rd-header-relaxed .rd-header {
+  margin-bottom: calc(var(--rd-section-gap) + 6pt);
+}
+.rd-header-relaxed .rd-jobtitle {
+  margin-top: 3.5pt;
+}
+.rd-header-relaxed .rd-contacts {
+  gap: 9.5pt 16pt;
+  margin-top: 8.5pt;
+  font-size: 1em;
+}
+.rd-header-relaxed .rd-contacts li {
+  gap: 5pt;
+}
+.rd-header-relaxed .rd-contacts .rd-icon {
+  width: 1.05em;
+  height: 1.05em;
 }
 .rd-contacts {
   display: flex;
@@ -215,12 +253,13 @@
 .rd-block:not(.rd-section-start) {
   margin-top: var(--rd-entry-gap);
 }
-/* The next bullet, paragraph, or row of a section that a page may break before. */
+/* The next bullet, paragraph, or row of a section that a page may break before. Bullets are the
+   design's bullet spacing apart, paragraphs twice that. */
 .rd-block.rd-more-li {
-  margin-top: 1pt;
+  margin-top: var(--rd-desc-gap, 1pt);
 }
 .rd-block.rd-more-p {
-  margin-top: 2pt;
+  margin-top: calc(var(--rd-desc-gap, 1pt) * 2);
 }
 .rd-block.rd-more-row {
   margin-top: 3pt;
@@ -253,6 +292,11 @@
 .rd-heading-underline {
   padding-bottom: 2pt;
   border-bottom: 0.8pt solid var(--rd-line-color);
+}
+.rd-heading-thick-underline {
+  margin-bottom: 5pt;
+  padding-bottom: 1.5pt;
+  border-bottom: 1.6pt solid var(--rd-line-color);
 }
 .rd-heading-line-after::after {
   content: '';
@@ -329,13 +373,54 @@
 .rd-entry-title {
   min-width: 0;
 }
+/* Dates and place in a column of their own on the right (FlowCV): the first line beside the
+   title, the place beside the line under it. The column has a fixed width so an entry's next
+   bullets, rendered apart, wrap at the same place. */
+.rd-entry.rd-side-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 10em;
+  gap: 0 1.1em;
+  align-items: baseline;
+}
+.rd-side-column > * {
+  grid-column: 1;
+}
+.rd-side-column > .rd-side-meta {
+  grid-column: 2;
+  text-align: right;
+}
+.rd-side-column > .rd-side-1 {
+  grid-row: 1;
+}
+.rd-side-column > .rd-side-2 {
+  grid-row: 2;
+}
+/* A side column is too narrow for another column. */
+.rd-col-side .rd-entry.rd-side-column {
+  grid-template-columns: minmax(0, 1fr);
+}
+.rd-col-side .rd-side-column > .rd-side-meta {
+  grid-column: 1;
+  grid-row: auto;
+  text-align: left;
+}
+/* A small, light arrow or chain after an entry's linked line. */
 .rd-link-icon {
+  width: 0.8em;
+  height: 0.8em;
   margin-left: 3pt;
+  vertical-align: -0.04em;
+  stroke-width: 1.8;
 }
 .rd-meta {
   flex: none;
   font-size: 0.92em;
   color: color-mix(in srgb, var(--rd-text) 75%, #fff);
+}
+/* Dates and places like the text, as FlowCV prints them. */
+.rd-dates-plain .rd-meta {
+  font-size: 1em;
+  color: var(--rd-text);
 }
 .rd-meta.rd-accent {
   color: var(--rd-accent);
@@ -347,14 +432,14 @@
   font-style: italic;
 }
 .rd-desc {
-  margin-top: 2pt;
+  margin-top: calc(var(--rd-desc-gap, 1pt) * 2);
 }
 .rd-desc p + p,
 .rd-desc p + ul,
 .rd-desc ul + p,
 .rd-desc p + ol,
 .rd-desc ol + p {
-  margin-top: 2pt;
+  margin-top: calc(var(--rd-desc-gap, 1pt) * 2);
 }
 .rd-desc ul,
 .rd-desc ol {
@@ -379,10 +464,47 @@
   list-style: decimal;
 }
 .rd-desc li + li {
-  margin-top: 1pt;
+  margin-top: var(--rd-desc-gap, 1pt);
+}
+/* A small dot set close to the text. */
+.rd-bullet-dot .rd-desc ul {
+  list-style: none;
+  padding-left: 10pt;
+}
+.rd-bullet-dot .rd-desc ul > li {
+  position: relative;
+}
+.rd-bullet-dot .rd-desc ul > li::before {
+  content: '';
+  position: absolute;
+  left: -6.5pt;
+  top: calc(var(--rd-lh) * 0.5em - 1.5pt);
+  width: 3pt;
+  height: 3pt;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 /* Skills, languages, interests */
+/* Skill groups flow top to bottom, left column first, and a group never splits. */
+.rd-list-groups {
+  columns: var(--rd-cols, 2);
+  column-gap: 8mm;
+}
+.rd-col-side .rd-list-groups {
+  columns: 1;
+}
+/* Space above a group, not below: a column never ends in empty space, and the space above a
+   group that starts a column falls away at the break. */
+.rd-group {
+  break-inside: avoid;
+}
+.rd-group + .rd-group {
+  margin-top: calc(var(--rd-entry-gap) + 3pt);
+}
+.rd-group .rd-desc {
+  margin-top: var(--rd-desc-gap, 1pt);
+}
 .rd-list-grid {
   display: grid;
   grid-template-columns: repeat(var(--rd-cols, 2), minmax(0, 1fr));

@@ -1052,6 +1052,27 @@
   "letter_write_again": {
     "message": "Write again"
   },
+  "li_tailor_button": {
+    "message": "Tailor resume"
+  },
+  "li_tailor_failed": {
+    "message": "Couldn't start. Reload the page and try again."
+  },
+  "li_tailor_loading": {
+    "message": "The job is still loading. Try again in a moment."
+  },
+  "li_tailor_no_job": {
+    "message": "Couldn't read this job. Open it so its description shows, then try again."
+  },
+  "li_tailor_opened": {
+    "message": "Opened in a new tab."
+  },
+  "li_tailor_opening": {
+    "message": "Opening…"
+  },
+  "li_tailor_title": {
+    "message": "AnswerSnap: a resume and cover letter made for this job, from your master resume"
+  },
   "library_cancel": {
     "message": "Cancel"
   },
@@ -1985,6 +2006,21 @@
   },
   "status_withdrawn": {
     "message": "Withdrawn"
+  },
+  "tailor_full_button": {
+    "message": "Build them"
+  },
+  "tailor_full_error": {
+    "message": "Couldn't open the resume builder. Try again."
+  },
+  "tailor_full_intro": {
+    "message": "A copy of your master resume made for this job, fitted to two pages, with a matching cover letter. Opens in the resume builder, ready to download."
+  },
+  "tailor_full_short": {
+    "message": "The saved job post is too short. Read the whole page first."
+  },
+  "tailor_full_title": {
+    "message": "Resume and cover letter for this job"
   },
   "tracker_application": {
     "message": "Application"

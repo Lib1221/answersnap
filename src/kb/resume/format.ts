@@ -18,6 +18,16 @@ const MONTHS_LONG = [
   'December',
 ];
 
+/** An address as shown on the page: without "https://", "www.", "mailto:", or a trailing slash. */
+export function cleanUrl(value: string): string {
+  return value
+    .trim()
+    .replace(/^mailto:/i, '')
+    .replace(/^https?:\/\//i, '')
+    .replace(/^www\./i, '')
+    .replace(/\/+$/, '');
+}
+
 /**
  * "2024-03" -> "03/2024", "03.2024", "Mar 2024", "March 2024", "2024-03", "2024/03", or "2024",
  * in the resume language. A year-only value ("2024") shows as the bare year in every format.

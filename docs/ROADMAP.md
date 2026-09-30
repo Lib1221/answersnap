@@ -27,6 +27,8 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [x] Keyboard shortcuts: Alt+1 to 6, Alt+C, Alt+R, Alt+arrows, and ? for the list
 - [x] Scholarship and university forms (Study tab): exact personal details from a verified profile (passport MRZ, codice fiscale check), fitted to each field's format, verified after filling; requirements reader with eligibility checks; Italy guide
 - [x] Resume builder (FlowCV style): sections you add, hide, rename, reorder, and duplicate; rich text; full design controls; 8 templates; one or two columns; resume language with the GDPR consent line; PDF export that matches the preview page for page
+- [x] One-click tailoring: a Tailor resume button on LinkedIn job pages (and in the side panel for any saved job) makes a two-page copy of your master resume for the job, with a keyword match score, eligibility warnings, everything added listed for you to check, and a cover letter
+- [x] Import your resume (PDF, DOCX, TXT) into the builder, word for word, in a Professional template measured from a FlowCV resume
 
 ## Next
 
@@ -37,6 +39,19 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [ ] Test the Firefox build in a real Firefox and submit it to addons.mozilla.org
 - [x] Sync across devices (opt-in, Chrome Sync): settings, profile, standard answers, stories, cover letter, applications
 - [x] Resume builder: per-section settings (new page, heading, list layout, level style), photo crop, portrait shape, black and white, save my own design as a template
+- [ ] Easy Apply co-pilot: LinkedIn's screening questions answered from your profile, inserted only when you click, and never Next or Submit
+- [ ] Should I apply: your dealbreakers (location, visa, salary, seniority) checked before tailoring
+- [ ] What changed: the tailored copy side by side with the master
+- [ ] ATS preview: the text an applicant tracking system reads from the PDF
+- [ ] Several master resumes (for example ML and backend), picked per job
+- [ ] Tailor from any job site with a shortcut (no new permissions)
+- [ ] Referral and recruiter messages for a job
+- [ ] Work history autofill for Workday, Greenhouse, and Lever
+- [ ] Application memory: which resume went to which job, and a warning before applying twice
+- [ ] Skills demand map across the jobs you save
+- [ ] Interview pack for each application
+- [ ] Remote-work helpers: time zone overlap and salary in your currency
+- [ ] A quality eval for tailoring (the rules in `src/kb/resume/tailorApply.ts` against real job posts)
 
 ## Needs Liben's OK
 

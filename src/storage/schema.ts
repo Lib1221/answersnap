@@ -164,6 +164,8 @@ export const SettingsSchema = z.object({
   ollamaUrl: z.string().default('http://localhost:11434'),
   /** A Chrome notification when a tracked application has gone quiet. */
   followUpReminders: z.boolean().default(true),
+  /** The "Tailor resume" button on LinkedIn job pages (approved by Liben, 2026-09-29). */
+  linkedinButton: z.boolean().default(true),
   /** When a model runs out of quota, switch to the next one in its chain. */
   autoFallback: z.boolean().default(true),
   /** Model ids the key can use (from Test key), so fallback skips models the key can't reach. */

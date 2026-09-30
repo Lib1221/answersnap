@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>(2) Machine Learning Engineer | Fabrikam | LinkedIn</title>
+  </head>
+  <body>
+    <!-- Test fixture shaped like LinkedIn's new signed-in layout ("SDUI"): hashed classes, with
+         componentkey and data-testid hooks (fictional company). -->
+    <nav class="_1a2b3c">Home My Network Jobs Messaging</nav>
+    <main class="_9f8e7d">
+      <ul class="_4d5e6f">
+        <li componentkey="job-card-component-ref-4012345699" class="_77aa88">
+          <a href="/jobs/view/4012345699/">Data Engineer</a> Contoso · Nairobi · Posted a job with a
+          very long card text that should never be read as the description even though it is long
+          enough to look like one when a naive reader grabs the biggest block on the page.
+        </li>
+      </ul>
+      <div data-sdui-screen="com.linkedin.sdui.flagshipnav.jobs.SemanticJobDetails" class="_5c6d7e">
+        <div class="_a1b2c3">
+          <a href="https://www.linkedin.com/company/fabrikam/life/" class="_c4d5e6">Fabrikam</a>
+          <p class="_d7e8f9"><a href="/jobs/view/4099887766/">Machine Learning Engineer</a></p>
+          <p class="_e1f2a3"><span>Addis Ababa, Ethiopia</span> · 3 days ago · 41 applicants</p>
+          <div class="_f4a5b6">
+            <a href="/jobs/view/4099887766/"><span>Remote</span></a>
+            <a href="/jobs/view/4099887766/"><span>Full-time</span></a>
+          </div>
+          <a
+            aria-label="Easy Apply to this job"
+            href="/jobs/view/4099887766/apply/?openSDUIApplyFlow=true"
+            >Easy Apply</a
+          >
+        </div>
+        <div
+          componentkey="JobDetails_AboutTheJob_4099887766"
+          id="JobDetails_AboutTheJob_4099887766"
+          data-sdui-component="com.linkedin.sdui.generated.jobseeker.dsl.impl.aboutTheJob"
+        >
+          <h2 class="_0a1b2c">About the job</h2>
+          <div data-testid="expandable-text-box" class="_3d4e5f">
+            <div>Fabrikam builds agritech models for farmers across East Africa.</div>
+            <div>Responsibilities</div>
+            <ul>
+              <li>Train and evaluate NLP and computer vision models in Python with PyTorch.</li>
+              <li>Build data pipelines and REST APIs for model serving.</li>
+            </ul>
+            <div>Requirements</div>
+            <ul>
+              <li>3+ years of machine learning engineering.</li>
+              <li>Experience with scikit-learn, MLOps, and Docker.</li>
+            </ul>
+            <div>Remote within Africa (UTC+0 to UTC+4).</div>
+            <button data-testid="expandable-text-button">… more</button>
+          </div>
+        </div>
+        <div componentkey="JobDetails_AboutTheCompany_4099887766">
+          <h2>About the company</h2>
+          <div data-testid="expandable-text-box">
+            Fabrikam is a company. It has many employees and a long history of doing things that are
+            described at great length in this company blurb, which must never be read as the job
+            description, however long it gets.
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

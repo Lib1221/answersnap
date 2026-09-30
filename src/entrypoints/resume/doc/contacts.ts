@@ -1,3 +1,4 @@
+import { cleanUrl } from '@/kb/resume/format';
 import { DETAIL_LABELS, type Design, type DetailKind, type Personal } from '@/kb/resume/model';
 import { safeUrl } from '@/kb/richText';
 
@@ -69,16 +70,6 @@ export function detailHref(kind: DetailKind, value: string): string | null {
   return href;
 }
 
-/** An address as shown on the page: without "https://", "www.", "mailto:", or a trailing slash. */
-export function cleanUrl(value: string): string {
-  return value
-    .trim()
-    .replace(/^mailto:/i, '')
-    .replace(/^https?:\/\//i, '')
-    .replace(/^www\./i, '')
-    .replace(/\/+$/, '');
-}
-
 export function contactItems(
   personal: Personal,
   contactStyle: Design['contactStyle'],
@@ -98,7 +89,8 @@ export function contactItems(
     const withLabel = (text: string) =>
       contactStyle === 'icons' || !label ? text : `${label}: ${text}`;
     if (href && LINK_KINDS.has(det.kind)) {
-      items.push({ icon: det.kind, text: cleanUrl(value), href });
+      // The display text the candidate chose ("Linkedin"), else the address itself.
+      items.push({ icon: det.kind, text: det.display.trim() || cleanUrl(value), href });
     } else if (href) {
       const icon = href.startsWith('mailto:') ? 'email' : 'link';
       items.push({ icon, text: withLabel(cleanUrl(value)), href });

@@ -70,6 +70,8 @@ export function duplicateResume(r: Resume): Resume {
     name: `${r.name} (copy)`,
     createdAt: now,
     updatedAt: now,
+    // A copy is never the master unless the user says so.
+    master: false,
     sections: copy.sections.map((s) => ({
       ...s,
       id: newId('s'),

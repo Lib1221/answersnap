@@ -1,6 +1,6 @@
 # AnswerSnap privacy policy
 
-Last updated: September 25, 2026
+Last updated: September 29, 2026
 
 AnswerSnap is a Chrome extension that drafts answers to job, freelance, and scholarship
 application questions from your own resume and website. This policy explains what it handles,
@@ -16,7 +16,10 @@ where that data lives, and who receives it.
 - **The area you snip:** when you snip a question, a screenshot of that area and the visible text
   in it, the page title and site name (no query strings), and details of the form field you are
   filling (its label and character limit).
-- **Job posts you choose to add**, from a snip, a selection, or a page.
+- **Job posts you choose to add**, from a snip, a selection, or a page. On LinkedIn, the Tailor
+  resume button reads the job posting you're viewing (title, company, location, and description)
+  only when you click it. It sends the post, with your resume, to your AI provider to write a
+  resume and cover letter for that job; nothing else on LinkedIn is read.
 - **Your applicant details** (for scholarship and university forms): names, birth date and place,
   citizenship, passport and ID numbers and dates, codice fiscale, contact details, addresses,
   education, and language tests. They are stored only on this computer, are never sent to the AI
@@ -24,9 +27,11 @@ where that data lives, and who receives it.
 - **Your application tracker:** for each job post you save, the site, role, company, the status
   you set, and your notes. It is never sent to the AI provider. Follow-up reminders are checked
   on this computer and shown as Chrome notifications; you can turn them off.
-- **Resumes you build** in the resume builder, including a photo if you add one. They are stored
-  only on this computer, are never sent to the AI provider, and are never synced. They are
-  included in your backup file. Download PDF uses Chrome's print dialog; the PDF is saved where
+- **Resumes you build** in the resume builder (including copies tailored for a job, with the job
+  post, its keywords, and the cover letter), including a photo if you add one. They are stored
+  only on this computer and are never synced. When you tailor a resume for a job, the text of your
+  master resume (never the photo) goes to your AI provider with the job post. They are included
+  in your backup file. Download PDF uses Chrome's print dialog; the PDF is saved where
   you choose.
 - **Your AI provider API key**, which you paste in yourself.
 
@@ -39,7 +44,9 @@ Everything is stored locally in your Chrome profile, using Chrome's extension st
   is stored unencrypted, like most extension settings. It is never synced or exported.
 - Screenshots are never stored. The snipped image is held in memory for the current question only
   and is dropped when you snip the next one or close the side panel.
-- Job posts are kept for 12 hours per site, and only until Chrome closes.
+- Job posts are kept for 12 hours per site, and only until Chrome closes. A job sent from the
+  LinkedIn button waits up to 6 hours for the resume builder to open it, also only until Chrome
+  closes.
 
 AnswerSnap has no servers and no accounts.
 
@@ -54,6 +61,10 @@ or Ollama running on your own computer), using your own API key, and only when y
   in the last day (so a multi-page application stays consistent), and your candidate data.
 - **When you build your profile:** the text of your enabled sources.
 - **When you use "Read with AI":** the images of the pages or snips you are importing.
+- **When you import your resume into the resume builder:** the text of the file you choose.
+- **When you tailor a resume for a job** (the LinkedIn button, Tailor full resume in the side
+  panel, or the builder): the job post, the text of your master resume (never its photo), and
+  your candidate data. The cover letter written with it uses the same.
 - **When you test your key:** a request for the list of available models, which contains no
   personal data.
 

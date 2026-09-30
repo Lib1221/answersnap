@@ -294,3 +294,49 @@ export function insertLink(e: Edit, url: string): Edit {
     end: e.start + link.length,
   };
 }
+
+/** One piece of rich text that can start a page: a paragraph or a single list item. */
+export interface Unit {
+  /** Markdown source of just this piece (a numbered item keeps its real number). */
+  text: string;
+  kind: 'p' | 'li';
+}
+
+/**
+ * Split rich text into pieces a page may break between: each paragraph, and each list item.
+ * A numbered item gets its running number written out, so it shows the right number alone.
+ */
+export function splitRich(src: string): Unit[] {
+  const units: Unit[] = [];
+  let para: string[] = [];
+  let lastList: 'bullets' | 'numbered' | null = null;
+  let next = 1;
+  const flush = () => {
+    if (para.length) {
+      units.push({ text: para.join('\n'), kind: 'p' });
+      lastList = null;
+    }
+    para = [];
+  };
+  for (const line of src.replace(/\r\n?/g, '\n').split('\n')) {
+    const n = line.match(NUMBERED);
+    if (BULLET.test(line)) {
+      flush();
+      units.push({ text: line.trim(), kind: 'li' });
+      lastList = 'bullets';
+    } else if (n) {
+      flush();
+      // A run of numbered items counts on from its first number, like the renderer.
+      const num = lastList === 'numbered' ? next : Number(n[1]);
+      units.push({ text: `${num}. ${n[2]}`, kind: 'li' });
+      lastList = 'numbered';
+      next = num + 1;
+    } else if (!line.trim()) {
+      flush();
+    } else {
+      para.push(line.trim());
+    }
+  }
+  flush();
+  return units;
+}

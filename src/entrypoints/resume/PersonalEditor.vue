@@ -174,7 +174,7 @@ async function addDetail(kind: DetailKind) {
   const i = personal.value.details.length;
   setDetails([
     ...personal.value.details,
-    { kind, label: kind === 'other' ? '' : DETAIL_LABELS[kind], value: '' },
+    { kind, label: kind === 'other' ? '' : DETAIL_LABELS[kind], value: '', display: '' },
   ]);
   await nextTick();
   const row = root.value?.querySelector(`[data-detail-index="${i}"]`);
@@ -412,6 +412,20 @@ function detailName(d: Detail): string {
             class="field-input px-2.5 py-1.5 font-normal"
             data-testid="pd-detail-label"
             @input="updateDetail(i, { label: ($event.target as HTMLInputElement).value })"
+          />
+        </label>
+        <label
+          v-else-if="LINK_KINDS.has(d.kind)"
+          class="flex w-1/3 min-w-0 flex-col gap-1 text-[13px] font-medium"
+          title="The text shown on the resume instead of the address, like Linkedin"
+        >
+          Shown as
+          <input
+            :value="d.display"
+            :placeholder="DETAIL_LABELS[d.kind]"
+            class="field-input px-2.5 py-1.5 font-normal"
+            data-testid="pd-detail-display"
+            @input="updateDetail(i, { display: ($event.target as HTMLInputElement).value })"
           />
         </label>
         <label class="flex min-w-0 flex-1 flex-col gap-1 text-[13px] font-medium">

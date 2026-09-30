@@ -27,7 +27,7 @@ export function useTracker(job: ReturnType<typeof useJob>) {
 
   const current = computed(() => {
     const j = job.job.value;
-    return j ? findApplication(list.value, j.hostname, j.title) : undefined;
+    return j ? findApplication(list.value, j.hostname, j.title, j.company) : undefined;
   });
 
   /** Days without news when the radar says it's time to follow up, else null. */

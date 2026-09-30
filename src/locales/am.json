@@ -275,7 +275,6 @@
   "linkedin_copied": "ተቀድቷል",
   "linkedin_copy": "ቅዳ",
   "linkedin_copy_headline": "ርዕስ $1 ቅዳ",
-  "linkedin_failed": "የ LinkedIn ረቂቁን መጻፍ አልተቻለም። እንደገና ይሞክሩ።",
   "linkedin_headlines": "ርዕሶች",
   "linkedin_intro": "የርዕስ አማራጮች እና \"ስለ እኔ\" ክፍል።",
   "linkedin_role_label": "ለአንድ የሥራ መደብ አነጣጥር (አማራጭ)",
@@ -526,5 +525,18 @@
   "sch_part_day": "ቀን",
   "sch_part_month": "ወር",
   "sch_part_year": "ዓመት",
-  "profile_resume_builder": "ሲቪዬን ገንባ (PDF)"
+  "profile_resume_builder": "ሲቪዬን ገንባ (PDF)",
+  "tailor_full_title": "ለዚህ ሥራ ሲቪ እና የማመልከቻ ደብዳቤ",
+  "tailor_full_intro": "ለዚህ ሥራ የተዘጋጀ የዋናው ሲቪዎ ቅጂ፣ በሁለት ገጽ የተስተካከለ፣ ከሚስማማ የማመልከቻ ደብዳቤ ጋር። በሲቪ መገንቢያው ይከፈታል፣ ለማውረድ ዝግጁ ነው።",
+  "tailor_full_button": "አዘጋጃቸው",
+  "tailor_full_error": "የሲቪ መገንቢያውን መክፈት አልተቻለም። እንደገና ይሞክሩ።",
+  "tailor_full_short": "የተቀመጠው የሥራ ማስታወቂያ በጣም አጭር ነው። መጀመሪያ ገጹን በሙሉ ያንብቡ።",
+  "li_tailor_button": "ሲቪ አስማማ",
+  "li_tailor_title": "AnswerSnap፦ ከዋናው ሲቪዎ ለዚህ ሥራ የተዘጋጀ ሲቪ እና የማመልከቻ ደብዳቤ",
+  "li_tailor_opening": "በመክፈት ላይ…",
+  "li_tailor_opened": "በአዲስ ትር ተከፍቷል።",
+  "li_tailor_no_job": "ይህን ሥራ ማንበብ አልተቻለም። መግለጫው እንዲታይ ይክፈቱት፣ ከዚያ እንደገና ይሞክሩ።",
+  "li_tailor_failed": "መጀመር አልተቻለም። ገጹን እንደገና ይጫኑ እና ይሞክሩ።",
+  "linkedin_failed": "የ LinkedIn ረቂቁን መጻፍ አልተቻለም። እንደገና ይሞክሩ።",
+  "li_tailor_loading": "ሥራው ገና በመጫን ላይ ነው። ትንሽ ቆይተው እንደገና ይሞክሩ።"
 }

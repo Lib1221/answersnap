@@ -436,3 +436,118 @@ test('FlowCV fonts are bundled: they load, and the PDF embeds them', async ({
   for (const name of ['Lora', 'Pacifico', 'NotoSansEthiopic'])
     expect(pdf).toMatch(new RegExp(`/BaseFont\\s*/[A-Z]{6}\\+${name}`));
 });
+
+test('the Professional design lays out entries and skill groups like FlowCV', async ({
+  context,
+  extensionId,
+  panel,
+}) => {
+  await seed(panel);
+  const resume = {
+    id: 'r-professional',
+    name: 'Professional',
+    personal: {
+      fullName: 'Jamie Park',
+      details: [
+        {
+          kind: 'website',
+          label: 'Website',
+          value: 'https://www.jamie.dev/',
+          display: 'www.jamie.dev',
+        },
+      ],
+    },
+    // The Professional template's entry and list settings.
+    design: {
+      template: 'professional',
+      datePlacement: 'right-column',
+      dateStyle: 'plain',
+      dateFormat: 'MM/YYYY',
+      subtitlePlacement: 'same-line',
+      locationWithDate: true,
+      linkStyle: 'icon',
+      linkIcon: 'arrow',
+      skillsLayout: 'grid',
+      contactIcons: 'solid',
+      bullet: 'dot',
+      descSpacing: 0,
+    },
+    sections: [
+      {
+        id: 's-exp',
+        type: 'experience',
+        entries: [
+          {
+            id: 'e-job',
+            title: 'Backend Engineer',
+            subtitle: 'Ledgerly',
+            link: 'https://ledgerly.example/',
+            start: '2022-03',
+            present: true,
+            city: 'Lisbon',
+            country: 'Portugal',
+            description:
+              '- Built the payments API that reconciles two million card payments a day for finance\n- Cut p95 latency from 900 ms to 240 ms',
+          },
+        ],
+      },
+      {
+        id: 's-proj',
+        type: 'projects',
+        entries: [
+          {
+            id: 'e-proj',
+            title: 'Shift Planner',
+            description: '- Vue 3 and Django app that schedules volunteer shifts for a food bank',
+          },
+        ],
+      },
+      {
+        id: 's-skills',
+        type: 'skills',
+        entries: [
+          { id: 'g1', title: 'Languages', description: '- Python\n- TypeScript' },
+          { id: 'g2', title: 'Tools', description: '- Docker\n- Git / GitHub\n- Linux' },
+          { id: 'g3', title: 'Data', description: '- pandas' },
+        ],
+      },
+    ],
+  };
+  await panel.evaluate((r) => chrome.storage.local.set({ resumes: [r] }), resume);
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(`chrome-extension://${extensionId}/resume.html?id=r-professional`);
+  const doc = page.locator('.preview-pages > [data-testid="resume-page"]').first();
+  const job = doc.locator('article.rd-side-column');
+  await expect(job).toHaveCount(1);
+  await expect(job.locator('.rd-side-1')).toHaveText('03/2022 – Present');
+  await expect(job.locator('.rd-side-2')).toHaveText('Lisbon, Portugal');
+
+  // The text wraps before the dates column, and the next bullet (drawn apart so a page can
+  // break before it) wraps at the same place.
+  const side = (await job.locator('.rd-side-1').boundingBox())!;
+  const first = (await job.locator('li').first().boundingBox())!;
+  const next = (await doc.locator('.rd-side-column li', { hasText: 'Cut p95' }).boundingBox())!;
+  expect(first.x + first.width).toBeLessThan(side.x);
+  expect(Math.abs(next.x + next.width - (first.x + first.width))).toBeLessThan(1);
+  // A project without dates runs the full width.
+  const project = (await doc.locator('li', { hasText: 'Vue 3 and Django' }).boundingBox())!;
+  expect(project.x + project.width).toBeGreaterThan(side.x + side.width - 2);
+
+  // The link icon stays on the title's line.
+  await expect(job.locator('a.rd-entry-link')).toHaveAttribute('href', 'https://ledgerly.example/');
+  await expect(job.locator('a.rd-entry-link .rd-nowrap')).toHaveText('Ledgerly');
+  const title = (await job.locator('.rd-entry-title').boundingBox())!;
+  expect(title.height).toBeLessThan(side.height * 1.5);
+
+  // Skill groups flow down two columns.
+  const groups = doc.locator('.rd-list-groups .rd-group');
+  await expect(groups).toHaveCount(3);
+  const lefts = await groups.evaluateAll((els) =>
+    els.map((e) => Math.round(e.getBoundingClientRect().left)),
+  );
+  expect(new Set(lefts).size).toBe(2);
+
+  // The website as the resume prints it.
+  await expect(doc.locator('.rd-contacts')).toContainText('www.jamie.dev');
+});

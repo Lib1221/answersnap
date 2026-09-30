@@ -1049,9 +1049,6 @@
       }
     }
   },
-  "linkedin_failed": {
-    "message": "Impossible de rédiger le brouillon LinkedIn. Réessayez."
-  },
   "linkedin_headlines": {
     "message": "Titres"
   },
@@ -2031,5 +2028,44 @@
   },
   "profile_resume_builder": {
     "message": "Créer mon CV (PDF)"
+  },
+  "tailor_full_title": {
+    "message": "CV et lettre de motivation pour cette offre"
+  },
+  "tailor_full_intro": {
+    "message": "Une copie de votre CV principal faite pour cette offre, tenant sur deux pages, avec une lettre de motivation assortie. S'ouvre dans l'éditeur de CV, prête à télécharger."
+  },
+  "tailor_full_button": {
+    "message": "Les créer"
+  },
+  "tailor_full_error": {
+    "message": "Impossible d'ouvrir l'éditeur de CV. Réessayez."
+  },
+  "tailor_full_short": {
+    "message": "L'offre enregistrée est trop courte. Lisez d'abord toute la page."
+  },
+  "li_tailor_button": {
+    "message": "Adapter le CV"
+  },
+  "li_tailor_title": {
+    "message": "AnswerSnap : un CV et une lettre de motivation faits pour cette offre, à partir de votre CV principal"
+  },
+  "li_tailor_opening": {
+    "message": "Ouverture…"
+  },
+  "li_tailor_opened": {
+    "message": "Ouvert dans un nouvel onglet."
+  },
+  "li_tailor_no_job": {
+    "message": "Impossible de lire cette offre. Ouvrez-la pour afficher sa description, puis réessayez."
+  },
+  "li_tailor_failed": {
+    "message": "Impossible de démarrer. Rechargez la page et réessayez."
+  },
+  "linkedin_failed": {
+    "message": "Impossible de rédiger le brouillon LinkedIn. Réessayez."
+  },
+  "li_tailor_loading": {
+    "message": "L'offre est encore en cours de chargement. Réessayez dans un instant."
   }
 }

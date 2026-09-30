@@ -22,32 +22,126 @@ import { getProfile } from '@/storage/items';
 import Icon from '@/ui/AppIcon.vue';
 import LogoMark from '@/ui/LogoMark.vue';
 import ContentEditor from './ContentEditor.vue';
+import CoverLetterPages from './CoverLetterPages.vue';
+import ImportResume from './ImportResume.vue';
+import JobMatchPanel from './JobMatchPanel.vue';
+import TailorProgress from './TailorProgress.vue';
+import { messageOf, useTailor } from './useTailor';
 import CustomizePanel from './CustomizePanel.vue';
 import ResumePages from './ResumePages.vue';
 import SectionColumns from './SectionColumns.vue';
 import TemplateGallery from './TemplateGallery.vue';
 import ThumbFit from './ThumbFit.vue';
 
-type Tab = 'content' | 'customize' | 'templates';
+type Tab = 'match' | 'content' | 'customize' | 'templates';
 const tab = ref<Tab>('content');
+const TAB_LABELS: Record<Tab, string> = {
+  match: 'Job match',
+  content: 'Content',
+  customize: 'Customize',
+  templates: 'Templates',
+};
+/** A tailored copy opens on its job match. */
+const tabs = computed<Tab[]>(() =>
+  current.value?.tailoring
+    ? ['match', 'content', 'customize', 'templates']
+    : ['content', 'customize', 'templates'],
+);
+/** The document in the preview (and the one Download PDF saves). */
+const showing = ref<'resume' | 'letter'>('resume');
 const resumes = ref<Resume[]>([]);
 const current = ref<Resume | null>(null);
-const saveState = ref<'saved' | 'saving' | ''>('');
+const saveState = ref<'saved' | 'saving' | 'error' | ''>('');
+/** Why the last save failed (storage full, most likely), shown until a save succeeds. */
+const saveError = ref('');
 const pageCount = ref(1);
 const renaming = ref(false);
 const confirmDelete = ref(false);
 const loading = ref(true);
 /** A piece of text taller than a page, which the page cuts off. */
 const tooTall = ref(false);
+/** Bullets from an imported file that no section took, shown until dismissed. */
+const unplaced = ref<string[]>([]);
+const unplacedNote = computed(() =>
+  unplaced.value.length === 1
+    ? "One bullet from your file didn't find a place in the resume. Add it where it belongs:"
+    : `${unplaced.value.length} bullets from your file didn't find a place in the resume. Add them where they belong:`,
+);
 
 async function load() {
   resumes.value = await getResumes();
   for (const r of resumes.value) savedAt.set(r.id, r.updatedAt);
-  const wanted = new URLSearchParams(location.search).get('id');
-  await setQuietly(resumes.value.find((r) => r.id === wanted) ?? resumes.value[0] ?? null);
+  const params = new URLSearchParams(location.search);
+  const wanted = params.get('id');
+  const master = resumes.value.find((r) => r.master);
+  await setQuietly(
+    resumes.value.find((r) => r.id === wanted) ?? master ?? resumes.value[0] ?? null,
+  );
   loading.value = false;
+  // Opened by LinkedIn's Tailor button or the side panel: tailor for that job.
+  const request = params.get('tailor');
+  if (request) await tailor.start(request);
 }
 onMounted(load);
+
+// ---- Pages measured: the fit-to-two-pages loop waits for its own change to be measured.
+const pageWaiters = new Map<string, ((n: number) => void)[]>();
+let lastMeasured: { at: string; count: number } | null = null;
+function onPages(count: number, at: string) {
+  pageCount.value = count;
+  lastMeasured = { at, count };
+  const waiting = pageWaiters.get(at);
+  pageWaiters.delete(at);
+  waiting?.forEach((resolve) => resolve(count));
+}
+function measured(at: string): Promise<number> {
+  if (lastMeasured?.at === at) return Promise.resolve(lastMeasured.count);
+  return new Promise((resolve) => {
+    pageWaiters.set(at, [...(pageWaiters.get(at) ?? []), resolve]);
+    // Never hang the flow if a measurement doesn't come (the preview was switched away).
+    setTimeout(() => resolve(pageCount.value), 8000);
+  });
+}
+
+const tailor = useTailor({
+  resumes,
+  current,
+  add: async (r) => {
+    await add(r);
+    tab.value = 'match';
+  },
+  measured,
+  flush: () => flush(),
+});
+const tailorBusy = computed(() =>
+  ['loading', 'need-master', 'tailoring', 'fitting', 'error'].includes(tailor.phase.value),
+);
+
+async function useAsMaster() {
+  if (!current.value) return;
+  const updated = await tailor.makeMaster(current.value);
+  savedAt.set(updated.id, updated.updatedAt);
+  await setQuietly(updated);
+}
+async function chooseMaster(r: Resume) {
+  await tailor.tailorFrom(r);
+}
+/** An imported resume: the master when there's none yet, and the start of a waiting tailoring. */
+async function onImported(r: Resume, missed: string[] = []) {
+  const first = !resumes.value.some((x) => x.master);
+  await add({ ...r, master: first });
+  unplaced.value = missed;
+  if (tailor.phase.value === 'need-master' && current.value) await tailor.tailorFrom(current.value);
+}
+watch(
+  () => current.value?.id,
+  () => {
+    showing.value = 'resume';
+    // A tailored copy opens on its job match; other resumes can't show that tab.
+    if (current.value?.tailoring) tab.value = 'match';
+    else if (tab.value === 'match') tab.value = 'content';
+  },
+);
 
 /** Replace the open resume without treating it as an edit to save. */
 let quiet = false;
@@ -71,13 +165,25 @@ async function flush() {
   pending.clear();
   for (const r of edits) {
     const at = new Date().toISOString();
+    const before = savedAt.get(r.id);
     savedAt.set(r.id, at);
-    // Never re-create a resume deleted elsewhere (another tab, Delete all data, an import).
-    const saved = await saveResume(r, { create: false, updatedAt: at });
-    const i = resumes.value.findIndex((x) => x.id === r.id);
-    if (saved && i !== -1) resumes.value[i] = { ...r, updatedAt: at };
+    try {
+      // Never re-create a resume deleted elsewhere (another tab, Delete all data, an import).
+      const saved = await saveResume(r, { create: false, updatedAt: at });
+      const i = resumes.value.findIndex((x) => x.id === r.id);
+      if (saved && i !== -1) resumes.value[i] = { ...r, updatedAt: at };
+    } catch (err) {
+      // Keep the edit to try again with the next change, and say why it wasn't saved.
+      if (before) savedAt.set(r.id, before);
+      if (!pending.has(r.id)) pending.set(r.id, r);
+      saveState.value = 'error';
+      saveError.value = messageOf(err);
+    }
   }
-  if (!pending.size && saveState.value === 'saving') saveState.value = 'saved';
+  if (!pending.size && saveState.value !== '') {
+    saveState.value = 'saved';
+    saveError.value = '';
+  }
 }
 
 watch(
@@ -255,7 +361,8 @@ let titleBefore = '';
 function beforePrint() {
   if (!current.value) return;
   titleBefore = document.title;
-  document.title = pdfTitle(current.value.personal.fullName, current.value.name);
+  const base = pdfTitle(current.value.personal.fullName, current.value.name);
+  document.title = showing.value === 'letter' ? base.replace(/_Resume$/, '_Cover_Letter') : base;
   void flush();
 }
 function afterPrint() {
@@ -273,6 +380,17 @@ onBeforeUnmount(() => {
 
 function downloadPdf() {
   if (current.value) window.print();
+}
+
+/** Download one document: show it, let it render (the resume's pages are measured first), then print. */
+async function downloadDoc(doc: 'resume' | 'letter') {
+  const switching = doc === 'resume' && showing.value !== 'resume';
+  if (switching) lastMeasured = null;
+  showing.value = doc;
+  if (switching && current.value) await measured(current.value.updatedAt);
+  await nextTick();
+  await document.fonts.ready;
+  downloadPdf();
 }
 
 /** The current resume in another design, for the gallery's live thumbnails. */
@@ -351,6 +469,31 @@ async function deleteMine(id: string) {
         >
           Duplicate
         </button>
+        <span
+          v-if="current.master"
+          class="rounded-full bg-ink-soft px-2 py-0.5 text-[12px] font-medium text-ink"
+          title="Every tailored copy starts from this resume"
+          data-testid="master-badge"
+        >
+          Master
+        </span>
+        <span
+          v-else-if="current.tailoring"
+          class="rounded-full bg-surface px-2 py-0.5 text-[12px] font-medium text-graphite-2"
+          data-testid="tailored-badge"
+        >
+          Tailored
+        </span>
+        <button
+          v-else
+          class="btn btn-quiet min-h-0 px-2 text-[13px]"
+          type="button"
+          title="Tailored copies for jobs will start from this resume"
+          data-testid="make-master"
+          @click="useAsMaster"
+        >
+          Use as master
+        </button>
         <template v-if="!confirmDelete">
           <button
             class="btn btn-quiet min-h-0 px-2 text-[13px]"
@@ -382,8 +525,21 @@ async function deleteMine(id: string) {
         </template>
       </template>
       <div class="ml-auto flex items-center gap-2">
-        <span class="text-[12.5px] text-graphite-2" role="status" data-testid="save-state">
-          {{ saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? 'Saved' : '' }}
+        <span
+          class="max-w-[360px] text-[12.5px]"
+          :class="saveState === 'error' ? 'text-carbon-pink-text' : 'text-graphite-2'"
+          role="status"
+          data-testid="save-state"
+        >
+          {{
+            saveState === 'saving'
+              ? 'Saving…'
+              : saveState === 'saved'
+                ? 'Saved'
+                : saveState === 'error'
+                  ? saveError
+                  : ''
+          }}
         </span>
         <button
           class="btn min-h-0 px-2.5 text-[13px]"
@@ -401,6 +557,7 @@ async function deleteMine(id: string) {
         >
           Blank
         </button>
+        <ImportResume variant="quiet" @imported="onImported" />
         <button
           v-if="current"
           class="btn btn-primary"
@@ -415,6 +572,19 @@ async function deleteMine(id: string) {
     </header>
 
     <div v-if="loading" class="app-chrome p-8 text-graphite-2">Loading…</div>
+
+    <TailorProgress
+      v-else-if="!current && tailorBusy"
+      :phase="tailor.phase.value"
+      :job="tailor.job.value"
+      :error="tailor.error.value"
+      :resumes="resumes"
+      @choose="chooseMaster"
+      @retry="tailor.retry"
+      @close="tailor.close"
+    >
+      <template #import><ImportResume @imported="onImported" /></template>
+    </TailorProgress>
 
     <div v-else-if="!current" class="app-chrome flex flex-1 items-center justify-center p-8">
       <div
@@ -440,27 +610,49 @@ async function deleteMine(id: string) {
             Blank resume
           </button>
         </div>
+        <div class="mt-2 flex flex-col items-center gap-1.5 border-t border-rule pt-4">
+          <p class="text-[13px] text-graphite-2">
+            Have a resume already? Import it word for word, in a matching design.
+          </p>
+          <ImportResume @imported="onImported" />
+        </div>
       </div>
     </div>
 
-    <div v-else class="flex min-h-0 flex-1">
+    <div v-else class="relative flex min-h-0 flex-1">
       <aside class="app-chrome flex w-[470px] shrink-0 flex-col border-r border-rule bg-paper">
-        <nav class="grid grid-cols-3 gap-1 border-b border-rule p-2" aria-label="Editor">
+        <nav
+          class="grid gap-1 border-b border-rule p-2"
+          :style="{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }"
+          aria-label="Editor"
+        >
           <button
-            v-for="t in ['content', 'customize', 'templates'] as const"
+            v-for="t in tabs"
             :key="t"
             type="button"
-            class="rounded-[8px] py-1.5 text-[13px] font-medium capitalize transition-colors"
+            class="rounded-[8px] py-1.5 text-[13px] font-medium transition-colors"
             :class="tab === t ? 'bg-ink-soft text-ink' : 'text-graphite-2 hover:text-graphite'"
             :aria-pressed="tab === t"
             :data-testid="`tab-${t}`"
             @click="tab = t"
           >
-            {{ t }}
+            {{ TAB_LABELS[t] }}
           </button>
         </nav>
         <div class="min-h-0 flex-1 overflow-y-auto p-4">
-          <ContentEditor v-if="tab === 'content'" v-model="current" />
+          <JobMatchPanel
+            v-if="tab === 'match' && current.tailoring"
+            :key="current.id"
+            :resume="current"
+            :letter-state="tailor.letter.value"
+            :letter-error="tailor.letterError.value"
+            :showing="showing"
+            @update="(r) => (current = r)"
+            @write-letter="tailor.writeLetter"
+            @show="(doc) => (showing = doc)"
+            @download="downloadDoc"
+          />
+          <ContentEditor v-else-if="tab === 'content'" v-model="current" />
           <template v-else-if="tab === 'customize'">
             <SectionColumns
               v-if="current.design.columns === 'two'"
@@ -506,19 +698,55 @@ async function deleteMine(id: string) {
             Some text is taller than a whole page, so the page cuts it off. Break it into shorter
             paragraphs or bullets.
           </p>
+          <div v-if="unplaced.length" class="notice mt-2 text-[13px]" data-testid="import-unplaced">
+            <p>{{ unplacedNote }}</p>
+            <ul class="mt-1 list-disc pl-5">
+              <li v-for="(line, i) in unplaced.slice(0, 5)" :key="i">{{ line }}</li>
+            </ul>
+            <button
+              type="button"
+              class="btn btn-quiet mt-1 min-h-0 px-2 text-[13px]"
+              data-testid="import-unplaced-dismiss"
+              @click="unplaced = []"
+            >
+              Got it
+            </button>
+          </div>
         </div>
         <div
           class="preview-scale mx-auto my-4"
           :style="{ width: `${pageWidthPx * scale}px`, '--k': String(scale) }"
         >
-          <ResumePages
+          <CoverLetterPages
+            v-if="showing === 'letter' && current.coverLetter"
             :resume="current"
             class="preview-pages"
-            @pages="(n) => (pageCount = n)"
+          />
+          <ResumePages
+            v-else
+            :resume="current"
+            class="preview-pages"
+            @pages="onPages"
             @overflow="(v) => (tooTall = v)"
           />
         </div>
       </main>
+      <div
+        v-if="tailorBusy"
+        class="absolute inset-y-0 right-0 left-[470px] z-10 overflow-auto bg-surface/90"
+      >
+        <TailorProgress
+          :phase="tailor.phase.value"
+          :job="tailor.job.value"
+          :error="tailor.error.value"
+          :resumes="resumes"
+          @choose="chooseMaster"
+          @retry="tailor.retry"
+          @close="tailor.close"
+        >
+          <template #import><ImportResume @imported="onImported" /></template>
+        </TailorProgress>
+      </div>
     </div>
   </div>
 </template>

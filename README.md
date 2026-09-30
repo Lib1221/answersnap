@@ -26,10 +26,18 @@ Made by Liben.
   machine-readable lines to fill your details, validate your codice fiscale, check a call's
   deadlines, age limits, and language minimums against your details, and keep a document
   checklist. Personal details are never sent to the AI.
-- **Resume builder:** build your CV in a FlowCV-style editor, starting from your profile. Add,
-  hide, rename, and reorder sections, write with bold, italics, and bullets, and style everything
-  (layout, columns, colors, headings, dates, skill levels, and FlowCV's fonts, bundled so the PDF
-  looks the same on every computer) or pick one of 8 templates, or save your own.
+- **One-click tailoring (LinkedIn):** on a LinkedIn job page, click **Tailor resume**. AnswerSnap
+  reads the job, then makes a copy of your master resume aimed at it: the job's keywords in your
+  own bullets, a matching summary and title line, the most relevant projects, all within two
+  pages. The **Job match** tab shows the keyword score before and after, what could reject the
+  application whatever the resume says (location, work authorization, years), and everything
+  added that isn't in your resume, for you to keep or remove. A cover letter comes with it. Your
+  master resume never changes, and nothing is sent until you click.
+- **Resume builder:** build your CV in a FlowCV-style editor, starting from your profile or by
+  importing your resume (PDF, DOCX, or TXT, word for word). Add, hide, rename, and reorder
+  sections, write with bold, italics, and bullets, and style everything (layout, columns, colors,
+  headings, dates, skill levels, and FlowCV's fonts, bundled so the PDF looks the same on every
+  computer) or pick one of 9 templates, or save your own.
   Write it in English, Italian, French, Spanish, or German, with the GDPR consent line Italian
   applications ask for. Download PDF saves real, selectable text that matches the preview page
   for page. Open it from Settings or the Profile tab.

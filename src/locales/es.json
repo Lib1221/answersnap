@@ -275,7 +275,6 @@
   "linkedin_copied": "Copiado",
   "linkedin_copy": "Copiar",
   "linkedin_copy_headline": "Copiar titular $1",
-  "linkedin_failed": "No se pudo escribir el borrador de LinkedIn. Inténtalo de nuevo.",
   "linkedin_headlines": "Titulares",
   "linkedin_intro": "Opciones de titular y una sección Acerca de.",
   "linkedin_role_label": "Orientarlo a un puesto (opcional)",
@@ -526,5 +525,18 @@
   "sch_part_day": "día",
   "sch_part_month": "mes",
   "sch_part_year": "año",
-  "profile_resume_builder": "Crear mi currículum (PDF)"
+  "profile_resume_builder": "Crear mi currículum (PDF)",
+  "tailor_full_title": "Currículum y carta de presentación para este empleo",
+  "tailor_full_intro": "Una copia de tu currículum principal hecha para este empleo, ajustada a dos páginas, con una carta de presentación a juego. Se abre en el editor de currículum, lista para descargar.",
+  "tailor_full_button": "Crearlos",
+  "tailor_full_error": "No se pudo abrir el editor de currículum. Inténtalo de nuevo.",
+  "tailor_full_short": "La oferta guardada es demasiado corta. Lee primero la página completa.",
+  "li_tailor_button": "Adaptar currículum",
+  "li_tailor_title": "AnswerSnap: un currículum y una carta de presentación hechos para este empleo, a partir de tu currículum principal",
+  "li_tailor_opening": "Abriendo…",
+  "li_tailor_opened": "Abierto en una pestaña nueva.",
+  "li_tailor_no_job": "No se pudo leer este empleo. Ábrelo para que se vea su descripción e inténtalo de nuevo.",
+  "li_tailor_failed": "No se pudo empezar. Recarga la página e inténtalo de nuevo.",
+  "linkedin_failed": "No se pudo escribir el borrador de LinkedIn. Inténtalo de nuevo.",
+  "li_tailor_loading": "El empleo aún se está cargando. Inténtalo de nuevo en un momento."
 }

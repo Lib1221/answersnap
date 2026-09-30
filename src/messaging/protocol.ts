@@ -12,6 +12,17 @@ export interface UploadInfo {
 
 export type StartSnipError = 'NEEDS_GESTURE' | 'RESTRICTED_PAGE' | 'INJECT_FAILED';
 
+/** A job post as a page reads it; the service worker validates it (parseJobPost). */
+export interface JobPostInput {
+  url?: string;
+  hostname: string;
+  title?: string;
+  company?: string;
+  location?: string;
+  workplace?: string;
+  text: string;
+}
+
 export interface MessageMap {
   START_SNIP: {
     msg: { type: 'START_SNIP'; tabId: number; mode: SnipMode };
@@ -80,6 +91,19 @@ export interface MessageMap {
   READ_PAGE_TEXT: {
     msg: { type: 'READ_PAGE_TEXT'; scope: 'selection' | 'page' | 'job' };
     reply: { title: string; text: string; url: string };
+  };
+  /**
+   * One-click tailoring: a job post from LinkedIn's Tailor button (a content script) or from the
+   * side panel's saved job. The service worker tracks the application and opens the resume builder.
+   */
+  TAILOR_JOB: {
+    msg: { type: 'TAILOR_JOB'; job: JobPostInput };
+    reply: { ok: true } | { ok: false; error: 'NO_JOB' | 'NOT_ALLOWED' };
+  };
+  /** The LinkedIn content script asks whether to show its button (Settings can turn it off). */
+  LINKEDIN_BUTTON: {
+    msg: { type: 'LINKEDIN_BUTTON' };
+    reply: { show: boolean };
   };
   /** Test-only, compiled out of production (spec 16.2). */
   E2E_START_SNIP: {

@@ -11,6 +11,8 @@
 import { readFileSync } from 'node:fs';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { join } from 'node:path';
+import { IMPORT_PROMPT, importJson } from './resumeImport';
+import { TAILOR_PROMPT, tailorJson } from './tailor';
 
 const PROFILE = readFileSync(join(import.meta.dirname, '../fixtures/profile.json'), 'utf8');
 const TRANSCRIPT = 'Jamie Park\nBackend Engineer, Lisbon\nPayments APIs with Django at Ledgerly';
@@ -225,6 +227,8 @@ function completeText(raw: string): string {
   if (/You compare a candidate with a job post/.test(raw)) return JSON.stringify(FIT);
   if (/You prepare a candidate for a job interview/.test(raw)) return JSON.stringify(INTERVIEW);
   if (/You help a candidate build a bank of STAR stories/.test(raw)) return JSON.stringify(STORIES);
+  if (TAILOR_PROMPT.test(raw)) return tailorJson(raw);
+  if (IMPORT_PROMPT.test(raw)) return importJson(raw);
   if (/You tailor a candidate's resume to a job post/.test(raw)) return JSON.stringify(RESUME);
   if (/You read a scholarship call or a university admission page/.test(raw))
     return JSON.stringify(REQUIREMENTS);

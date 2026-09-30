@@ -34,6 +34,16 @@ describe('application tracker', () => {
     expect(await getApplications()).toHaveLength(2);
   });
 
+  it('keeps the same role at two companies on one site apart', async () => {
+    const li = { hostname: 'www.linkedin.com', role: 'Software Engineer' };
+    const acme = await trackJob({ ...li, company: 'Acme' });
+    const globex = await trackJob({ ...li, company: 'Globex' });
+    expect(globex.id).not.toBe(acme.id);
+    expect(await getApplications()).toHaveLength(2);
+    // The same company again is the same application.
+    expect((await trackJob({ ...li, company: 'acme ' })).id).toBe(acme.id);
+  });
+
   it('records status history, counts, and exports CSV', async () => {
     const a = await trackJob(job, new Date('2026-09-01T10:00:00Z'));
     await updateApplication(a.id, { status: 'applied' }, new Date('2026-09-03T10:00:00Z'));

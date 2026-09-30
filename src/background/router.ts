@@ -1,6 +1,7 @@
 import { createRouter } from '@/messaging/send';
 import { sendToTab } from '@/messaging/send';
 import { classifyInjectError, ensureCaptureScript, isRestrictedUrl } from './inject';
+import { handleLinkedInButton, handleTailorJob } from './tailor';
 import {
   handleRegionSelected,
   handleSelectionCancelled,
@@ -33,6 +34,9 @@ export function registerRouter(): void {
       }
     },
     REGION_SELECTED: (msg, sender) => handleRegionSelected(msg, sender),
+    // One-click tailoring from LinkedIn's button or the side panel.
+    TAILOR_JOB: (msg, sender) => handleTailorJob(msg, sender),
+    LINKEDIN_BUTTON: (_msg, sender) => handleLinkedInButton(sender),
     SELECTION_CANCELLED: async (msg) => {
       await handleSelectionCancelled(msg);
     },

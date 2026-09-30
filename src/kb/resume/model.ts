@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { DOC_STRINGS, type DocLang } from './docLang';
 import { FONT_KEYS, NAME_ONLY_FONT_KEYS } from './fontKeys';
+import { CoverLetterSchema, TailoringSchema } from './tailoring';
 
 // Resume documents for the builder: content (personal details and sections of entries) plus a
 // design (layout, spacing, colors, fonts, headings, entry layout). A template is a preset design.
@@ -151,6 +152,8 @@ export const PersonalSchema = z.object({
         kind: z.enum(DETAIL_KINDS).catch('other'),
         label: s,
         value: s,
+        /** Text shown on the resume instead of a link's address ("Linkedin"); empty shows it. */
+        display: s,
       }),
     )
     .default([]),
@@ -230,26 +233,45 @@ export const DesignSchema = z.object({
       'short-bar',
       'top-bottom',
       'text-underline',
+      // A heavier rule close under the text, as FlowCV draws it.
+      'thick-underline',
     ])
     .default('underline'),
   headingCase: z.enum(['upper', 'capitalize', 'none']).default('upper'),
   headingSize: z.number().min(0.9).max(1.6).default(1.1),
+  /** Letter spacing of uppercase headings, in em (other cases have none). */
+  headingSpacing: z.number().min(0).max(0.2).default(0.06),
   headingIcons: b,
   // Header
   headerAlign: z.enum(['left', 'center', 'right']).default('left'),
   contactStyle: z.enum(['icons', 'bullets', 'bars', 'lines']).default('icons'),
+  /** Contact icons as thin outlines, or filled shapes. */
+  contactIcons: z.enum(['outline', 'solid']).default('outline'),
+  /** Relaxed spreads the header out: more room around the job title and between details. */
+  headerSpacing: z.enum(['compact', 'relaxed']).default('compact'),
+  /** The job title under the name, relative to the text size. */
+  jobTitleSize: z.number().min(0.9).max(1.8).default(1.15),
   photo: z.enum(['none', 'circle', 'rounded', 'square', 'portrait']).default('circle'),
   photoGrayscale: b,
   photoSize: z.number().min(40).max(140).default(80),
   // Entries
-  datePlacement: z.enum(['right', 'below', 'left']).default('right'),
+  /**
+   * 'right' puts the dates on the title line and the text runs full width under them;
+   * 'right-column' keeps the dates and place in a column of their own, as FlowCV does.
+   */
+  datePlacement: z.enum(['right', 'right-column', 'below', 'left']).default('right'),
   subtitleStyle: z.enum(['normal', 'bold', 'italic']).default('italic'),
   subtitlePlacement: z.enum(['same-line', 'next-line']).default('next-line'),
   /** Bold line first: the job title or degree (default), or the employer or school. */
   entryOrder: z.enum(['title-first', 'subtitle-first']).default('title-first'),
   locationWithDate: z.boolean().default(true),
   indentDescription: b,
-  bullet: z.enum(['disc', 'hyphen', 'square', 'arrow']).default('disc'),
+  /** 'dot' is a small disc set close to the text. */
+  bullet: z.enum(['disc', 'hyphen', 'square', 'arrow', 'dot']).default('disc'),
+  /** Space between bullets in pt; paragraphs and the gap under an entry's title get twice this. */
+  descSpacing: z.number().min(0).max(4).default(1),
+  /** Dates and places small and gray ('muted'), or like the text ('plain'). */
+  dateStyle: z.enum(['muted', 'plain']).default('muted'),
   // Skills and languages
   levelStyle: z.enum(['text', 'dots', 'bar', 'none']).default('dots'),
   skillsLayout: z.enum(['list', 'grid', 'bubbles', 'inline']).default('grid'),
@@ -260,6 +282,8 @@ export const DesignSchema = z.object({
   /** Empty means the resume language's word (Present, Oggi, ...). */
   presentLabel: z.string().default(''),
   linkStyle: z.enum(['underline', 'plain', 'icon']).default('plain'),
+  /** The icon after a link when linkStyle is 'icon': a chain link, or an arrow out of a box. */
+  linkIcon: z.enum(['chain', 'arrow']).default('chain'),
   footer: z.enum(['none', 'page-numbers', 'name-page', 'email-page']).default('none'),
 });
 export type Design = z.infer<typeof DesignSchema>;
@@ -283,6 +307,12 @@ export const ResumeSchema = z.object({
   }),
   sections: z.array(SectionSchema).default([]),
   design: DesignSchema.default(DesignSchema.parse({})),
+  /** The master resume: every one-click tailored copy starts from it, and tailoring never edits it. */
+  master: b,
+  /** Set on a copy tailored for one job: the job, its keywords, and what to review. */
+  tailoring: TailoringSchema.nullable().default(null),
+  /** The cover letter written with a tailored copy, in the same design. */
+  coverLetter: CoverLetterSchema.nullable().default(null),
 });
 export type Resume = z.infer<typeof ResumeSchema>;
 
@@ -329,8 +359,13 @@ export const SECTION_SETUP: Record<SectionType, SectionSetup> = {
   },
   skills: {
     name: 'Skills',
-    fields: ['title', 'info', 'level'],
-    labels: { title: 'Skill', info: 'Information (e.g. years, tools)' },
+    // A skill, or a group of skills: "Machine Learning & AI" with its list in the description.
+    fields: ['title', 'info', 'level', 'description'],
+    labels: {
+      title: 'Skill or group',
+      info: 'Information (e.g. years, tools)',
+      description: 'Skills in this group (optional)',
+    },
     column: 'side',
   },
   languages: {

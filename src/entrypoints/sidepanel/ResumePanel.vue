@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { TailoredResume } from '@/llm/resumeTailor';
+import { sendToBackground } from '@/messaging/send';
 import Icon from '@/ui/AppIcon.vue';
 import { t } from '@/ui/i18n';
 import type { useJob } from './useJob';
@@ -23,6 +24,32 @@ async function copy(id: string, text: string) {
     // Clipboard refused; the text stays selectable.
   }
 }
+// A whole tailored resume and cover letter, built in the resume builder (the same flow as
+// LinkedIn's Tailor button).
+const opening = ref(false);
+const openError = ref('');
+async function buildFull() {
+  const j = props.job.job.value;
+  if (!j) return;
+  opening.value = true;
+  openError.value = '';
+  try {
+    const reply = await sendToBackground<'TAILOR_JOB'>({
+      type: 'TAILOR_JOB',
+      job: { hostname: j.hostname, title: j.title ?? '', company: j.company ?? '', text: j.text },
+    });
+    if (!reply?.ok)
+      openError.value =
+        reply?.error === 'NO_JOB'
+          ? t('tailor_full_short', 'The saved job post is too short. Read the whole page first.')
+          : t('tailor_full_error', "Couldn't open the resume builder. Try again.");
+  } catch {
+    openError.value = t('tailor_full_error', "Couldn't open the resume builder. Try again.");
+  } finally {
+    opening.value = false;
+  }
+}
+
 const allBullets = computed(() =>
   (res.value?.bullets ?? []).map((b) => `• ${b.tailored}`).join('\n'),
 );
@@ -48,6 +75,31 @@ const allBullets = computed(() =>
   </section>
 
   <template v-else>
+    <section class="card flex flex-col gap-2.5 p-4" data-testid="tailor-full">
+      <h2 class="text-[15px] leading-tight font-[650]">
+        {{ t('tailor_full_title', 'Resume and cover letter for this job') }}
+      </h2>
+      <p class="text-[12.5px] text-graphite-2">
+        {{
+          t(
+            'tailor_full_intro',
+            'A copy of your master resume made for this job, fitted to two pages, with a matching cover letter. Opens in the resume builder, ready to download.',
+          )
+        }}
+      </p>
+      <p v-if="openError" class="notice text-[13px]" role="alert">{{ openError }}</p>
+      <button
+        class="btn btn-primary self-start"
+        type="button"
+        :disabled="opening"
+        data-testid="tailor-full-run"
+        @click="buildFull"
+      >
+        <Icon name="sparkle" />
+        {{ t('tailor_full_button', 'Build them') }}
+      </button>
+    </section>
+
     <section class="card flex flex-col gap-3 p-4" data-testid="resume">
       <div class="flex items-center gap-2.5">
         <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-ink-soft text-ink">

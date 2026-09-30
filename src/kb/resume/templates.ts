@@ -12,6 +12,72 @@ export interface Template {
 
 export const TEMPLATES: Template[] = [
   {
+    // Measured from a FlowCV resume: A4, 16 mm margins, Source Sans at 11 pt on 19 px lines,
+    // name 19.5 pt bold, title line 15.3 pt, headings 12 pt bold capitals over a heavy black rule,
+    // filled contact icons, dates and places like the text in a column of their own, links marked
+    // with an arrow.
+    id: 'professional',
+    name: 'Professional',
+    description:
+      'Clean one column in black and white, like a FlowCV resume. Reads well in every ATS.',
+    design: {
+      columns: 'one',
+      header: 'top',
+      font: 'source-sans-3',
+      headingFont: 'same',
+      nameFont: 'same',
+      fontSize: 11,
+      // FlowCV sets 19 px lines (14.25 pt), a hair under 1.3.
+      lineHeight: 1.295,
+      marginX: 16,
+      marginY: 16,
+      entrySpacing: 9,
+      sectionSpacing: 16,
+      accent: '#000000',
+      text: '#000000',
+      accentOn: {
+        name: false,
+        jobTitle: false,
+        headings: true,
+        headingLine: true,
+        dates: false,
+        subtitle: false,
+        links: false,
+        icons: false,
+        levels: true,
+      },
+      fill: 'none',
+      nameSize: 19.5,
+      nameBold: true,
+      headingStyle: 'thick-underline',
+      headingCase: 'upper',
+      headingSize: 1.09,
+      headingSpacing: 0.04,
+      headingIcons: false,
+      headerAlign: 'left',
+      contactStyle: 'icons',
+      contactIcons: 'solid',
+      headerSpacing: 'relaxed',
+      jobTitleSize: 1.39,
+      photo: 'none',
+      datePlacement: 'right-column',
+      subtitleStyle: 'italic',
+      subtitlePlacement: 'same-line',
+      entryOrder: 'title-first',
+      locationWithDate: true,
+      indentDescription: false,
+      bullet: 'dot',
+      descSpacing: 0,
+      dateStyle: 'plain',
+      skillsLayout: 'grid',
+      levelStyle: 'none',
+      dateFormat: 'MM/YYYY',
+      linkStyle: 'icon',
+      linkIcon: 'arrow',
+      footer: 'none',
+    },
+  },
+  {
     id: 'classic',
     name: 'Classic',
     description: 'One column, serif, rules under headings. Safe everywhere.',
@@ -257,6 +323,7 @@ export function applyTemplate(
   id: string,
   keep?: Partial<Pick<Design, 'page' | 'docLang'>>,
 ): Design {
-  const t = TEMPLATES.find((x) => x.id === id) ?? TEMPLATES[1]!;
+  const t =
+    TEMPLATES.find((x) => x.id === id) ?? TEMPLATES.find((x) => x.id === 'modern') ?? TEMPLATES[0]!;
   return DesignSchema.parse({ ...t.design, template: t.id, ...(keep ?? {}) });
 }

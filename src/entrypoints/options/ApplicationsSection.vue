@@ -28,8 +28,16 @@ async function setReminders(on: boolean) {
   reminders.value = on;
   await saveSettings({ followUpReminders: on });
 }
+const linkedinButton = ref(true);
+async function setLinkedinButton(on: boolean) {
+  linkedinButton.value = on;
+  await saveSettings({ linkedinButton: on });
+}
 onMounted(() => {
-  void getSettings().then((s) => (reminders.value = s.followUpReminders));
+  void getSettings().then((s) => {
+    reminders.value = s.followUpReminders;
+    linkedinButton.value = s.linkedinButton;
+  });
   void load();
   unwatch = watchApplications(() => void load());
 });
@@ -164,6 +172,23 @@ function exportCsv() {
         <span class="block text-[13px] text-graphite-2">
           A Chrome notification when an application has had no news for 7 days after applying, or 5
           days while interviewing. Checked a few times a day, only in this browser.
+        </span>
+      </span>
+    </label>
+
+    <label class="flex items-start gap-2">
+      <input
+        type="checkbox"
+        class="mt-1"
+        :checked="linkedinButton"
+        data-testid="linkedin-button-toggle"
+        @change="setLinkedinButton(($event.target as HTMLInputElement).checked)"
+      />
+      <span>
+        Show the Tailor resume button on LinkedIn jobs
+        <span class="block text-[13px] text-graphite-2">
+          One click builds a copy of your master resume and a cover letter for the job you're
+          viewing, and tracks the application here. The job post is read only when you click.
         </span>
       </span>
     </label>

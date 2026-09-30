@@ -1049,9 +1049,6 @@
       }
     }
   },
-  "linkedin_failed": {
-    "message": "No se pudo escribir el borrador de LinkedIn. Inténtalo de nuevo."
-  },
   "linkedin_headlines": {
     "message": "Titulares"
   },
@@ -2031,5 +2028,44 @@
   },
   "profile_resume_builder": {
     "message": "Crear mi currículum (PDF)"
+  },
+  "tailor_full_title": {
+    "message": "Currículum y carta de presentación para este empleo"
+  },
+  "tailor_full_intro": {
+    "message": "Una copia de tu currículum principal hecha para este empleo, ajustada a dos páginas, con una carta de presentación a juego. Se abre en el editor de currículum, lista para descargar."
+  },
+  "tailor_full_button": {
+    "message": "Crearlos"
+  },
+  "tailor_full_error": {
+    "message": "No se pudo abrir el editor de currículum. Inténtalo de nuevo."
+  },
+  "tailor_full_short": {
+    "message": "La oferta guardada es demasiado corta. Lee primero la página completa."
+  },
+  "li_tailor_button": {
+    "message": "Adaptar currículum"
+  },
+  "li_tailor_title": {
+    "message": "AnswerSnap: un currículum y una carta de presentación hechos para este empleo, a partir de tu currículum principal"
+  },
+  "li_tailor_opening": {
+    "message": "Abriendo…"
+  },
+  "li_tailor_opened": {
+    "message": "Abierto en una pestaña nueva."
+  },
+  "li_tailor_no_job": {
+    "message": "No se pudo leer este empleo. Ábrelo para que se vea su descripción e inténtalo de nuevo."
+  },
+  "li_tailor_failed": {
+    "message": "No se pudo empezar. Recarga la página e inténtalo de nuevo."
+  },
+  "linkedin_failed": {
+    "message": "No se pudo escribir el borrador de LinkedIn. Inténtalo de nuevo."
+  },
+  "li_tailor_loading": {
+    "message": "El empleo aún se está cargando. Inténtalo de nuevo en un momento."
   }
 }

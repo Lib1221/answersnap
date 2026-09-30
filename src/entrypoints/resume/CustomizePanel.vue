@@ -246,6 +246,7 @@ const HeadingSample: FunctionalComponent<{ kind: string }> = (p) => {
   const tint = `color-mix(in srgb, ${d.accent} 12%, #fff)`;
   const styles: Record<string, Record<string, string>> = {
     underline: { borderBottom: `1.5px solid ${line}` },
+    'thick-underline': { borderBottom: `3px solid ${line}` },
     'top-line': { borderTop: `1.5px solid ${line}` },
     'top-bottom': { borderTop: `1.5px solid ${line}`, borderBottom: `1.5px solid ${line}` },
     box: { background: tint, padding: '0 4px' },
@@ -369,6 +370,7 @@ const HEADING_STYLES: Opt<Design['headingStyle']>[] = [
   { value: 'top-bottom', label: 'Lines around' },
   { value: 'short-bar', label: 'Short bar' },
   { value: 'text-underline', label: 'Text underline' },
+  { value: 'thick-underline', label: 'Thick line', title: "FlowCV's heavy rule under the heading" },
 ];
 
 const CASES: Opt<Design['headingCase']>[] = [
@@ -405,7 +407,12 @@ const PHOTO_SHAPE: Record<string, string> = {
 };
 
 const DATE_PLACES: Opt<Design['datePlacement']>[] = [
-  { value: 'right', label: 'Right' },
+  { value: 'right', label: 'Right', title: 'On the title line; the text runs full width' },
+  {
+    value: 'right-column',
+    label: 'Right column',
+    title: 'In a column of their own; the text wraps before it',
+  },
   { value: 'below', label: 'Below title' },
   { value: 'left', label: 'Left column' },
 ];
@@ -435,8 +442,32 @@ const BULLETS: Opt<Design['bullet']>[] = [
   { value: 'hyphen', label: 'Hyphen' },
   { value: 'square', label: 'Square' },
   { value: 'arrow', label: 'Arrow' },
+  { value: 'dot', label: 'Small dot', title: 'A small dot set close to the text' },
 ];
-const BULLET_GLYPH: Record<string, string> = { disc: '•', hyphen: '-', square: '▪', arrow: '›' };
+const BULLET_GLYPH: Record<string, string> = {
+  disc: '•',
+  hyphen: '-',
+  square: '▪',
+  arrow: '›',
+  dot: '·',
+};
+
+const CONTACT_ICONS: Opt<Design['contactIcons']>[] = [
+  { value: 'outline', label: 'Outline' },
+  { value: 'solid', label: 'Filled' },
+];
+const HEADER_SPACINGS: Opt<Design['headerSpacing']>[] = [
+  { value: 'compact', label: 'Compact' },
+  { value: 'relaxed', label: 'Relaxed', title: 'More room under the name and between details' },
+];
+const DATE_STYLES: Opt<Design['dateStyle']>[] = [
+  { value: 'muted', label: 'Small and gray' },
+  { value: 'plain', label: 'Like the text' },
+];
+const LINK_ICONS: Opt<Design['linkIcon']>[] = [
+  { value: 'arrow', label: 'Arrow out of a box' },
+  { value: 'chain', label: 'Chain link' },
+];
 
 const SKILL_LAYOUTS: Opt<Design['skillsLayout']>[] = [
   { value: 'list', label: 'List' },
@@ -746,6 +777,15 @@ const inputValue = (e: Event) => (e.target as HTMLInputElement).value;
         :step="0.05"
         :fmt="relative"
       />
+      <Range
+        field="headingSpacing"
+        label="Letter spacing of uppercase headings"
+        :min="0"
+        :max="0.2"
+        :step="0.01"
+        :fmt="(v: number) => `${v.toFixed(2)} em`"
+        :disabled="design.headingCase !== 'upper'"
+      />
       <Check field="headingIcons" label="Icons next to headings" />
     </Card>
 
@@ -768,7 +808,22 @@ const inputValue = (e: Event) => (e.target as HTMLInputElement).value;
           {{ option.label }}
         </template>
       </Seg>
+      <Range
+        field="jobTitleSize"
+        label="Title line size (relative to text)"
+        :min="0.9"
+        :max="1.8"
+        :step="0.05"
+        :fmt="relative"
+      />
+      <Seg field="headerSpacing" label="Spacing" :options="HEADER_SPACINGS" />
       <Seg field="contactStyle" label="Contact details" :options="CONTACTS" />
+      <Seg
+        field="contactIcons"
+        label="Contact icons"
+        :options="CONTACT_ICONS"
+        :disabled="design.contactStyle !== 'icons'"
+      />
       <Seg field="photo" label="Photo" :options="PHOTOS">
         <template #default="{ option }">
           <span
@@ -810,11 +865,17 @@ const inputValue = (e: Event) => (e.target as HTMLInputElement).value;
             class="flex w-10 gap-[3px]"
             :class="{
               'flex-col': option.value === 'below',
-              'items-center': option.value !== 'below',
+              'items-center': option.value !== 'below' && option.value !== 'right-column',
+              'items-start': option.value === 'right-column',
               'flex-row-reverse': option.value === 'left',
             }"
           >
+            <span v-if="option.value === 'right-column'" class="flex flex-1 flex-col gap-[2px]">
+              <span class="h-[4px] rounded-full bg-current/70" />
+              <span class="h-[3px] rounded-full bg-current/40" />
+            </span>
             <span
+              v-else
               class="h-[4px] rounded-full bg-current/70"
               :class="option.value === 'below' ? 'w-full' : 'flex-1'"
             />
@@ -846,6 +907,15 @@ const inputValue = (e: Event) => (e.target as HTMLInputElement).value;
           {{ option.label }}
         </template>
       </Seg>
+      <Range
+        field="descSpacing"
+        label="Space between bullets"
+        :min="0"
+        :max="4"
+        :step="0.5"
+        :fmt="pt"
+      />
+      <Seg field="dateStyle" label="Dates and places" :options="DATE_STYLES" />
       <div class="flex flex-col gap-2">
         <Check field="locationWithDate" label="Show the city and country next to the dates" />
         <Check field="indentDescription" label="Indent descriptions under the title" />
@@ -927,6 +997,12 @@ const inputValue = (e: Event) => (e.target as HTMLInputElement).value;
           </span>
         </template>
       </Seg>
+      <Seg
+        field="linkIcon"
+        label="Link icon"
+        :options="LINK_ICONS"
+        :disabled="design.linkStyle !== 'icon'"
+      />
     </Card>
 
     <Card title="Footer">

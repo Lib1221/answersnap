@@ -44,6 +44,7 @@ You need an Anthropic or Google Gemini API key to use AnswerSnap. Gemini's free 
   - `alarms`: Checks the user's local application tracker a few times a day for applications with no news, to remind them to follow up. Can be turned off.
   - `notifications`: Shows that follow-up reminder. Nothing is sent anywhere; the check reads local storage only.
   - Host `https://api.anthropic.com/*`: Sends the question and the user's profile to the AI provider the user configured.
+  - Content script on `https://www.linkedin.com/*`: Shows a "Tailor resume" button while a job posting is open. When the user clicks it, the script reads that job posting (title, company, location, description) and passes it to the extension, which builds a resume and cover letter for the job with the AI provider the user configured. It reads nothing until clicked, sends nothing anywhere itself, and can be turned off in Settings.
   - Optional `<all_urls>`: Requested at runtime only, per site, to import the user's own website, to reach the user's own Ollama server (usually localhost) if they choose Ollama, or, if the user opts in, to snip from the panel on any site. OpenRouter and Gemini allow browser requests and need no host permission.
 - **Remote code:** No.
 - **Data usage (declare, matching the form's current wording):**

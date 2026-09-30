@@ -275,7 +275,6 @@
   "linkedin_copied": "Copié",
   "linkedin_copy": "Copier",
   "linkedin_copy_headline": "Copier le titre $1",
-  "linkedin_failed": "Impossible de rédiger le brouillon LinkedIn. Réessayez.",
   "linkedin_headlines": "Titres",
   "linkedin_intro": "Des propositions de titre et une section Infos.",
   "linkedin_role_label": "Cibler un poste (facultatif)",
@@ -526,5 +525,18 @@
   "sch_part_day": "jour",
   "sch_part_month": "mois",
   "sch_part_year": "année",
-  "profile_resume_builder": "Créer mon CV (PDF)"
+  "profile_resume_builder": "Créer mon CV (PDF)",
+  "tailor_full_title": "CV et lettre de motivation pour cette offre",
+  "tailor_full_intro": "Une copie de votre CV principal faite pour cette offre, tenant sur deux pages, avec une lettre de motivation assortie. S'ouvre dans l'éditeur de CV, prête à télécharger.",
+  "tailor_full_button": "Les créer",
+  "tailor_full_error": "Impossible d'ouvrir l'éditeur de CV. Réessayez.",
+  "tailor_full_short": "L'offre enregistrée est trop courte. Lisez d'abord toute la page.",
+  "li_tailor_button": "Adapter le CV",
+  "li_tailor_title": "AnswerSnap : un CV et une lettre de motivation faits pour cette offre, à partir de votre CV principal",
+  "li_tailor_opening": "Ouverture…",
+  "li_tailor_opened": "Ouvert dans un nouvel onglet.",
+  "li_tailor_no_job": "Impossible de lire cette offre. Ouvrez-la pour afficher sa description, puis réessayez.",
+  "li_tailor_failed": "Impossible de démarrer. Rechargez la page et réessayez.",
+  "linkedin_failed": "Impossible de rédiger le brouillon LinkedIn. Réessayez.",
+  "li_tailor_loading": "L'offre est encore en cours de chargement. Réessayez dans un instant."
 }

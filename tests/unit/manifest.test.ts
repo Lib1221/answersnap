@@ -84,8 +84,14 @@ describe('production manifest', () => {
     expect(manifest.host_permissions).toEqual(['https://api.anthropic.com/*']);
   });
 
-  it('has no static content scripts or web accessible resources', () => {
-    expect(manifest.content_scripts).toBeUndefined();
+  it('has one static content script, on LinkedIn only (Liben, 2026-09-29), and no web accessible resources', () => {
+    expect(manifest.content_scripts).toEqual([
+      expect.objectContaining({
+        matches: ['https://www.linkedin.com/*'],
+        run_at: 'document_idle',
+        js: [expect.stringMatching(/linkedin/)],
+      }),
+    ]);
     expect(manifest.web_accessible_resources).toBeUndefined();
   });
 });
@@ -98,6 +104,19 @@ describe('performance budgets (spec 17, M7)', () => {
   it('keeps the capture script under 40 KB minified', async () => {
     const { size } = await stat(join(lastBuildDir, 'capture.js'));
     expect(size).toBeLessThan(40 * 1024);
+  });
+
+  it('keeps the LinkedIn button script small: it loads on every LinkedIn page', async () => {
+    const { size } = await stat(join(lastBuildDir, 'content-scripts/linkedin.js'));
+    expect(size).toBeLessThan(20 * 1024);
+  });
+
+  it("never posts to LinkedIn's page: no message would carry the extension's id", async () => {
+    const code = await readFile(join(lastBuildDir, 'content-scripts/linkedin.js'), 'utf8');
+    // WXT's only post to the page is guarded by this option, set in the script's definition.
+    expect(code).toContain('noScriptStartedPostMessage:!0');
+    expect(code.match(/postMessage\(/g)).toHaveLength(1);
+    expect(code).toMatch(/noScriptStartedPostMessage\|\|window\.postMessage\(/);
   });
 
   it('keeps the side panel under 400 KB of JS gzipped, with pdf.js and mammoth out of it', async () => {

@@ -1049,9 +1049,6 @@
       }
     }
   },
-  "linkedin_failed": {
-    "message": "የ LinkedIn ረቂቁን መጻፍ አልተቻለም። እንደገና ይሞክሩ።"
-  },
   "linkedin_headlines": {
     "message": "ርዕሶች"
   },
@@ -2031,5 +2028,44 @@
   },
   "profile_resume_builder": {
     "message": "ሲቪዬን ገንባ (PDF)"
+  },
+  "tailor_full_title": {
+    "message": "ለዚህ ሥራ ሲቪ እና የማመልከቻ ደብዳቤ"
+  },
+  "tailor_full_intro": {
+    "message": "ለዚህ ሥራ የተዘጋጀ የዋናው ሲቪዎ ቅጂ፣ በሁለት ገጽ የተስተካከለ፣ ከሚስማማ የማመልከቻ ደብዳቤ ጋር። በሲቪ መገንቢያው ይከፈታል፣ ለማውረድ ዝግጁ ነው።"
+  },
+  "tailor_full_button": {
+    "message": "አዘጋጃቸው"
+  },
+  "tailor_full_error": {
+    "message": "የሲቪ መገንቢያውን መክፈት አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "tailor_full_short": {
+    "message": "የተቀመጠው የሥራ ማስታወቂያ በጣም አጭር ነው። መጀመሪያ ገጹን በሙሉ ያንብቡ።"
+  },
+  "li_tailor_button": {
+    "message": "ሲቪ አስማማ"
+  },
+  "li_tailor_title": {
+    "message": "AnswerSnap፦ ከዋናው ሲቪዎ ለዚህ ሥራ የተዘጋጀ ሲቪ እና የማመልከቻ ደብዳቤ"
+  },
+  "li_tailor_opening": {
+    "message": "በመክፈት ላይ…"
+  },
+  "li_tailor_opened": {
+    "message": "በአዲስ ትር ተከፍቷል።"
+  },
+  "li_tailor_no_job": {
+    "message": "ይህን ሥራ ማንበብ አልተቻለም። መግለጫው እንዲታይ ይክፈቱት፣ ከዚያ እንደገና ይሞክሩ።"
+  },
+  "li_tailor_failed": {
+    "message": "መጀመር አልተቻለም። ገጹን እንደገና ይጫኑ እና ይሞክሩ።"
+  },
+  "linkedin_failed": {
+    "message": "የ LinkedIn ረቂቁን መጻፍ አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "li_tailor_loading": {
+    "message": "ሥራው ገና በመጫን ላይ ነው። ትንሽ ቆይተው እንደገና ይሞክሩ።"
   }
 }

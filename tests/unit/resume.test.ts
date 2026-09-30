@@ -54,13 +54,15 @@ describe('resume dates', () => {
 
 describe('templates', () => {
   it('are complete, valid presets that keep the page size', () => {
-    expect(TEMPLATES).toHaveLength(8);
+    expect(TEMPLATES).toHaveLength(9);
     for (const t of TEMPLATES) {
       const d = applyTemplate(t.id, { page: 'Letter' });
       expect(d.template).toBe(t.id);
       expect(d.page).toBe('Letter');
     }
-    expect(new Set(TEMPLATES.map((t) => t.id)).size).toBe(8);
+    expect(new Set(TEMPLATES.map((t) => t.id)).size).toBe(9);
+    // An unknown id falls back to Modern, whatever the gallery's order.
+    expect(applyTemplate('nope').template).toBe('modern');
   });
 });
 
@@ -105,7 +107,7 @@ describe('import from the profile', () => {
       email: 'jamie@example.com',
     });
     expect(r.personal.details).toEqual([
-      { kind: 'github', label: 'GitHub', value: 'https://github.com/jamie' },
+      { kind: 'github', label: 'GitHub', value: 'https://github.com/jamie', display: '' },
     ]);
     expect(r.sections.map((s) => s.type)).toEqual([
       'profile',
@@ -402,7 +404,9 @@ describe('contact links', () => {
 
   it('reads a detail kind it does not know as other, keeping its label', () => {
     const personal = personalWith([{ kind: 'mastodon', label: 'Mastodon', value: '@jamie' }]);
-    expect(personal.details).toEqual([{ kind: 'other', label: 'Mastodon', value: '@jamie' }]);
+    expect(personal.details).toEqual([
+      { kind: 'other', label: 'Mastodon', value: '@jamie', display: '' },
+    ]);
   });
 
   it('maps profile links to their platform', () => {

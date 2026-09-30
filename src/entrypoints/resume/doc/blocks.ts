@@ -6,6 +6,9 @@ import {
   type Resume,
   type Section,
 } from '@/kb/resume/model';
+import { splitRich, type Unit } from '@/kb/richText';
+
+export { splitRich, type Unit };
 
 // The document is a list of blocks that are measured and packed onto pages. Like FlowCV, a page
 // can break between the bullets and paragraphs of an entry or a text section, and between the
@@ -14,13 +17,6 @@ import {
 // PDF, so both paginate identically.
 
 export type Column = 'main' | 'side' | 'full';
-
-/** One piece of rich text that can start a page: a paragraph or a single list item. */
-export interface Unit {
-  /** Markdown source of just this piece (a numbered item keeps its real number). */
-  text: string;
-  kind: 'p' | 'li';
-}
 
 export type Block = (
   | { id: string; kind: 'header'; column: Column }
@@ -86,52 +82,16 @@ export function visibleEntries(s: Section): Entry[] {
   );
 }
 
-// Same list markers as src/kb/richText.ts.
-const BULLET = /^\s*[-•*]\s+/;
-const NUMBERED = /^\s*(\d{1,9})[.)]\s+(.*)$/;
-
-/**
- * Split rich text into pieces a page may break between: each paragraph, and each list item.
- * A numbered item gets its running number written out, so it shows the right number alone.
- */
-export function splitRich(src: string): Unit[] {
-  const units: Unit[] = [];
-  let para: string[] = [];
-  let lastList: 'bullets' | 'numbered' | null = null;
-  let next = 1;
-  const flush = () => {
-    if (para.length) {
-      units.push({ text: para.join('\n'), kind: 'p' });
-      lastList = null;
-    }
-    para = [];
-  };
-  for (const line of src.replace(/\r\n?/g, '\n').split('\n')) {
-    const n = line.match(NUMBERED);
-    if (BULLET.test(line)) {
-      flush();
-      units.push({ text: line.trim(), kind: 'li' });
-      lastList = 'bullets';
-    } else if (n) {
-      flush();
-      // A run of numbered items counts on from its first number, like the renderer.
-      const num = lastList === 'numbered' ? next : Number(n[1]);
-      units.push({ text: `${num}. ${n[2]}`, kind: 'li' });
-      lastList = 'numbered';
-      next = num + 1;
-    } else if (!line.trim()) {
-      flush();
-    } else {
-      para.push(line.trim());
-    }
-  }
-  flush();
-  return units;
+/** Items per row of a list layout, so long lists can break between rows. */
+/** Skill groups: entries with their own list ("Machine Learning & AI" and its bullets). */
+export function hasGroups(s: Section): boolean {
+  return s.entries.some((e) => !e.hidden && e.description.trim());
 }
 
-/** Items per row of a list layout, so long lists can break between rows. */
 function rowSize(s: Section, d: Design, column: Column): number {
   const layout = listLayout(s, d);
+  // Groups flow down the columns like FlowCV prints them (left column first): one block.
+  if (hasGroups(s) && (layout === 'grid' || layout === 'list')) return Infinity;
   if (layout === 'list') return 1;
   if (layout === 'grid') return column === 'side' ? 1 : s.gridColumns;
   return Infinity; // bubbles and one-line lists wrap freely: one block

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, h, type FunctionalComponent } from 'vue';
 import { formatDates, formatPlace } from '@/kb/resume/format';
 import { DOC_STRINGS } from '@/kb/resume/docLang';
 import { PHOTO_DATA_URL, sectionTitle, type Entry, type Resume } from '@/kb/resume/model';
 import { safeUrl } from '@/kb/richText';
 import RichText from '@/ui/RichText';
-import { levelStyle, listLayout, type Block } from './blocks';
+import { hasGroups, levelStyle, listLayout, type Block } from './blocks';
 import { contactItems } from './contacts';
 import DocIcon from './DocIcon';
 
@@ -39,11 +39,87 @@ function levelText(n: number) {
 }
 const entryLink = (e: Entry) => safeUrl(e.link);
 
+/**
+ * Which line carries the entry's link. FlowCV links the employer or school on jobs and degrees
+ * ("Ledgerly ↗"), and the name itself on projects, certificates, and the rest.
+ */
+const LINK_ON_SUBTITLE = new Set(['experience', 'education', 'organisations', 'volunteering']);
+function linkPart(e: Entry): 'main' | 'second' | null {
+  if (!entryLink(e)) return null;
+  const type = 'section' in props.block ? props.block.section.type : '';
+  if (!LINK_ON_SUBTITLE.has(type) || !e.subtitle) return 'main';
+  return d.value.entryOrder === 'subtitle-first' ? 'main' : 'second';
+}
+
+/**
+ * A line of an entry, as a link (with the design's icon) when it carries the entry's link. The
+ * icon stays on the line of the last word.
+ */
+const Linked: FunctionalComponent<{ text: string; href: string | null; cls?: unknown }> = (p) => {
+  if (!p.href) return h('span', { class: p.cls }, p.text);
+  const at = p.text.lastIndexOf(' ') + 1;
+  return h(
+    'a',
+    {
+      href: p.href,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+      class: [p.cls, 'rd-entry-link', { 'rd-accent': d.value.accentOn.links }],
+    },
+    d.value.linkStyle === 'icon'
+      ? [
+          p.text.slice(0, at),
+          h('span', { class: 'rd-nowrap' }, [
+            p.text.slice(at),
+            h(DocIcon, {
+              name: d.value.linkIcon === 'arrow' ? 'external' : 'link',
+              class: 'rd-link-icon',
+            }),
+          ]),
+        ]
+      : p.text,
+  );
+};
+Linked.props = ['text', 'href', 'cls'];
+
 /** The bold line and the line under it: title first, or employer and school first. */
 function lines(e: Entry): { main: string; second: string } {
   return d.value.entryOrder === 'subtitle-first' && e.subtitle
     ? { main: e.subtitle, second: e.title }
     : { main: e.title, second: e.subtitle };
+}
+
+/** The bold line, with the subtitle after a comma when the design puts it on the same line. */
+const EntryTitle: FunctionalComponent<{ entry: Entry }> = ({ entry }) => {
+  const { main, second } = lines(entry);
+  const part = linkPart(entry);
+  const href = entryLink(entry);
+  return h('p', { class: 'rd-entry-title' }, [
+    h(Linked, { text: main, href: part === 'main' ? href : null, cls: 'rd-strong' }),
+    ...(d.value.subtitlePlacement === 'same-line' && second
+      ? [
+          h('span', { class: 'rd-strong' }, ', '),
+          h(Linked, {
+            text: second,
+            href: part === 'second' ? href : null,
+            cls: [
+              'rd-subtitle',
+              `rd-sub-${d.value.subtitleStyle}`,
+              { 'rd-accent': d.value.accentOn.subtitle },
+            ],
+          }),
+        ]
+      : []),
+  ]);
+};
+EntryTitle.props = ['entry'];
+
+/**
+ * FlowCV's layout: dates and place in a column of their own beside an entry that has them, so
+ * the title and text wrap before it. The next bullets of the entry keep the column free.
+ */
+function sideColumn(e: Entry | null): boolean {
+  return !!e && d.value.datePlacement === 'right-column' && meta(e).length > 0;
 }
 
 /** Only a data URL ever reaches <img>: the page never loads a remote image. */
@@ -81,6 +157,19 @@ const layout = computed(() =>
 const levels = computed(() =>
   'section' in props.block ? levelStyle(props.block.section, d.value) : d.value.levelStyle,
 );
+/** Skill groups in columns (grid) or one under another (list); other layouts show titles. */
+const groups = computed(
+  () =>
+    props.block.kind === 'list' &&
+    (layout.value === 'grid' || layout.value === 'list') &&
+    hasGroups(props.block.section),
+);
+const groupStyle = computed(() =>
+  props.block.kind === 'list' && layout.value === 'grid'
+    ? { '--rd-cols': String(props.block.section.gridColumns) }
+    : { '--rd-cols': '1' },
+);
+
 const gridStyle = computed(() =>
   'section' in props.block && layout.value === 'grid'
     ? { '--rd-cols': String(props.block.section.gridColumns) }
@@ -117,6 +206,7 @@ const gridStyle = computed(() =>
           <DocIcon
             v-if="d.contactStyle === 'icons'"
             :name="c.icon"
+            :solid="d.contactIcons === 'solid'"
             :class="{ 'rd-accent': d.accentOn.icons && d.fill !== 'header' }"
           />
           <a v-if="c.href" :href="c.href" target="_blank" rel="noopener noreferrer">{{ c.text }}</a>
@@ -150,7 +240,10 @@ const gridStyle = computed(() =>
     <RichText v-if="block.kind === 'text'" :text="block.text" class="rd-desc" />
 
     <!-- The next bullet or paragraph of an entry or a text section -->
-    <div v-else-if="block.kind === 'more'" :class="{ 'rd-entry': block.entry }">
+    <div
+      v-else-if="block.kind === 'more'"
+      :class="{ 'rd-entry': block.entry, 'rd-side-column': sideColumn(block.entry) }"
+    >
       <div v-if="block.entry && d.datePlacement === 'left'" class="rd-entry-left" />
       <div :class="{ 'rd-entry-main': block.entry }">
         <RichText
@@ -158,6 +251,33 @@ const gridStyle = computed(() =>
           class="rd-desc"
           :class="{ 'rd-indent': block.entry && d.indentDescription }"
         />
+      </div>
+    </div>
+
+    <!-- Skill groups: a bold group name and its list, flowing down the columns -->
+    <div
+      v-else-if="block.kind === 'list' && groups"
+      class="rd-list rd-list-groups"
+      :style="groupStyle"
+    >
+      <div v-for="e in block.entries" :key="e.id" class="rd-group">
+        <div class="rd-list-item">
+          <span class="rd-strong">{{ e.title }}</span>
+          <span v-if="e.info" class="rd-muted">{{ e.info }}</span>
+          <span v-if="e.level && levels === 'dots'" class="rd-dots" :aria-label="`${e.level} of 5`">
+            <i v-for="n in 5" :key="n" :class="{ on: n <= e.level }" />
+          </span>
+          <span
+            v-else-if="e.level && levels === 'bar'"
+            class="rd-bar"
+            :aria-label="`${e.level} of 5`"
+            ><i :style="{ width: `${e.level * 20}%` }"
+          /></span>
+          <span v-else-if="e.level && levels === 'text'" class="rd-muted">{{
+            levelText(e.level)
+          }}</span>
+        </div>
+        <RichText v-if="e.description.trim()" :text="e.description" class="rd-desc" />
       </div>
     </div>
 
@@ -197,6 +317,46 @@ const gridStyle = computed(() =>
       </template>
     </div>
 
+    <!-- One entry with its dates and place in a column on the right. They follow the title in
+         the page's text, so an ATS reads them together. -->
+    <article
+      v-else-if="block.kind === 'entry' && sideColumn(block.entry)"
+      class="rd-entry rd-side-column"
+    >
+      <EntryTitle :entry="block.entry" />
+      <p
+        v-for="(m, i) in meta(block.entry)"
+        :key="i"
+        class="rd-meta rd-side-meta"
+        :class="[
+          `rd-side-${i + 1}`,
+          { 'rd-accent': d.accentOn.dates && i === 0 && dates(block.entry) },
+        ]"
+      >
+        {{ m }}
+      </p>
+      <p
+        v-if="d.subtitlePlacement === 'next-line' && lines(block.entry).second"
+        class="rd-subtitle"
+        :class="[`rd-sub-${d.subtitleStyle}`, { 'rd-accent': d.accentOn.subtitle }]"
+      >
+        <Linked
+          :text="lines(block.entry).second"
+          :href="linkPart(block.entry) === 'second' ? entryLink(block.entry) : null"
+        />
+      </p>
+      <p v-if="block.entry.info" class="rd-muted">{{ block.entry.info }}</p>
+      <p v-if="block.entry.email || block.entry.phone" class="rd-muted">
+        {{ [block.entry.email, block.entry.phone].filter(Boolean).join(' | ') }}
+      </p>
+      <RichText
+        v-if="block.desc"
+        :text="block.desc"
+        class="rd-desc"
+        :class="{ 'rd-indent': d.indentDescription }"
+      />
+    </article>
+
     <!-- One entry -->
     <article
       v-else-if="block.kind === 'entry'"
@@ -212,27 +372,7 @@ const gridStyle = computed(() =>
       </div>
       <div class="rd-entry-main">
         <div class="rd-entry-row">
-          <p class="rd-entry-title">
-            <a
-              v-if="entryLink(block.entry)"
-              :href="entryLink(block.entry)!"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="rd-strong rd-entry-link"
-              :class="{ 'rd-accent': d.accentOn.links }"
-              >{{ lines(block.entry).main
-              }}<DocIcon v-if="d.linkStyle === 'icon'" name="link" class="rd-link-icon"
-            /></a>
-            <span v-else class="rd-strong">{{ lines(block.entry).main }}</span>
-            <template v-if="d.subtitlePlacement === 'same-line' && lines(block.entry).second">
-              <span>, </span
-              ><span
-                class="rd-subtitle"
-                :class="[`rd-sub-${d.subtitleStyle}`, { 'rd-accent': d.accentOn.subtitle }]"
-                >{{ lines(block.entry).second }}</span
-              >
-            </template>
-          </p>
+          <EntryTitle :entry="block.entry" />
           <p
             v-if="d.datePlacement === 'right' && dates(block.entry)"
             class="rd-meta"
@@ -252,7 +392,11 @@ const gridStyle = computed(() =>
             class="rd-subtitle"
             :class="[`rd-sub-${d.subtitleStyle}`, { 'rd-accent': d.accentOn.subtitle }]"
           >
-            {{ d.subtitlePlacement === 'next-line' ? lines(block.entry).second : '' }}
+            <Linked
+              v-if="d.subtitlePlacement === 'next-line' && lines(block.entry).second"
+              :text="lines(block.entry).second"
+              :href="linkPart(block.entry) === 'second' ? entryLink(block.entry) : null"
+            />
           </p>
           <p v-if="d.datePlacement === 'right' && d.locationWithDate" class="rd-meta">
             {{ formatPlace(block.entry) }}

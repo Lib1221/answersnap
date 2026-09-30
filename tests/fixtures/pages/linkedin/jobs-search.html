@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>(3) Senior Backend Engineer | Northwind | LinkedIn</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        display: flex;
+      }
+      .jobs-search-results-list {
+        width: 40%;
+        height: 100vh;
+        overflow: auto;
+        border-right: 1px solid #ddd;
+      }
+      .jobs-search__job-details--container {
+        width: 60%;
+        padding: 24px;
+        height: 100vh;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Test fixture shaped like LinkedIn's logged-in two-pane job search (fictional company). -->
+    <main id="main">
+      <div class="jobs-search-results-list">
+        <ul>
+          <li><a href="?currentJobId=4012345678">Senior Backend Engineer, Northwind</a></li>
+          <li><a href="?currentJobId=4012345699">Data Engineer, Fabrikam</a></li>
+        </ul>
+      </div>
+      <div class="jobs-search__job-details--container">
+        <div class="job-details-jobs-unified-top-card__container--two-pane">
+          <div class="job-details-jobs-unified-top-card__company-name">
+            <a href="https://www.linkedin.com/company/northwind/life/">Northwind</a>
+          </div>
+          <div class="job-details-jobs-unified-top-card__job-title">
+            <h1 class="t-24 t-bold inline">
+              <a href="/jobs/view/4012345678/">Senior Backend Engineer</a>
+            </h1>
+          </div>
+          <div class="job-details-jobs-unified-top-card__primary-description-container">
+            <span class="tvm__text tvm__text--low-emphasis">European Union</span>
+            <span class="tvm__text tvm__text--low-emphasis"> · </span>
+            <span class="tvm__text tvm__text--low-emphasis">2 days ago</span>
+          </div>
+          <div class="job-details-fit-level-preferences">
+            <button><span>Remote</span></button>
+            <button><span>Full-time</span></button>
+          </div>
+          <button class="jobs-apply-button">Easy Apply</button>
+        </div>
+        <div class="jobs-description__container">
+          <article class="jobs-description__content jobs-description-content">
+            <div class="jobs-box__html-content" id="job-details">
+              <h2 class="text-heading-large">About the job</h2>
+              <div class="mt4">
+                <p>Northwind builds payment infrastructure for small businesses across Europe.</p>
+                <p><strong>What you'll do</strong></p>
+                <ul>
+                  <li>
+                    Design and build Python and Django services for payments and reconciliation.
+                  </li>
+                  <li>Own PostgreSQL data models and performance.</li>
+                  <li>Run services on Kubernetes in AWS.</li>
+                </ul>
+                <p><strong>What you bring</strong></p>
+                <ul>
+                  <li>5+ years of backend engineering with Python and Django.</li>
+                  <li>Experience with PostgreSQL, Celery, and REST APIs.</li>
+                  <li>Nice to have: Kubernetes, AWS, Terraform.</li>
+                </ul>
+                <p>Remote within the European Union. We don't sponsor visas.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
