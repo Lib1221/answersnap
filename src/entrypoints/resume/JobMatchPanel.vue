@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { updateApplication } from '@/kb/applications';
+import { checkDealbreakers } from '@/kb/dealbreakers';
+import { getSettings } from '@/storage/items';
 import type { Resume } from '@/kb/resume/model';
 import { addSkill, removeAssumed, resumeText } from '@/kb/resume/tailorApply';
 import { matchKeywords, type Assumed, type Keyword } from '@/kb/resume/tailoring';
@@ -30,6 +32,11 @@ const must = computed(() => tl.value.keywords.filter((k) => k.importance === 'mu
 const nice = computed(() => tl.value.keywords.filter((k) => k.importance === 'nice'));
 const jobUrl = computed(() => safeUrl(tl.value.job.url));
 const applied = ref(false);
+/** The candidate's dealbreakers this job hits, with the settings as they are now. */
+const hits = ref<string[]>([]);
+onMounted(async () => {
+  hits.value = checkDealbreakers(tl.value.job, (await getSettings()).dealbreakers).hits;
+});
 
 function add(k: Keyword) {
   emit('update', addSkill(props.resume, k.term));
@@ -79,7 +86,7 @@ async function markApplied() {
     </section>
 
     <section
-      v-if="tl.eligibility.length"
+      v-if="tl.eligibility.length || hits.length"
       class="card flex flex-col gap-2 p-4"
       aria-labelledby="elig-h"
     >
@@ -88,6 +95,14 @@ async function markApplied() {
         These can reject an application whatever the resume says.
       </p>
       <ul class="flex flex-col gap-1.5">
+        <li
+          v-for="(h, i) in hits"
+          :key="`d${i}`"
+          class="notice rounded-control px-2.5 py-1.5 text-[13px]"
+          data-testid="dealbreaker-item"
+        >
+          Your dealbreaker: {{ h }}
+        </li>
         <li
           v-for="(e, i) in tl.eligibility"
           :key="i"

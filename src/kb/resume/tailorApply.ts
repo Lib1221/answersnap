@@ -135,7 +135,7 @@ export function resumeText(r: Resume): string {
 
 // ---- Eligibility: a small model can misplace a country in a region; catch the clear cases.
 
-const IN_AFRICA =
+export const IN_AFRICA =
   /\b(ethiopia|kenya|nigeria|ghana|egypt|morocco|tunisia|algeria|south africa|rwanda|uganda|tanzania|senegal|cameroon|ivory coast|côte d[’']ivoire|zambia|zimbabwe|botswana|namibia|mozambique|malawi|sudan|somalia|eritrea|djibouti|madagascar|mauritius|angola|congo|benin|togo|burkina faso|mali|niger|chad|libya|gabon|liberia|sierra leone|guinea|gambia|lesotho|eswatini|addis ababa|nairobi|lagos|accra|cairo|kigali|kampala)\b/i;
 
 /**

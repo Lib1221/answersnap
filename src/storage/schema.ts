@@ -139,6 +139,27 @@ export const ModelPriceSchema = z.object({
 });
 export type ModelPrice = z.infer<typeof ModelPriceSchema>;
 
+/** "Should I apply?": the candidate's dealbreakers (src/kb/dealbreakers.ts). All off by default. */
+export const DealbreakersSchema = z.object({
+  /** Countries or regions the candidate can work in, for on-site jobs and country-limited remote. */
+  places: z.array(z.string()).default([]),
+  /** Only remote jobs. */
+  remoteOnly: z.boolean().default(false),
+  /** The candidate needs visa sponsorship: posts that rule it out are dealbreakers. */
+  needsSponsorship: z.boolean().default(false),
+  /** The lowest pay worth applying for (0 means no minimum), in `currency` per `period`. */
+  minPay: z.number().nonnegative().default(0),
+  currency: z.string().default('USD'),
+  period: z.enum(['year', 'month', 'hour']).default('year'),
+  /** Words in a job title that rule it out ("Senior", "Intern"). */
+  titleWords: z.array(z.string()).default([]),
+  /** Companies the candidate won't apply to. */
+  companies: z.array(z.string()).default([]),
+  /** Words in the post that rule it out ("security clearance", "on-call"). */
+  avoidWords: z.array(z.string()).default([]),
+});
+export type Dealbreakers = z.infer<typeof DealbreakersSchema>;
+
 export const SettingsSchema = z.object({
   schemaVersion: z.literal(1).default(1),
   provider: ProviderSchema.default('anthropic'),
@@ -180,6 +201,7 @@ export const SettingsSchema = z.object({
   followUpReminders: z.boolean().default(true),
   /** The "Tailor resume" button on LinkedIn job pages (approved by Liben, 2026-09-29). */
   linkedinButton: z.boolean().default(true),
+  dealbreakers: DealbreakersSchema.default(DealbreakersSchema.parse({})),
   /** When a model runs out of quota, switch to the next one in its chain. */
   autoFallback: z.boolean().default(true),
   /** Model ids the key can use (from Test key), so fallback skips models the key can't reach. */

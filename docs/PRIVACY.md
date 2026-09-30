@@ -33,6 +33,9 @@ where that data lives, and who receives it.
   master resume (never the photo) goes to your AI provider with the job post. They are included
   in your backup file. Download PDF uses Chrome's print dialog; the PDF is saved where
   you choose.
+- **Your dealbreakers** (where you can work, lowest pay, titles and companies to skip), stored
+  with your settings. They are checked on this computer against the job you tailor for and are
+  never sent to the AI provider.
 - **Your AI provider API key**, which you paste in yourself.
 
 ## Where it is stored

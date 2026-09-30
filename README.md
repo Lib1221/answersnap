@@ -35,7 +35,9 @@ Made by Liben.
   pages. The **Job match** tab shows the keyword score before and after, what could reject the
   application whatever the resume says (location, work authorization, years), and everything
   added that isn't in your resume, for you to keep or remove. A cover letter comes with it. Your
-  master resume never changes, and nothing is sent until you click.
+  master resume never changes, and nothing is sent until you click. Set your **dealbreakers**
+  (where you can work, remote only, visa sponsorship, lowest pay, titles or companies to skip) in
+  Settings, and a job that hits one asks before anything goes to the AI.
 - **Resume builder:** build your CV in a FlowCV-style editor, starting from your profile or by
   importing your resume (PDF, DOCX, or TXT, word for word). Add, hide, rename, and reorder
   sections, write with bold, italics, and bullets, and style everything (layout, columns, colors,

@@ -16,6 +16,7 @@ import {
 } from '@/kb/applications';
 import { getSettings, saveSettings } from '@/storage/items';
 import Icon from '@/ui/AppIcon.vue';
+import DealbreakersCard from './DealbreakersCard.vue';
 
 const list = ref<Application[]>([]);
 const filter = ref<ApplicationStatus | 'all' | 'active'>('active');
@@ -192,6 +193,8 @@ function exportCsv() {
         </span>
       </span>
     </label>
+
+    <DealbreakersCard />
 
     <ul class="grid grid-cols-3 gap-2 sm:grid-cols-6" data-testid="application-counts">
       <li

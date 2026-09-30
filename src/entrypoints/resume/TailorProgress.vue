@@ -13,8 +13,16 @@ const props = defineProps<{
   job: JobPost | null;
   error: string;
   resumes: Resume[];
+  /** Dealbreakers the job hits ("Should I apply?"). */
+  hits: string[];
 }>();
-const emit = defineEmits<{ choose: [resume: Resume]; retry: []; close: [] }>();
+const emit = defineEmits<{
+  choose: [resume: Resume];
+  retry: [];
+  close: [];
+  proceed: [];
+  skip: [];
+}>();
 defineSlots<{ import?: () => unknown }>();
 
 const target = computed(() => {
@@ -60,6 +68,41 @@ const originals = computed(() => props.resumes.filter((r) => !r.tailoring));
           </li>
         </ul>
         <slot name="import" />
+      </template>
+
+      <template v-else-if="phase === 'dealbreakers'">
+        <h2 class="text-[17px] font-[650]">Should you apply?</h2>
+        <p class="text-[13.5px] text-graphite-2">
+          {{ target }} hits
+          {{ hits.length === 1 ? 'one of your dealbreakers' : 'your dealbreakers' }}. Nothing has
+          been sent to the AI yet.
+        </p>
+        <ul class="flex flex-col gap-1.5">
+          <li
+            v-for="(h, i) in hits"
+            :key="i"
+            class="notice rounded-control px-2.5 py-1.5 text-[13px]"
+            data-testid="dealbreaker-item"
+          >
+            {{ h }}
+          </li>
+        </ul>
+        <div class="flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-testid="skip-job"
+            @click="emit('skip')"
+          >
+            Skip this job
+          </button>
+          <button type="button" class="btn" data-testid="tailor-anyway" @click="emit('proceed')">
+            Tailor anyway
+          </button>
+        </div>
+        <p class="text-[12.5px] text-graphite-2">
+          Change your dealbreakers in Settings, Applications.
+        </p>
       </template>
 
       <template v-else-if="phase === 'error'">

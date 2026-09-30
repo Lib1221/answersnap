@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { BrowserContext, Page } from '@playwright/test';
-import { expect, seed, test } from './fixtures';
+import { expect, mockLog, seed, test } from './fixtures';
 
 // One-click tailoring: a job post arrives (as LinkedIn's button or the side panel sends it), the
 // builder opens, tailors the master resume within two pages, and writes the cover letter.
@@ -180,4 +180,49 @@ test('refuses job posts from other sites and ones too short to use', async ({
   );
   expect(short).toEqual({ ok: false, error: 'NO_JOB' });
   expect(context.pages().filter((p) => p.url().includes('tailor='))).toHaveLength(0);
+});
+
+test('dealbreakers: set in Settings, asked before any AI call, then skip or tailor anyway', async ({
+  context,
+  extensionId,
+  panel,
+}) => {
+  test.setTimeout(90_000);
+  await seed(panel);
+  await seedProfile(panel);
+
+  // Settings: the job title says Senior, which this candidate skips.
+  const options = await context.newPage();
+  await options.goto(`chrome-extension://${extensionId}/options.html#applications`);
+  await options.getByTestId('db-titles').fill('Senior, Intern');
+  await options.getByTestId('db-titles').press('Tab');
+  await expect(options.getByTestId('dealbreakers')).toContainText('Saved');
+  const stored = await panel.evaluate(
+    async () => (await chrome.storage.local.get('settings')).settings.dealbreakers.titleWords,
+  );
+  expect(stored).toEqual(['Senior', 'Intern']);
+
+  const builder = await openBuilder(context, extensionId);
+  await builder.getByTestId('resume-start-profile').click();
+  await builder.getByTestId('make-master').click();
+  await expect(builder.getByTestId('master-badge')).toBeVisible();
+
+  // Skip: the tab closes, and nothing went to the AI.
+  const tailorCalls = async () =>
+    (await mockLog()).filter((b) => JSON.stringify(b).includes('ATS specialist')).length;
+  const skipped = await tailor(context, builder);
+  await expect(skipped.getByTestId('dealbreaker-item')).toHaveText('The title says "Senior".');
+  const closed = skipped.waitForEvent('close');
+  await skipped.getByTestId('skip-job').click();
+  await closed;
+  expect(await tailorCalls()).toBe(0);
+
+  // Tailor anyway: it goes on, and Job match still shows the dealbreaker.
+  const page = await tailor(context, builder);
+  await page.getByTestId('tailor-anyway').click();
+  await expect(page.getByTestId('job-match')).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByTestId('dealbreaker-item')).toContainText(
+    'Your dealbreaker: The title says "Senior".',
+  );
+  expect(await tailorCalls()).toBe(1);
 });

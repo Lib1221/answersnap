@@ -1,6 +1,7 @@
 import { ref, shallowRef, type Ref } from 'vue';
 import { loadCandidateData } from '@/kb/candidate';
 import { candidateBlock } from '@/kb/contextBuilder';
+import { checkDealbreakers } from '@/kb/dealbreakers';
 import type { Resume } from '@/kb/resume/model';
 import { masterOf, saveResume, saveResumes } from '@/kb/resume/store';
 import { applyTailoring, nextTrim, outlineResume, resumeText } from '@/kb/resume/tailorApply';
@@ -19,7 +20,7 @@ import { getApiKey, getSettings } from '@/storage/items';
 // tailor the master resume, fit the result to two pages, and write the cover letter.
 
 export type TailorPhase =
-  'idle' | 'loading' | 'need-master' | 'tailoring' | 'fitting' | 'done' | 'error';
+  'idle' | 'loading' | 'dealbreakers' | 'need-master' | 'tailoring' | 'fitting' | 'done' | 'error';
 
 /** Two pages, as Liben asked: long enough for the experience, short enough to be read. */
 export const TAILOR_MAX_PAGES = 2;
@@ -41,6 +42,8 @@ export function useTailor(deps: TailorDeps) {
   const error = ref('');
   const letter = ref<'idle' | 'writing' | 'error'>('idle');
   const letterError = ref('');
+  /** Dealbreakers the job hits, asked about before anything goes to the AI. */
+  const hits = ref<string[]>([]);
   let request: TailorRequest | null = null;
 
   const findMaster = () => masterOf(deps.resumes.value);
@@ -54,12 +57,32 @@ export function useTailor(deps: TailorDeps) {
       return;
     }
     job.value = request.job;
+    // "Should I apply?": the candidate's own dealbreakers, checked in code before any AI call.
+    hits.value = checkDealbreakers(request.job, (await getSettings()).dealbreakers).hits;
+    if (hits.value.length) {
+      phase.value = 'dealbreakers';
+      return;
+    }
+    await proceed();
+  }
+
+  /** Go on with the tailoring (after the dealbreakers, when the candidate says so). */
+  async function proceed() {
     const master = findMaster();
     if (!master) {
       phase.value = 'need-master';
       return;
     }
     await tailorFrom(master);
+  }
+
+  /** Skip the job: forget the request and close the tab it opened. */
+  async function skip() {
+    if (request) await dropTailorRequest(request.id);
+    request = null;
+    close();
+    const tab = await browser.tabs.getCurrent().catch(() => undefined);
+    if (tab?.id !== undefined) await browser.tabs.remove(tab.id).catch(() => undefined);
   }
 
   /**
@@ -210,7 +233,10 @@ export function useTailor(deps: TailorDeps) {
     error,
     letter,
     letterError,
+    hits,
     start,
+    proceed,
+    skip,
     tailorFrom,
     retry,
     close,

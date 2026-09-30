@@ -114,7 +114,9 @@ const tailor = useTailor({
   flush: () => flush(),
 });
 const tailorBusy = computed(() =>
-  ['loading', 'need-master', 'tailoring', 'fitting', 'error'].includes(tailor.phase.value),
+  ['loading', 'dealbreakers', 'need-master', 'tailoring', 'fitting', 'error'].includes(
+    tailor.phase.value,
+  ),
 );
 
 async function useAsMaster() {
@@ -579,6 +581,9 @@ async function deleteMine(id: string) {
       :job="tailor.job.value"
       :error="tailor.error.value"
       :resumes="resumes"
+      :hits="tailor.hits.value"
+      @proceed="tailor.proceed"
+      @skip="tailor.skip"
       @choose="chooseMaster"
       @retry="tailor.retry"
       @close="tailor.close"
@@ -740,6 +745,9 @@ async function deleteMine(id: string) {
           :job="tailor.job.value"
           :error="tailor.error.value"
           :resumes="resumes"
+          :hits="tailor.hits.value"
+          @proceed="tailor.proceed"
+          @skip="tailor.skip"
           @choose="chooseMaster"
           @retry="tailor.retry"
           @close="tailor.close"

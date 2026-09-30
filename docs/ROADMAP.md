@@ -40,7 +40,7 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [x] Sync across devices (opt-in, Chrome Sync): settings, profile, standard answers, stories, cover letter, applications
 - [x] Resume builder: per-section settings (new page, heading, list layout, level style), photo crop, portrait shape, black and white, save my own design as a template
 - [x] Easy Apply co-pilot: LinkedIn's screening questions answered from your own data (years counted from your dated jobs), the rest drafted, inserted only when you click, and never Next or Submit
-- [ ] Should I apply: your dealbreakers (location, visa, salary, seniority) checked before tailoring
+- [x] Should I apply: your dealbreakers (where you can work, remote only, sponsorship, pay, title words, companies, words in the post) checked in code before tailoring
 - [ ] What changed: the tailored copy side by side with the master
 - [ ] ATS preview: the text an applicant tracking system reads from the PDF
 - [ ] Several master resumes (for example ML and backend), picked per job
