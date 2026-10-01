@@ -62,6 +62,21 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [ ] What's working report: which resume versions and keywords got replies, interviews, or rejections
 - [ ] Today's apply queue: saved jobs ranked by fit, dealbreakers, and age
 
+## Master's scholarships (Study tab)
+
+- [ ] Motivation letter writer: a letter per program from your profile and the program's page, within the call's word limit, facts only
+- [ ] Scholarship tracker with deadlines and reminders
+- [ ] Am I eligible, across calls: every saved call checked against your details and ranked
+- [ ] Program fit: a program's course page compared with your background and goals
+- [ ] Grade conversion to the Italian /110, German, and ECTS scales, formula shown
+- [ ] Study plan and research proposal outline
+- [ ] Essay reuse and consistency across applications
+- [ ] Academic CV template (Europass-style and academic layouts)
+- [ ] Supervisor contact email
+- [ ] Backwards timeline from a deadline
+- [ ] Recommendation letter kit: request emails and a fact sheet for referees
+- [ ] Document check: format, size limit, and validity dates against the call
+
 ## Needs Liben's OK
 
 - [x] Follow-up reminders as Chrome notifications (approved: `alarms`, `notifications`)

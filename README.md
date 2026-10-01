@@ -98,6 +98,38 @@ invented. The running list, with what's done, is in [docs/ROADMAP.md](docs/ROADM
 Features 3, 5, and 8 read another site or call another service, so each waits for the owner's
 approval first (see "Needs Liben's OK" in the roadmap).
 
+### For master's scholarships
+
+Planned for the Study tab, which already fills personal details exactly, reads a call's
+requirements, and keeps a document checklist. None of these needs a new permission, and passport
+and ID details still never go to the AI.
+
+**Finding and choosing**
+
+1. **Am I eligible, across calls:** every call you've saved checked against your details
+   (degree, grade, age, language test, country), ranked.
+2. **Program fit:** a program's course page compared with your background and goals.
+3. **Grade conversion:** your grade on the Italian /110, German, and ECTS scales, with the
+   formula shown (unofficial: universities differ).
+
+**Writing**
+
+4. **Motivation letter writer:** a letter per program from your profile and that program's page,
+   within the call's word limit, facts only.
+5. **Study plan and research proposal outline** for calls that require one.
+6. **Essay reuse and consistency:** an essay you wrote adapted to a new question and limit, and
+   a check that all your essays state the same facts.
+7. **Academic CV template:** Europass-style and academic layouts in the resume builder.
+8. **Supervisor contact email** from a professor's page and your background.
+
+**Managing the process**
+
+9. **Scholarship tracker with deadlines** and reminders.
+10. **Backwards timeline:** from a deadline, when to book the language test, request
+    recommendations, and get documents legalised.
+11. **Recommendation letter kit:** request emails to your referees, and a fact sheet for them.
+12. **Document check:** each file against the call's format, size limit, and validity dates.
+
 ## AI providers
 
 Bring your own key:
