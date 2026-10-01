@@ -58,6 +58,46 @@ Made by Liben.
   gaps with modest claims (always listed as "Assumed" so you can check them) or leave
   placeholders.
 
+## Planned features
+
+Twelve features planned next, all built on the same rule as the rest: nothing about you is ever
+invented. The running list, with what's done, is in [docs/ROADMAP.md](docs/ROADMAP.md).
+
+**Getting past the filters**
+
+1. **Hires-from-your-country check:** reads a job post for signs the company can hire you where
+   you live ("contractor", "employer of record", "work from anywhere", or "must reside in the
+   US"), so you don't apply where you can't be hired.
+2. **Scam and ghost-job detector:** flags upfront fees, chat-app-only contact, pay too good for
+   the role, vague posts, and very old reposts.
+3. **LinkedIn profile consistency check:** compares your own LinkedIn profile with your master
+   resume (titles, dates, skills), since hiring tools compare the two.
+
+**A stronger resume**
+
+4. **Bullet strengthener:** finds bullets with no result or number and asks you questions to fill
+   them in.
+5. **GitHub evidence import:** reads your public repositories and proposes project bullets and
+   skills, with links as proof.
+6. **Honest gap closer:** for must-have skills you lack across the jobs you save, suggests a
+   small project that would let you claim the skill truthfully.
+7. **One-page version:** a one-page cut of any resume that keeps the job's keywords.
+
+**Beyond the application**
+
+8. **Freelance proposal mode:** a short proposal for a freelance job post from your most relevant
+   projects, with answers to the client's questions.
+9. **Recruiter reply helper:** paste a recruiter's message and get replies about availability,
+   salary, and time zone.
+10. **Company brief:** from the company's own pages, what they do, their stack, and three talking
+    points.
+11. **What's working report:** which resume versions and keywords got replies, interviews, or
+    rejections.
+12. **Today's apply queue:** your saved jobs ranked by fit, dealbreakers, and age.
+
+Features 3, 5, and 8 read another site or call another service, so each waits for the owner's
+approval first (see "Needs Liben's OK" in the roadmap).
+
 ## AI providers
 
 Bring your own key:

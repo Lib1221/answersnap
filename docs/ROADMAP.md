@@ -52,9 +52,21 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 - [ ] Interview pack for each application
 - [ ] Remote-work helpers: time zone overlap and salary in your currency
 - [ ] A quality eval for tailoring (the rules in `src/kb/resume/tailorApply.ts` against real job posts)
+- [ ] Hires-from-your-country check: signs in a post that the company can hire where you live (contractor, employer of record, work from anywhere) or can't (must reside in one country)
+- [ ] Scam and ghost-job detector: upfront fees, chat-app-only contact, pay too good for the role, vague posts, very old reposts
+- [ ] Bullet strengthener: finds bullets with no result or number and asks you questions to fill them in, never inventing
+- [ ] Honest gap closer: for must-have skills you lack across saved jobs, a small project that would let you claim the skill truthfully
+- [ ] One-page version of any resume, with the keyword-safe trimming
+- [ ] Recruiter reply helper: paste a recruiter's message, get replies about availability, salary, and time zone
+- [ ] Company brief from the company's own pages: what they do, their stack, three talking points
+- [ ] What's working report: which resume versions and keywords got replies, interviews, or rejections
+- [ ] Today's apply queue: saved jobs ranked by fit, dealbreakers, and age
 
 ## Needs Liben's OK
 
 - [x] Follow-up reminders as Chrome notifications (approved: `alarms`, `notifications`)
 - [x] OpenRouter and Ollama providers (approved; no new manifest permissions needed)
 - [x] Resume fonts: FlowCV's list (sans, serif, mono, creative name fonts) and Noto Sans Ethiopic, bundled (approved)
+- [ ] LinkedIn profile consistency check: reads your own LinkedIn profile page when you click, to compare titles, dates, and skills with your master resume (reads a LinkedIn page beyond the job post)
+- [ ] GitHub evidence import: reads your public repositories through GitHub's API to propose project bullets and skills (a new place requests go)
+- [ ] Freelance proposal mode: reads a freelance job post (Upwork and similar) to draft a proposal (a new site to read)
