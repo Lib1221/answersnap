@@ -15,6 +15,7 @@ import { getApiKey, getSettings } from '@/storage/items';
 import type { PageInfo } from '@/storage/schema';
 import { t } from '@/ui/i18n';
 import { jobTaskError, prepareJobTask } from './jobTask';
+import { useMotivation } from './useMotivation';
 import type { useJob } from './useJob';
 
 export interface Row {
@@ -237,6 +238,11 @@ export function useScholarship(job: ReturnType<typeof useJob>) {
     return j ? `${j.hostname}|${j.createdAt}` : '';
   });
   const checklistKey = computed(() => job.job.value?.hostname ?? '');
+  /** One motivation letter per saved page: the site and the page's title (saving it again keeps it). */
+  const letterKey = computed(() => {
+    const j = job.job.value;
+    return j ? `${j.hostname}|${(j.title ?? '').trim().toLowerCase()}` : '';
+  });
 
   watch(
     jobKey,
@@ -317,5 +323,6 @@ export function useScholarship(job: ReturnType<typeof useJob>) {
     checklist,
     analyze,
     toggleDocument,
+    letter: useMotivation(job, requirements, letterKey),
   };
 }

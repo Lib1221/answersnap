@@ -2101,5 +2101,73 @@
         "content": "$1"
       }
     }
+  },
+  "sch_view_letter": {
+    "message": "Lettre"
+  },
+  "sch_letter_save_page": {
+    "message": "Enregistrez d'abord la page du programme"
+  },
+  "sch_letter_save_how": {
+    "message": "Ouvrez la page du programme ou de la bourse, puis utilisez Définir l'offre ci-dessus et lisez toute la page. La lettre est écrite pour cette page."
+  },
+  "sch_letter_intro": {
+    "message": "Une lettre de motivation pour la page enregistrée, à partir de votre profil et de ce que vous écrivez ci-dessous. Rien n'est inventé à votre sujet : ce que vous laissez vide revient comme un [[blanc]] à compléter."
+  },
+  "sch_letter_program": {
+    "message": "Programme ou bourse"
+  },
+  "sch_letter_institution": {
+    "message": "Université"
+  },
+  "sch_letter_why": {
+    "message": "Pourquoi ce programme, avec vos propres mots"
+  },
+  "sch_letter_why_hint": {
+    "message": "Un cours, un laboratoire, un professeur, la ville : ce qui vous a attiré"
+  },
+  "sch_letter_goals": {
+    "message": "Ce que vous voulez faire ensuite"
+  },
+  "sch_letter_limit": {
+    "message": "Limite de mots"
+  },
+  "sch_letter_writing": {
+    "message": "Rédaction de votre lettre…"
+  },
+  "sch_letter_again": {
+    "message": "L'écrire à nouveau"
+  },
+  "sch_letter_write": {
+    "message": "Écrire la lettre"
+  },
+  "sch_letter_fill": {
+    "message": "À compléter vous-même :"
+  },
+  "sch_letter_text": {
+    "message": "Votre lettre de motivation"
+  },
+  "sch_letter_count": {
+    "message": "$P1$ sur $P2$ mots",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_letter_copied": {
+    "message": "Copié"
+  },
+  "sch_letter_copy": {
+    "message": "Copier"
+  },
+  "sch_letter_check": {
+    "message": "Relisez-la avant de l'envoyer : le comité vous interrogera sur tout ce qu'elle contient."
+  },
+  "sch_letter_error": {
+    "message": "Impossible d'écrire la lettre. Réessayez."
   }
 }

@@ -2101,5 +2101,73 @@
         "content": "$1"
       }
     }
+  },
+  "sch_view_letter": {
+    "message": "Carta"
+  },
+  "sch_letter_save_page": {
+    "message": "Primero guarda la página del programa"
+  },
+  "sch_letter_save_how": {
+    "message": "Abre la página del programa o de la beca, luego usa Fijar oferta arriba y lee la página completa. La carta se escribe para esa página."
+  },
+  "sch_letter_intro": {
+    "message": "Una carta de motivación para la página guardada, a partir de tu perfil y de lo que escribas abajo. No se inventa nada sobre ti: lo que dejes vacío vuelve como un [[hueco]] para rellenar."
+  },
+  "sch_letter_program": {
+    "message": "Programa o beca"
+  },
+  "sch_letter_institution": {
+    "message": "Universidad"
+  },
+  "sch_letter_why": {
+    "message": "Por qué este programa, con tus propias palabras"
+  },
+  "sch_letter_why_hint": {
+    "message": "Una asignatura, un laboratorio, un profesor, la ciudad: lo que te atrajo"
+  },
+  "sch_letter_goals": {
+    "message": "Qué quieres hacer después"
+  },
+  "sch_letter_limit": {
+    "message": "Límite de palabras"
+  },
+  "sch_letter_writing": {
+    "message": "Escribiendo tu carta…"
+  },
+  "sch_letter_again": {
+    "message": "Escribirla de nuevo"
+  },
+  "sch_letter_write": {
+    "message": "Escribir la carta"
+  },
+  "sch_letter_fill": {
+    "message": "Rellena esto tú:"
+  },
+  "sch_letter_text": {
+    "message": "Tu carta de motivación"
+  },
+  "sch_letter_count": {
+    "message": "$P1$ de $P2$ palabras",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_letter_copied": {
+    "message": "Copiado"
+  },
+  "sch_letter_copy": {
+    "message": "Copiar"
+  },
+  "sch_letter_check": {
+    "message": "Léela entera antes de enviarla: el comité te preguntará por todo lo que diga."
+  },
+  "sch_letter_error": {
+    "message": "No se pudo escribir la carta. Inténtalo de nuevo."
   }
 }

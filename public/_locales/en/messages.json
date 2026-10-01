@@ -1877,6 +1877,71 @@
   "sch_key_street": {
     "message": "Street"
   },
+  "sch_letter_again": {
+    "message": "Write it again"
+  },
+  "sch_letter_check": {
+    "message": "Read it through before you send it: a committee will ask about anything in it."
+  },
+  "sch_letter_copied": {
+    "message": "Copied"
+  },
+  "sch_letter_copy": {
+    "message": "Copy"
+  },
+  "sch_letter_count": {
+    "message": "$P1$ of $P2$ words",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_letter_error": {
+    "message": "Couldn't write the letter. Try again."
+  },
+  "sch_letter_fill": {
+    "message": "Fill these in yourself:"
+  },
+  "sch_letter_goals": {
+    "message": "What you want to do afterwards"
+  },
+  "sch_letter_institution": {
+    "message": "University"
+  },
+  "sch_letter_intro": {
+    "message": "A motivation letter for the saved page, from your profile and what you write below. Nothing about you is invented: what you leave empty comes back as a [[blank]] to fill in."
+  },
+  "sch_letter_limit": {
+    "message": "Word limit"
+  },
+  "sch_letter_program": {
+    "message": "Programme or scholarship"
+  },
+  "sch_letter_save_how": {
+    "message": "Open the programme or scholarship page, then use Set job above and read the whole page. The letter is written for that page."
+  },
+  "sch_letter_save_page": {
+    "message": "Save the programme page first"
+  },
+  "sch_letter_text": {
+    "message": "Your motivation letter"
+  },
+  "sch_letter_why": {
+    "message": "Why this programme, in your own words"
+  },
+  "sch_letter_why_hint": {
+    "message": "A course, a lab, a professor, the city: what drew you"
+  },
+  "sch_letter_write": {
+    "message": "Write the letter"
+  },
+  "sch_letter_writing": {
+    "message": "Writing your letter…"
+  },
   "sch_likely": {
     "message": "Matched from the label and its neighbors: glance at it."
   },
@@ -1986,6 +2051,9 @@
   },
   "sch_view_guide": {
     "message": "Italy guide"
+  },
+  "sch_view_letter": {
+    "message": "Letter"
   },
   "sch_view_requirements": {
     "message": "Requirements"

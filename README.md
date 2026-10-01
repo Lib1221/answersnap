@@ -28,7 +28,9 @@ Made by Liben.
   Universitaly, Esse3, and other portals), then checked on the page. Read your passport's
   machine-readable lines to fill your details, validate your codice fiscale, check a call's
   deadlines, age limits, and language minimums against your details, and keep a document
-  checklist. Personal details are never sent to the AI.
+  checklist. Write a **motivation letter** for a programme from your profile and your own reasons
+  and goals, within the call's word limit; what you didn't say is left as a blank to fill in,
+  never invented. Personal details are never sent to the AI.
 - **One-click tailoring (LinkedIn):** on a LinkedIn job page, click **Tailor resume**. AnswerSnap
   reads the job, then makes a copy of your master resume aimed at it: the job's keywords in your
   own bullets, a matching summary and title line, the most relevant projects, all within two
@@ -114,8 +116,8 @@ and ID details still never go to the AI.
 
 **Writing**
 
-4. **Motivation letter writer:** a letter per program from your profile and that program's page,
-   within the call's word limit, facts only.
+4. **Motivation letter writer** (done): a letter per program from your profile and that
+   program's page, within the call's word limit, facts only.
 5. **Study plan and research proposal outline** for calls that require one.
 6. **Essay reuse and consistency:** an essay you wrote adapted to a new question and limit, and
    a check that all your essays state the same facts.

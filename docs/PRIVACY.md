@@ -63,6 +63,9 @@ or Ollama running on your own computer), using your own API key, and only when y
   post if you set one, up to three similar saved answers, the answers you gave on the same site
   in the last day (so a multi-page application stays consistent), and your candidate data.
 - **When you build your profile:** the text of your enabled sources.
+- **When you write a motivation letter** (Study tab): the programme or scholarship page you
+  saved, what you typed about your reasons and goals, and your candidate data. Your applicant
+  details (passport, birth, address) are not sent.
 - **When you use "Read with AI":** the images of the pages or snips you are importing.
 - **When you import your resume into the resume builder:** the text of the file you choose.
 - **When you tailor a resume for a job** (the LinkedIn button, Tailor full resume in the side

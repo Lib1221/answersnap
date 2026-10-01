@@ -15,11 +15,12 @@ const props = defineProps<{
 const emit = defineEmits<{ openSettings: [section?: string] }>();
 const sc = props.state;
 
-type View = 'fill' | 'requirements' | 'guide';
+type View = 'fill' | 'requirements' | 'letter' | 'guide';
 const view = ref<View>('fill');
 const VIEWS = computed<{ id: View; label: string }[]>(() => [
   { id: 'fill', label: t('sch_view_fill', 'Fill') },
   { id: 'requirements', label: t('sch_view_requirements', 'Requirements') },
+  { id: 'letter', label: t('sch_view_letter', 'Letter') },
   { id: 'guide', label: t('sch_view_guide', 'Italy guide') },
 ]);
 
@@ -174,6 +175,19 @@ function checkText(c: Check): string {
         : t('sch_check_deadline_past', '$1: $2, already passed.', String(d.what), String(d.date));
   }
 }
+const letter = sc.letter;
+const copied = ref(false);
+async function copyLetter() {
+  try {
+    await navigator.clipboard.writeText(letter.form.value.text);
+    copied.value = true;
+    setTimeout(() => (copied.value = false), 1500);
+  } catch {
+    // The panel isn't focused: the text stays selectable in the box.
+  }
+}
+const overLimit = computed(() => letter.words() > letter.form.value.wordLimit);
+
 const CHECK_ICON = { ok: 'check', fail: 'alert', unknown: 'flag' } as const;
 const CHECK_TONE = {
   ok: 'text-success',
@@ -216,7 +230,7 @@ const CHECK_TONE = {
   </section>
 
   <div
-    class="grid grid-cols-3 gap-1 rounded-[10px] border border-rule bg-paper p-1"
+    class="grid grid-cols-4 gap-1 rounded-[10px] border border-rule bg-paper p-1"
     role="group"
     :aria-label="t('sch_views', 'Scholarship tools')"
   >
@@ -652,6 +666,179 @@ const CHECK_TONE = {
           </ul>
         </section>
       </template>
+    </template>
+  </template>
+
+  <!-- Motivation letter -->
+  <template v-else-if="view === 'letter'">
+    <section
+      v-if="!props.job.job.value"
+      class="card flex flex-col items-center gap-2 px-5 py-7 text-center"
+      data-testid="sch-letter-needs-page"
+    >
+      <Icon name="cap" :size="22" class="text-ink" />
+      <h2 class="text-[15px] font-[650]">
+        {{ t('sch_letter_save_page', 'Save the programme page first') }}
+      </h2>
+      <p class="text-[13px] text-graphite-2">
+        {{
+          t(
+            'sch_letter_save_how',
+            'Open the programme or scholarship page, then use Set job above and read the whole page. The letter is written for that page.',
+          )
+        }}
+      </p>
+    </section>
+    <template v-else>
+      <section class="card flex flex-col gap-3 p-4" data-testid="sch-letter">
+        <p class="text-[13px] text-graphite-2">
+          {{
+            t(
+              'sch_letter_intro',
+              'A motivation letter for the saved page, from your profile and what you write below. Nothing about you is invented: what you leave empty comes back as a [[blank]] to fill in.',
+            )
+          }}
+        </p>
+        <label class="flex flex-col gap-1 text-[13px]">
+          <span class="font-medium">{{ t('sch_letter_program', 'Programme or scholarship') }}</span>
+          <input
+            v-model="letter.form.value.program"
+            class="field-input px-2 py-1.5"
+            data-testid="sch-letter-program"
+          />
+        </label>
+        <label class="flex flex-col gap-1 text-[13px]">
+          <span class="font-medium">{{ t('sch_letter_institution', 'University') }}</span>
+          <input
+            v-model="letter.form.value.institution"
+            class="field-input px-2 py-1.5"
+            data-testid="sch-letter-institution"
+          />
+        </label>
+        <label class="flex flex-col gap-1 text-[13px]">
+          <span class="font-medium">{{
+            t('sch_letter_why', 'Why this programme, in your own words')
+          }}</span>
+          <textarea
+            v-model="letter.form.value.why"
+            rows="3"
+            class="field-input p-2"
+            :placeholder="
+              t('sch_letter_why_hint', 'A course, a lab, a professor, the city: what drew you')
+            "
+            data-testid="sch-letter-why"
+          />
+        </label>
+        <label class="flex flex-col gap-1 text-[13px]">
+          <span class="font-medium">{{
+            t('sch_letter_goals', 'What you want to do afterwards')
+          }}</span>
+          <textarea
+            v-model="letter.form.value.goals"
+            rows="2"
+            class="field-input p-2"
+            data-testid="sch-letter-goals"
+          />
+        </label>
+        <label class="flex items-center gap-2 text-[13px]">
+          <span class="font-medium">{{ t('sch_letter_limit', 'Word limit') }}</span>
+          <input
+            v-model.number="letter.form.value.wordLimit"
+            type="number"
+            min="150"
+            max="1500"
+            step="50"
+            class="field-input w-24 px-2 py-1"
+            data-testid="sch-letter-limit"
+          />
+        </label>
+        <p
+          v-if="letter.status.value === 'writing'"
+          role="status"
+          class="flex items-center gap-2 text-[13px] text-graphite-2"
+        >
+          <span class="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden="true" />
+          {{ t('sch_letter_writing', 'Writing your letter…') }}
+        </p>
+        <p v-if="letter.error.value" class="notice text-[13px]" role="alert">
+          {{ letter.error.value }}
+        </p>
+        <button
+          class="btn self-start"
+          :class="letter.form.value.text ? '' : 'btn-primary'"
+          type="button"
+          :disabled="letter.status.value === 'writing'"
+          data-testid="sch-letter-write"
+          @click="letter.write"
+        >
+          <Icon :name="letter.form.value.text ? 'refresh' : 'sparkle'" />
+          {{
+            letter.form.value.text
+              ? t('sch_letter_again', 'Write it again')
+              : t('sch_letter_write', 'Write the letter')
+          }}
+        </button>
+      </section>
+
+      <section
+        v-if="letter.form.value.text"
+        class="card flex flex-col gap-2 p-4"
+        data-testid="sch-letter-result"
+      >
+        <p v-if="letter.form.value.missing.length" class="flex flex-col gap-1 text-[13px]">
+          <span class="font-medium">{{ t('sch_letter_fill', 'Fill these in yourself:') }}</span>
+          <span class="flex flex-wrap gap-1">
+            <span
+              v-for="m in letter.form.value.missing"
+              :key="m"
+              class="rounded-[6px] bg-carbon-pink px-2 py-0.5 text-[12px] text-carbon-pink-text"
+              data-testid="sch-letter-missing"
+              >{{ m }}</span
+            >
+          </span>
+        </p>
+        <textarea
+          v-model="letter.form.value.text"
+          rows="18"
+          class="field-input p-2 text-[13.5px] leading-relaxed"
+          :aria-label="t('sch_letter_text', 'Your motivation letter')"
+          data-testid="sch-letter-text"
+          @change="letter.save"
+        />
+        <div class="flex flex-wrap items-center gap-3">
+          <span
+            class="text-[12.5px] tabular-nums"
+            :class="overLimit ? 'text-carbon-pink-text' : 'text-graphite-2'"
+            data-testid="sch-letter-count"
+          >
+            {{
+              t(
+                'sch_letter_count',
+                '$1 of $2 words',
+                String(letter.words()),
+                String(letter.form.value.wordLimit),
+              )
+            }}
+          </span>
+          <button
+            class="btn min-h-0 px-2.5 py-1 text-[13px]"
+            type="button"
+            data-testid="sch-letter-copy"
+            @click="copyLetter"
+          >
+            <Icon name="copy" :size="14" />
+            {{ copied ? t('sch_letter_copied', 'Copied') : t('sch_letter_copy', 'Copy') }}
+          </button>
+        </div>
+        <p class="text-[12.5px] text-graphite-2">
+          {{
+            t(
+              'sch_letter_check',
+              'Read it through before you send it: a committee will ask about anything in it.',
+            )
+          }}
+        </p>
+      </section>
     </template>
   </template>
 

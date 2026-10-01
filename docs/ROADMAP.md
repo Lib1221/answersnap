@@ -64,7 +64,7 @@ extension can do is in one place. Items under "Needs Liben's OK" touch a hard ru
 
 ## Master's scholarships (Study tab)
 
-- [ ] Motivation letter writer: a letter per program from your profile and the program's page, within the call's word limit, facts only
+- [x] Motivation letter writer: a letter per program from your profile, your own reasons and goals, and the program's page, within the call's word limit, facts only
 - [ ] Scholarship tracker with deadlines and reminders
 - [ ] Am I eligible, across calls: every saved call checked against your details and ranked
 - [ ] Program fit: a program's course page compared with your background and goals

@@ -2101,5 +2101,73 @@
         "content": "$1"
       }
     }
+  },
+  "sch_view_letter": {
+    "message": "ደብዳቤ"
+  },
+  "sch_letter_save_page": {
+    "message": "መጀመሪያ የፕሮግራሙን ገጽ አስቀምጥ"
+  },
+  "sch_letter_save_how": {
+    "message": "የፕሮግራሙን ወይም የስኮላርሺፑን ገጽ ይክፈቱ፣ ከዚያ ከላይ ያለውን \"ሥራ አዘጋጅ\" ተጠቅመው ሙሉውን ገጽ ያንብቡ። ደብዳቤው ለዚያ ገጽ ይጻፋል።"
+  },
+  "sch_letter_intro": {
+    "message": "ለተቀመጠው ገጽ የሚሆን የተነሳሽነት ደብዳቤ፣ ከመገለጫዎ እና ከታች ከሚጽፉት። ስለ እርስዎ ምንም አይፈጠርም፦ ባዶ የተዉት በኋላ የሚሞሉት [[ባዶ ቦታ]] ሆኖ ይመለሳል።"
+  },
+  "sch_letter_program": {
+    "message": "ፕሮግራም ወይም ስኮላርሺፕ"
+  },
+  "sch_letter_institution": {
+    "message": "ዩኒቨርሲቲ"
+  },
+  "sch_letter_why": {
+    "message": "ይህን ፕሮግራም ለምን መረጡ፣ በራስዎ ቃላት"
+  },
+  "sch_letter_why_hint": {
+    "message": "አንድ ኮርስ፣ ላብራቶሪ፣ ፕሮፌሰር፣ ከተማው፦ የሳበዎት ነገር"
+  },
+  "sch_letter_goals": {
+    "message": "ከዚያ በኋላ ማድረግ የሚፈልጉት"
+  },
+  "sch_letter_limit": {
+    "message": "የቃላት ገደብ"
+  },
+  "sch_letter_writing": {
+    "message": "ደብዳቤዎ እየተጻፈ ነው…"
+  },
+  "sch_letter_again": {
+    "message": "እንደገና ጻፍ"
+  },
+  "sch_letter_write": {
+    "message": "ደብዳቤውን ጻፍ"
+  },
+  "sch_letter_fill": {
+    "message": "እነዚህን እራስዎ ይሙሉ፦"
+  },
+  "sch_letter_text": {
+    "message": "የተነሳሽነት ደብዳቤዎ"
+  },
+  "sch_letter_count": {
+    "message": "ከ$P2$ ቃላት $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_letter_copied": {
+    "message": "ተቀድቷል"
+  },
+  "sch_letter_copy": {
+    "message": "ቅዳ"
+  },
+  "sch_letter_check": {
+    "message": "ከመላክዎ በፊት ሙሉውን ያንብቡት፦ ኮሚቴው በውስጡ ስላለው ማንኛውም ነገር ይጠይቅዎታል።"
+  },
+  "sch_letter_error": {
+    "message": "ደብዳቤውን መጻፍ አልተቻለም። እንደገና ይሞክሩ።"
   }
 }

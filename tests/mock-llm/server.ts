@@ -243,6 +243,11 @@ const log: unknown[] = [];
 const counters = new Map<string, number>();
 
 const CANNED: [RegExp, string][] = [
+  // Study > Letter.
+  [
+    /Write a motivation letter for/i,
+    '<question>Write a motivation letter.</question>\n<type>long_text</type>\n<answer>Dear Admissions Committee,\n\nI am applying to the programme because of its statistical learning track. At Ledgerly I moved report generation to Celery workers and cut p95 latency from 900 ms to 240 ms.\n\nAfter the programme I want to [[what you want to do after the programme]].\n\nYours sincerely,\nJamie Park</answer>\n<missing>what you want to do after the programme</missing>\n<notes></notes>',
+  ],
   // "Another angle": a different version of whatever was asked. Listed first so it wins.
   [
     /Write a different version of the answer/i,

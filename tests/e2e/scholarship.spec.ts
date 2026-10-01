@@ -226,3 +226,50 @@ test('Applicant details: read a passport MRZ and check the codice fiscale', asyn
     'L898902C3',
   );
 });
+
+test('motivation letter: written for the saved page from your own reasons, kept, and never your ID details', async ({
+  context,
+  panel,
+}) => {
+  await seed(panel);
+  await seedApplicant(panel);
+  const call = await saveJob(panel, context, 'scholarship-call.html');
+  await openScholarship(panel);
+  await panel.getByRole('button', { name: 'Letter', exact: true }).click();
+
+  await panel.getByTestId('sch-letter-program').fill('MSc Data Science');
+  await panel.getByTestId('sch-letter-institution').fill('University of Padua');
+  await panel.getByTestId('sch-letter-why').fill('The statistical learning track.');
+  await panel.getByTestId('sch-letter-limit').fill('400');
+  await panel.getByTestId('sch-letter-write').click();
+
+  const text = panel.getByTestId('sch-letter-text');
+  await expect(text).toHaveValue(/Dear Admissions Committee/, { timeout: 15_000 });
+  // What the applicant didn't say is a blank to fill in, not an invented plan.
+  await expect(panel.getByTestId('sch-letter-missing')).toHaveText(
+    'what you want to do after the programme',
+  );
+  await expect(panel.getByTestId('sch-letter-count')).toContainText('of 400 words');
+
+  const sent = JSON.stringify(
+    (await mockLog()).filter((b) => JSON.stringify(b).includes('Write a motivation letter')),
+  );
+  expect(sent).toContain('MSc Data Science at University of Padua');
+  expect(sent).toContain('The statistical learning track.');
+  expect(sent).toContain('Padua International Excellence Scholarship');
+  expect(sent).toContain('never more than 400 words');
+  expect(sent).not.toContain('EP1234567');
+  expect(sent).not.toContain('Tesfaye');
+
+  // Edits are kept, and the letter is still there after the panel reloads.
+  await text.fill('Dear Admissions Committee,\n\nMy own edit.');
+  await text.blur();
+  // The panel follows the active tab: reload it with the call page in front.
+  await call.bringToFront();
+  await panel.reload();
+  await expect(panel.getByTestId('job-chip')).toBeVisible();
+  await openScholarship(panel);
+  await panel.getByRole('button', { name: 'Letter', exact: true }).click();
+  await expect(panel.getByTestId('sch-letter-text')).toHaveValue(/My own edit\./);
+  await expect(panel.getByTestId('sch-letter-why')).toHaveValue('The statistical learning track.');
+});
