@@ -199,6 +199,8 @@ export const SettingsSchema = z.object({
   ollamaUrl: z.string().default('http://localhost:11434'),
   /** A Chrome notification when a tracked application has gone quiet. */
   followUpReminders: z.boolean().default(true),
+  /** A Chrome notification 14, 7, 3, and 1 day before a tracked scholarship closes. */
+  deadlineReminders: z.boolean().default(true),
   /** The "Tailor resume" button on LinkedIn job pages (approved by Liben, 2026-09-29). */
   linkedinButton: z.boolean().default(true),
   dealbreakers: DealbreakersSchema.default(DealbreakersSchema.parse({})),

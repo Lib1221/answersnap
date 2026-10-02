@@ -16,6 +16,7 @@ import type { PageInfo } from '@/storage/schema';
 import { t } from '@/ui/i18n';
 import { jobTaskError, prepareJobTask } from './jobTask';
 import { useMotivation } from './useMotivation';
+import { useScholarshipTracker } from './useScholarshipTracker';
 import type { useJob } from './useJob';
 
 export interface Row {
@@ -324,5 +325,6 @@ export function useScholarship(job: ReturnType<typeof useJob>) {
     analyze,
     toggleDocument,
     letter: useMotivation(job, requirements, letterKey),
+    tracker: useScholarshipTracker(job, requirements, checklist),
   };
 }

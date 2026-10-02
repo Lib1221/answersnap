@@ -30,7 +30,8 @@ Made by Liben.
   deadlines, age limits, and language minimums against your details, and keep a document
   checklist. Write a **motivation letter** for a programme from your profile and your own reasons
   and goals, within the call's word limit; what you didn't say is left as a blank to fill in,
-  never invented. Personal details are never sent to the AI.
+  never invented. **Track** every scholarship with its closing date, documents, and status, and
+  get a reminder 14, 7, 3, and 1 day before it closes. Personal details are never sent to the AI.
 - **One-click tailoring (LinkedIn):** on a LinkedIn job page, click **Tailor resume**. AnswerSnap
   reads the job, then makes a copy of your master resume aimed at it: the job's keywords in your
   own bullets, a matching summary and title line, the most relevant projects, all within two
@@ -126,7 +127,7 @@ and ID details still never go to the AI.
 
 **Managing the process**
 
-9. **Scholarship tracker with deadlines** and reminders.
+9. **Scholarship tracker with deadlines** and reminders (done).
 10. **Backwards timeline:** from a deadline, when to book the language test, request
     recommendations, and get documents legalised.
 11. **Recommendation letter kit:** request emails to your referees, and a fact sheet for them.

@@ -2169,5 +2169,185 @@
   },
   "sch_letter_error": {
     "message": "Impossible d'écrire la lettre. Réessayez."
+  },
+  "deadline_in_days": {
+    "message": "dans $P1$ jours",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_today": {
+    "message": "aujourd'hui"
+  },
+  "deadline_tomorrow": {
+    "message": "demain"
+  },
+  "deadline_title": {
+    "message": "Une bourse se clôture $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_title_many": {
+    "message": "$P1$ bourses se clôturent bientôt",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_one": {
+    "message": "$P1$ se clôture le $P2$. Ouvrez l'onglet Études pour voir ce qu'il reste à faire.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "deadline_many": {
+    "message": "La première, $P1$, se clôture $P2$. Ouvrez l'onglet Études pour les voir.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_status_planning": {
+    "message": "En projet"
+  },
+  "sch_status_preparing": {
+    "message": "En préparation"
+  },
+  "sch_status_submitted": {
+    "message": "Envoyée"
+  },
+  "sch_status_interview": {
+    "message": "Entretien"
+  },
+  "sch_status_awarded": {
+    "message": "Obtenue"
+  },
+  "sch_status_rejected": {
+    "message": "Refusée"
+  },
+  "sch_status_withdrawn": {
+    "message": "Retirée"
+  },
+  "sch_view_tracker": {
+    "message": "Suivi"
+  },
+  "sch_track": {
+    "message": "Suivre cette bourse"
+  },
+  "sch_track_update": {
+    "message": "La mettre à jour dans le suivi"
+  },
+  "sch_tr_intro": {
+    "message": "Toutes les bourses sur lesquelles vous travaillez, la plus proche de sa date limite en premier. Ajoutez-en une depuis Conditions ou ici."
+  },
+  "sch_tr_name": {
+    "message": "Bourse ou programme"
+  },
+  "sch_tr_deadline": {
+    "message": "Clôture le"
+  },
+  "sch_tr_add": {
+    "message": "Ajouter"
+  },
+  "sch_tr_remind": {
+    "message": "Me prévenir avant les dates limites"
+  },
+  "sch_tr_remind_how": {
+    "message": "Une notification Chrome 14, 7, 3 et 1 jour avant la clôture d'une bourse que vous n'avez pas encore envoyée."
+  },
+  "sch_tr_empty": {
+    "message": "Aucune bourse suivie pour le moment."
+  },
+  "sch_tr_status": {
+    "message": "Statut de $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_no_date": {
+    "message": "Pas encore de date de clôture"
+  },
+  "sch_tr_closed": {
+    "message": "Clôturée le $P1$ (il y a $P2$ jours)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_today": {
+    "message": "Clôture aujourd'hui ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_tomorrow": {
+    "message": "Clôture demain ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_in_days": {
+    "message": "Clôture dans $P1$ jours ($P2$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_docs": {
+    "message": "Documents : $P1$ sur $P2$ prêts",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_more": {
+    "message": "Date, notes, retirer"
+  },
+  "sch_tr_notes": {
+    "message": "Notes : référents contactés, accès au portail, ce qu'il reste"
+  },
+  "sch_tr_notes_label": {
+    "message": "Notes pour $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_remove": {
+    "message": "Retirer du suivi"
   }
 }

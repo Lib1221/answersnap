@@ -2169,5 +2169,185 @@
   },
   "sch_letter_error": {
     "message": "No se pudo escribir la carta. Inténtalo de nuevo."
+  },
+  "deadline_in_days": {
+    "message": "en $P1$ días",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_today": {
+    "message": "hoy"
+  },
+  "deadline_tomorrow": {
+    "message": "mañana"
+  },
+  "deadline_title": {
+    "message": "Una beca cierra $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_title_many": {
+    "message": "$P1$ becas cierran pronto",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_one": {
+    "message": "$P1$ cierra el $P2$. Abre la pestaña Estudios para ver lo que falta.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "deadline_many": {
+    "message": "La primera, $P1$, cierra $P2$. Abre la pestaña Estudios para verlas.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_status_planning": {
+    "message": "Planeando"
+  },
+  "sch_status_preparing": {
+    "message": "Preparando"
+  },
+  "sch_status_submitted": {
+    "message": "Enviada"
+  },
+  "sch_status_interview": {
+    "message": "Entrevista"
+  },
+  "sch_status_awarded": {
+    "message": "Concedida"
+  },
+  "sch_status_rejected": {
+    "message": "Rechazada"
+  },
+  "sch_status_withdrawn": {
+    "message": "Retirada"
+  },
+  "sch_view_tracker": {
+    "message": "Seguimiento"
+  },
+  "sch_track": {
+    "message": "Seguir esta beca"
+  },
+  "sch_track_update": {
+    "message": "Actualizarla en el seguimiento"
+  },
+  "sch_tr_intro": {
+    "message": "Todas las becas en las que trabajas, primero la que cierra antes. Añade una desde Requisitos o aquí."
+  },
+  "sch_tr_name": {
+    "message": "Beca o programa"
+  },
+  "sch_tr_deadline": {
+    "message": "Cierra el"
+  },
+  "sch_tr_add": {
+    "message": "Añadir"
+  },
+  "sch_tr_remind": {
+    "message": "Avisarme antes de los plazos"
+  },
+  "sch_tr_remind_how": {
+    "message": "Una notificación de Chrome 14, 7, 3 y 1 día antes de que cierre una beca que aún no has enviado."
+  },
+  "sch_tr_empty": {
+    "message": "Aún no sigues ninguna."
+  },
+  "sch_tr_status": {
+    "message": "Estado de $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_no_date": {
+    "message": "Sin fecha de cierre todavía"
+  },
+  "sch_tr_closed": {
+    "message": "Cerró el $P1$ (hace $P2$ días)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_today": {
+    "message": "Cierra hoy ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_tomorrow": {
+    "message": "Cierra mañana ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_in_days": {
+    "message": "Cierra en $P1$ días ($P2$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_docs": {
+    "message": "Documentos: $P1$ de $P2$ listos",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_more": {
+    "message": "Fecha, notas, quitar"
+  },
+  "sch_tr_notes": {
+    "message": "Notas: referencias pedidas, acceso al portal, lo que falta"
+  },
+  "sch_tr_notes_label": {
+    "message": "Notas de $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_remove": {
+    "message": "Quitar del seguimiento"
   }
 }

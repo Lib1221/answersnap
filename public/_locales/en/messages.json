@@ -299,6 +299,58 @@
   "credit_star_on_github": {
     "message": "Star on GitHub"
   },
+  "deadline_in_days": {
+    "message": "in $P1$ days",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_many": {
+    "message": "The first, $P1$, closes $P2$. Open the Study tab to see them.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "deadline_one": {
+    "message": "$P1$ closes on $P2$. Open the Study tab to see what is left to do.",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "deadline_title": {
+    "message": "A scholarship closes $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_title_many": {
+    "message": "$P1$ scholarships close soon",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_today": {
+    "message": "today"
+  },
+  "deadline_tomorrow": {
+    "message": "tomorrow"
+  },
   "email_company": {
     "message": "Company"
   },
@@ -2021,11 +2073,136 @@
   "sch_scanning": {
     "message": "Scanning"
   },
+  "sch_status_awarded": {
+    "message": "Awarded"
+  },
+  "sch_status_interview": {
+    "message": "Interview"
+  },
+  "sch_status_planning": {
+    "message": "Planning"
+  },
+  "sch_status_preparing": {
+    "message": "Preparing"
+  },
+  "sch_status_rejected": {
+    "message": "Rejected"
+  },
+  "sch_status_submitted": {
+    "message": "Submitted"
+  },
+  "sch_status_withdrawn": {
+    "message": "Withdrawn"
+  },
   "sch_subtitle": {
     "message": "Exact personal details, verified after filling."
   },
   "sch_title": {
     "message": "Scholarships and admissions"
+  },
+  "sch_tr_add": {
+    "message": "Add"
+  },
+  "sch_tr_closed": {
+    "message": "Closed $P1$ ($P2$ days ago)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_deadline": {
+    "message": "Closes on"
+  },
+  "sch_tr_docs": {
+    "message": "Documents: $P1$ of $P2$ ready",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_empty": {
+    "message": "Nothing tracked yet."
+  },
+  "sch_tr_in_days": {
+    "message": "Closes in $P1$ days ($P2$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_intro": {
+    "message": "Every scholarship you are working on, the soonest deadline first. Track one from Requirements, or add it here."
+  },
+  "sch_tr_more": {
+    "message": "Date, notes, remove"
+  },
+  "sch_tr_name": {
+    "message": "Scholarship or programme"
+  },
+  "sch_tr_no_date": {
+    "message": "No closing date yet"
+  },
+  "sch_tr_notes": {
+    "message": "Notes: referees asked, portal login, what is left"
+  },
+  "sch_tr_notes_label": {
+    "message": "Notes for $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_remind": {
+    "message": "Remind me before deadlines"
+  },
+  "sch_tr_remind_how": {
+    "message": "A Chrome notification 14, 7, 3, and 1 day before a scholarship you have not submitted closes."
+  },
+  "sch_tr_remove": {
+    "message": "Remove from the tracker"
+  },
+  "sch_tr_status": {
+    "message": "Status of $P1$",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_today": {
+    "message": "Closes today ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_tomorrow": {
+    "message": "Closes tomorrow ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_track": {
+    "message": "Track this scholarship"
+  },
+  "sch_track_update": {
+    "message": "Update it in the tracker"
   },
   "sch_uploads": {
     "message": "Uploads on this page ($P1$)",
@@ -2057,6 +2234,9 @@
   },
   "sch_view_requirements": {
     "message": "Requirements"
+  },
+  "sch_view_tracker": {
+    "message": "Tracker"
   },
   "sch_views": {
     "message": "Scholarship tools"

@@ -2169,5 +2169,185 @@
   },
   "sch_letter_error": {
     "message": "ደብዳቤውን መጻፍ አልተቻለም። እንደገና ይሞክሩ።"
+  },
+  "deadline_in_days": {
+    "message": "በ$P1$ ቀናት ውስጥ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_today": {
+    "message": "ዛሬ"
+  },
+  "deadline_tomorrow": {
+    "message": "ነገ"
+  },
+  "deadline_title": {
+    "message": "አንድ ስኮላርሺፕ $P1$ ይዘጋል",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_title_many": {
+    "message": "$P1$ ስኮላርሺፖች በቅርቡ ይዘጋሉ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "deadline_one": {
+    "message": "$P1$ በ$P2$ ይዘጋል። የቀረውን ለማየት የትምህርት ትሩን ይክፈቱ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "deadline_many": {
+    "message": "የመጀመሪያው $P1$ $P2$ ይዘጋል። ለማየት የትምህርት ትሩን ይክፈቱ።",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_status_planning": {
+    "message": "በዕቅድ ላይ"
+  },
+  "sch_status_preparing": {
+    "message": "በዝግጅት ላይ"
+  },
+  "sch_status_submitted": {
+    "message": "ተልኳል"
+  },
+  "sch_status_interview": {
+    "message": "ቃለ መጠይቅ"
+  },
+  "sch_status_awarded": {
+    "message": "ተሰጥቷል"
+  },
+  "sch_status_rejected": {
+    "message": "ውድቅ ሆኗል"
+  },
+  "sch_status_withdrawn": {
+    "message": "ተነስቷል"
+  },
+  "sch_view_tracker": {
+    "message": "መከታተያ"
+  },
+  "sch_track": {
+    "message": "ይህን ስኮላርሺፕ ተከታተል"
+  },
+  "sch_track_update": {
+    "message": "በመከታተያው ውስጥ አዘምን"
+  },
+  "sch_tr_intro": {
+    "message": "እየሠሩባቸው ያሉ ስኮላርሺፖች ሁሉ፣ ቀድሞ የሚዘጋው በመጀመሪያ። ከመስፈርቶች ወይም ከዚህ ያክሉ።"
+  },
+  "sch_tr_name": {
+    "message": "ስኮላርሺፕ ወይም ፕሮግራም"
+  },
+  "sch_tr_deadline": {
+    "message": "የሚዘጋበት ቀን"
+  },
+  "sch_tr_add": {
+    "message": "አክል"
+  },
+  "sch_tr_remind": {
+    "message": "ከመዝጊያ ቀናት በፊት አስታውሰኝ"
+  },
+  "sch_tr_remind_how": {
+    "message": "ገና ያልላኩት ስኮላርሺፕ ከመዘጋቱ 14፣ 7፣ 3 እና 1 ቀን በፊት የChrome ማሳወቂያ።"
+  },
+  "sch_tr_empty": {
+    "message": "እስካሁን የሚከታተሉት የለም።"
+  },
+  "sch_tr_status": {
+    "message": "የ$P1$ ሁኔታ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_no_date": {
+    "message": "የመዝጊያ ቀን ገና የለም"
+  },
+  "sch_tr_closed": {
+    "message": "በ$P1$ ተዘግቷል (ከ$P2$ ቀናት በፊት)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_today": {
+    "message": "ዛሬ ይዘጋል ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_tomorrow": {
+    "message": "ነገ ይዘጋል ($P1$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_in_days": {
+    "message": "በ$P1$ ቀናት ውስጥ ይዘጋል ($P2$)",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_docs": {
+    "message": "ሰነዶች፦ ከ$P2$ ውስጥ $P1$ ዝግጁ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      },
+      "p2": {
+        "content": "$2"
+      }
+    }
+  },
+  "sch_tr_more": {
+    "message": "ቀን፣ ማስታወሻ፣ አስወግድ"
+  },
+  "sch_tr_notes": {
+    "message": "ማስታወሻ፦ የተጠየቁ ምስክሮች፣ የፖርታል መግቢያ፣ የቀረው"
+  },
+  "sch_tr_notes_label": {
+    "message": "የ$P1$ ማስታወሻ",
+    "placeholders": {
+      "p1": {
+        "content": "$1"
+      }
+    }
+  },
+  "sch_tr_remove": {
+    "message": "ከመከታተያው አስወግድ"
   }
 }

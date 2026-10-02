@@ -273,3 +273,52 @@ test('motivation letter: written for the saved page from your own reasons, kept,
   await expect(panel.getByTestId('sch-letter-text')).toHaveValue(/My own edit\./);
   await expect(panel.getByTestId('sch-letter-why')).toHaveValue('The statistical learning track.');
 });
+
+test('tracker: a call tracked from its requirements, with its deadline, documents, and status', async ({
+  context,
+  panel,
+}) => {
+  await seed(panel);
+  await seedApplicant(panel);
+  await saveJob(panel, context, 'scholarship-call.html');
+  await openScholarship(panel);
+  await panel.getByRole('button', { name: 'Requirements' }).click();
+  await panel.getByTestId('sch-req-run').click();
+  await panel.getByTestId('sch-docs').getByText('Copy of passport').click();
+  await panel.getByTestId('sch-track').click();
+
+  // Tracking opens the tracker, with the closing date and the document already ticked.
+  const item = panel.getByTestId('sch-tr-item');
+  await expect(item).toHaveCount(1);
+  await expect(item).toContainText('Padua International Excellence');
+  await expect(item.getByTestId('sch-tr-closes')).toContainText(
+    /Closes in \d+ days \(2027-03-15\)/,
+  );
+  await expect(item.getByTestId('sch-tr-docs')).toContainText('Documents: 1 of 3 ready');
+  await item.getByTestId('sch-tr-docs').click();
+  await item.getByRole('checkbox').nth(1).check();
+  await expect(item.getByTestId('sch-tr-docs')).toContainText('Documents: 2 of 3 ready');
+
+  // One added by hand, with a date that has passed, sorts first and says so.
+  await panel.getByTestId('sch-tr-name').fill('Erasmus Mundus Data Science');
+  await panel.getByTestId('sch-tr-date').fill('2026-01-15');
+  await panel.getByTestId('sch-tr-add').click();
+  await expect(panel.getByTestId('sch-tr-item')).toHaveCount(2);
+  const erasmus = panel.getByTestId('sch-tr-item').first();
+  await expect(erasmus).toContainText('Erasmus Mundus Data Science');
+  await expect(erasmus.getByTestId('sch-tr-closes')).toContainText('Closed 2026-01-15');
+
+  // Submitted calls move below the open ones.
+  await erasmus.getByTestId('sch-tr-status').selectOption('submitted');
+  await expect(panel.getByTestId('sch-tr-item').first()).toContainText('Padua');
+
+  // Reminders can be turned off, and the list survives a reload.
+  await panel.getByTestId('sch-tr-reminders').uncheck();
+  const stored = await panel.evaluate(async () => {
+    const all = await chrome.storage.local.get(['scholarships', 'settings']);
+    return { n: all.scholarships.length, reminders: all.settings.deadlineReminders };
+  });
+  expect(stored).toEqual({ n: 2, reminders: false });
+  await panel.getByRole('button', { name: 'Requirements' }).click();
+  await expect(panel.getByTestId('sch-track')).toContainText('Update it in the tracker');
+});

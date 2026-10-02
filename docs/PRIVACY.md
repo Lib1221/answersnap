@@ -33,6 +33,10 @@ where that data lives, and who receives it.
   master resume (never the photo) goes to your AI provider with the job post. They are included
   in your backup file. Download PDF uses Chrome's print dialog; the PDF is saved where
   you choose.
+- **Your scholarship tracker:** each call you track, with its closing date, documents, status,
+  and notes, and the motivation letters you write. Stored only on this computer and never sent to
+  the AI provider (a letter's text is what the AI wrote for you). Deadline reminders are checked
+  on this computer and shown as Chrome notifications; you can turn them off.
 - **Your dealbreakers** (where you can work, lowest pay, titles and companies to skip), stored
   with your settings. They are checked on this computer against the job you tailor for and are
   never sent to the AI provider.

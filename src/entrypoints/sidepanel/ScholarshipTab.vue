@@ -3,6 +3,15 @@ import { computed, ref } from 'vue';
 import type { IdKey } from '@/kb/identityFill';
 import { italyGuide } from '@/kb/italyGuide';
 import type { Check } from '@/kb/eligibility';
+import {
+  daysUntil,
+  isOpen,
+  SCHOLARSHIP_STATUSES,
+  SCHOLARSHIP_STATUS_LABELS,
+  type Scholarship,
+  type ScholarshipStatus,
+} from '@/kb/scholarships';
+import { safeUrl } from '@/kb/richText';
 import { t } from '@/ui/i18n';
 import Icon from '@/ui/AppIcon.vue';
 import type { useJob } from './useJob';
@@ -15,12 +24,13 @@ const props = defineProps<{
 const emit = defineEmits<{ openSettings: [section?: string] }>();
 const sc = props.state;
 
-type View = 'fill' | 'requirements' | 'letter' | 'guide';
+type View = 'fill' | 'requirements' | 'letter' | 'tracker' | 'guide';
 const view = ref<View>('fill');
 const VIEWS = computed<{ id: View; label: string }[]>(() => [
   { id: 'fill', label: t('sch_view_fill', 'Fill') },
   { id: 'requirements', label: t('sch_view_requirements', 'Requirements') },
   { id: 'letter', label: t('sch_view_letter', 'Letter') },
+  { id: 'tracker', label: t('sch_view_tracker', 'Tracker') },
   { id: 'guide', label: t('sch_view_guide', 'Italy guide') },
 ]);
 
@@ -175,6 +185,40 @@ function checkText(c: Check): string {
         : t('sch_check_deadline_past', '$1: $2, already passed.', String(d.what), String(d.date));
   }
 }
+const tracker = sc.tracker;
+const newName = ref('');
+const newDeadline = ref('');
+async function addTracked() {
+  await tracker.add(newName.value, newDeadline.value);
+  newName.value = '';
+  newDeadline.value = '';
+}
+async function trackThis() {
+  await tracker.track();
+  view.value = 'tracker';
+}
+/** "Closes in 12 days", "Closes today", "Closed 3 days ago". */
+function closes(s: Scholarship): { text: string; tone: string } {
+  if (!s.deadline)
+    return { text: t('sch_tr_no_date', 'No closing date yet'), tone: 'text-graphite-2' };
+  const days = daysUntil(s.deadline);
+  if (!isOpen(s)) return { text: s.deadline, tone: 'text-graphite-2' };
+  if (days < 0)
+    return {
+      text: t('sch_tr_closed', 'Closed $1 ($2 days ago)', s.deadline, String(-days)),
+      tone: 'text-carbon-pink-text',
+    };
+  const when =
+    days === 0
+      ? t('sch_tr_today', 'Closes today ($1)', s.deadline)
+      : days === 1
+        ? t('sch_tr_tomorrow', 'Closes tomorrow ($1)', s.deadline)
+        : t('sch_tr_in_days', 'Closes in $1 days ($2)', String(days), s.deadline);
+  return { text: when, tone: days <= 7 ? 'text-carbon-pink-text font-medium' : 'text-graphite' };
+}
+const docsDone = (s: Scholarship) => s.documents.filter((d) => d.done).length;
+const value = (e: Event) => (e.target as HTMLInputElement).value;
+
 const letter = sc.letter;
 const copied = ref(false);
 async function copyLetter() {
@@ -230,7 +274,7 @@ const CHECK_TONE = {
   </section>
 
   <div
-    class="grid grid-cols-4 gap-1 rounded-[10px] border border-rule bg-paper p-1"
+    class="flex gap-1 overflow-x-auto rounded-[10px] border border-rule bg-paper p-1"
     role="group"
     :aria-label="t('sch_views', 'Scholarship tools')"
   >
@@ -238,7 +282,7 @@ const CHECK_TONE = {
       v-for="v in VIEWS"
       :key="v.id"
       type="button"
-      class="rounded-[8px] py-1.5 text-[12px] font-medium transition-colors"
+      class="flex-1 rounded-[8px] px-1.5 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors"
       :class="view === v.id ? 'bg-ink-soft text-ink' : 'text-graphite-2 hover:text-graphite'"
       :aria-pressed="view === v.id"
       @click="view = v.id"
@@ -590,6 +634,19 @@ const CHECK_TONE = {
               <span>{{ checkText(c) }}</span>
             </li>
           </ul>
+          <button
+            class="btn self-start text-[13px]"
+            type="button"
+            data-testid="sch-track"
+            @click="trackThis"
+          >
+            <Icon name="bookmark" :size="14" />
+            {{
+              tracker.tracked.value
+                ? t('sch_track_update', 'Update it in the tracker')
+                : t('sch_track', 'Track this scholarship')
+            }}
+          </button>
           <ul
             v-if="sc.requirements.value.warnings.length"
             class="notice flex flex-col gap-1 text-[13px]"
@@ -840,6 +897,169 @@ const CHECK_TONE = {
         </p>
       </section>
     </template>
+  </template>
+
+  <!-- Tracker -->
+  <template v-else-if="view === 'tracker'">
+    <section class="card flex flex-col gap-2 p-4" data-testid="sch-tracker-add">
+      <p class="text-[13px] text-graphite-2">
+        {{
+          t(
+            'sch_tr_intro',
+            'Every scholarship you are working on, the soonest deadline first. Track one from Requirements, or add it here.',
+          )
+        }}
+      </p>
+      <div class="flex flex-wrap items-end gap-2">
+        <label class="flex w-full flex-col gap-1 text-[12.5px]">
+          <span>{{ t('sch_tr_name', 'Scholarship or programme') }}</span>
+          <input v-model="newName" class="field-input px-2 py-1.5" data-testid="sch-tr-name" />
+        </label>
+        <label class="flex flex-col gap-1 text-[12.5px]">
+          <span>{{ t('sch_tr_deadline', 'Closes on') }}</span>
+          <input
+            v-model="newDeadline"
+            type="date"
+            class="field-input px-2 py-1.5"
+            data-testid="sch-tr-date"
+          />
+        </label>
+        <button
+          class="btn"
+          type="button"
+          :disabled="!newName.trim()"
+          data-testid="sch-tr-add"
+          @click="addTracked"
+        >
+          {{ t('sch_tr_add', 'Add') }}
+        </button>
+      </div>
+      <label class="flex items-start gap-2 text-[13px]">
+        <input
+          type="checkbox"
+          class="mt-1"
+          :checked="tracker.reminders.value"
+          data-testid="sch-tr-reminders"
+          @change="tracker.setReminders(($event.target as HTMLInputElement).checked)"
+        />
+        <span>
+          {{ t('sch_tr_remind', 'Remind me before deadlines') }}
+          <span class="block text-[12.5px] text-graphite-2">{{
+            t(
+              'sch_tr_remind_how',
+              'A Chrome notification 14, 7, 3, and 1 day before a scholarship you have not submitted closes.',
+            )
+          }}</span>
+        </span>
+      </label>
+    </section>
+
+    <p
+      v-if="!tracker.list.value.length"
+      class="text-center text-[13px] text-graphite-2"
+      data-testid="sch-tr-empty"
+    >
+      {{ t('sch_tr_empty', 'Nothing tracked yet.') }}
+    </p>
+    <ul v-else class="flex flex-col gap-3" data-testid="sch-tr-list">
+      <li
+        v-for="s in tracker.list.value"
+        :key="s.id"
+        class="card flex flex-col gap-2 p-4"
+        :class="isOpen(s) ? '' : 'opacity-75'"
+        data-testid="sch-tr-item"
+      >
+        <div class="flex items-start justify-between gap-2">
+          <p class="min-w-0 font-medium">
+            <a
+              v-if="safeUrl(s.url)"
+              :href="safeUrl(s.url)!"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline-offset-2 hover:underline"
+              >{{ s.program }}</a
+            >
+            <template v-else>{{ s.program }}</template>
+            <span v-if="s.institution" class="block text-[12.5px] font-normal text-graphite-2">{{
+              s.institution
+            }}</span>
+          </p>
+          <select
+            class="field-input w-auto shrink-0 px-2 py-1 text-[12.5px]"
+            :value="s.status"
+            :aria-label="t('sch_tr_status', 'Status of $1', s.program)"
+            data-testid="sch-tr-status"
+            @change="tracker.update(s.id, { status: value($event) as ScholarshipStatus })"
+          >
+            <option v-for="st in SCHOLARSHIP_STATUSES" :key="st" :value="st">
+              {{ SCHOLARSHIP_STATUS_LABELS[st] }}
+            </option>
+          </select>
+        </div>
+        <p class="text-[13px]" :class="closes(s).tone" data-testid="sch-tr-closes">
+          {{ closes(s).text }}
+        </p>
+        <details v-if="s.documents.length" class="text-[13px]">
+          <summary class="cursor-pointer" data-testid="sch-tr-docs">
+            {{
+              t(
+                'sch_tr_docs',
+                'Documents: $1 of $2 ready',
+                String(docsDone(s)),
+                String(s.documents.length),
+              )
+            }}
+          </summary>
+          <ul class="mt-1.5 flex flex-col gap-1">
+            <li v-for="d in s.documents" :key="d.name">
+              <label class="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  class="mt-1"
+                  :checked="d.done"
+                  @change="tracker.toggleDocument(s, d.name)"
+                />
+                <span>{{ d.name }}</span>
+              </label>
+            </li>
+          </ul>
+        </details>
+        <details class="text-[13px]">
+          <summary class="cursor-pointer text-graphite-2">
+            {{ t('sch_tr_more', 'Date, notes, remove') }}
+          </summary>
+          <div class="mt-2 flex flex-col gap-2">
+            <label class="flex items-center gap-2">
+              <span>{{ t('sch_tr_deadline', 'Closes on') }}</span>
+              <input
+                type="date"
+                class="field-input w-auto px-2 py-1"
+                :value="s.deadline ?? ''"
+                data-testid="sch-tr-edit-date"
+                @change="tracker.update(s.id, { deadline: value($event) || null })"
+              />
+            </label>
+            <textarea
+              rows="2"
+              class="field-input p-2"
+              :value="s.notes"
+              :placeholder="t('sch_tr_notes', 'Notes: referees asked, portal login, what is left')"
+              :aria-label="t('sch_tr_notes_label', 'Notes for $1', s.program)"
+              data-testid="sch-tr-notes"
+              @change="tracker.update(s.id, { notes: value($event).slice(0, 4000) })"
+            />
+            <button
+              class="btn btn-quiet min-h-0 self-start px-2 py-1 text-[12.5px]"
+              type="button"
+              data-testid="sch-tr-remove"
+              @click="tracker.remove(s.id)"
+            >
+              {{ t('sch_tr_remove', 'Remove from the tracker') }}
+            </button>
+          </div>
+        </details>
+      </li>
+    </ul>
   </template>
 
   <!-- Italy guide -->
